@@ -1,0 +1,70 @@
+import 'package:flutter/cupertino.dart';
+import 'package:mgs_app2/screens/add_event/add_event_controller.dart';
+
+import '../../../models/image_model.dart';
+import '../../../services/translator/translator.dart';
+import '../../../utilities/app_config.dart';
+import '../../../widgets/image_upload.dart';
+import '../../../widgets/text_field.dart';
+import '../../../widgets/title.dart';
+
+class EventImageStage extends StatefulWidget {
+  final AddEventController controller;
+
+  const EventImageStage({
+    required this.controller,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<EventImageStage> createState() => _TitleStageState();
+}
+
+class _TitleStageState extends State<EventImageStage> {
+  late AddEventController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = widget.controller;
+    controller.setCurrentStageValid(true);
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final AppConfig appConfig = AppConfig(context);
+    final Translator translator = Translator();
+
+    controller.setCurrentStageValid(controller.getTitle().isNotEmpty);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        buildTitle(
+          context,
+          title: 'Banner evento',
+          subtitle: 'Inserisci il banner per l\'evento',
+        ),
+        SizedBox(
+          height: appConfig.getHeight() * 5,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: appConfig.getWidth() * 10,
+          ),
+          child: Center(
+            child: ImageUploadCard(
+              width: appConfig.getWidth() * 80,
+              height: appConfig.getWidth() * 80 * 9 / 16,
+              imageType: ImageType.eventBanner,
+              initialImage: controller.getBanner(),
+              onImagePicked: (value) => controller.setBanner(value),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+}
