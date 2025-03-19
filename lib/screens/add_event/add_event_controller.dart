@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mgs_app2/models/event_firestore.dart';
+import 'package:mgs_app2/models/event_model.dart';
 import 'package:mgs_app2/models/image_model.dart';
 
 
@@ -33,7 +35,7 @@ class AddEventController {
   ImageModel? bannerImage;
 
   String location = '';
-  double price = 0.0;
+  double? price;
 
   bool isLoading = false;
 
@@ -51,14 +53,13 @@ class AddEventController {
   }
 
   void nextStage() {
-
     if (isLatestStage()) {
       return;
     }
 
     _stage = AddEventStage.values.elementAt(getCurrentStageIndex() + 1);
 
-    isCurrentStageValid =  isCurrentStateFilled();
+    isCurrentStageValid = isCurrentStateFilled();
 
     if (_animateProgressBar != null) {
       _animateProgressBar!();
@@ -76,7 +77,6 @@ class AddEventController {
   }
 
   void prevStage() {
-
     _stage = AddEventStage.values.elementAt(getCurrentStageIndex() - 1);
 
     isCurrentStageValid = isCurrentStateFilled();
@@ -96,50 +96,64 @@ class AddEventController {
     );
   }
 
-  void publish() {
-
+  void publish() async{
     isLoading = true;
+
+    EventModel eventModel = EventModel(
+      location: location,
+      start: startDate,
+      end: endDate,
+      title: title,
+      desc: description,
+      price: price ?? 0.0,
+    );
+
+    EventFirestore eventFirestore = EventFirestore();
+
+    String result = await eventFirestore.addEvent(eventModel);
+
+    //TODO if result is empty non è andato a buon fine se no contiene la ref dell'evento
     changeNextButton();
-
-
-
   }
 
   bool isCurrentStateFilled() {
-
     switch (getCurrentStage()) {
+      case AddEventStage.title:
+        {
+          return title.isNotEmpty;
+        }
 
-      case AddEventStage.title: {
-        return title.isNotEmpty;
-    }
+      case AddEventStage.desc:
+        {
+          return description.isNotEmpty;
+        }
 
-      case AddEventStage.desc: {
-        return description.isNotEmpty;
-      }
-
-      case AddEventStage.start: {
-        return startDate != null && startTime != null;
-      }
+      case AddEventStage.start:
+        {
+          return startDate != null && startTime != null;
+        }
 
       case AddEventStage.end:
         {
           return endDate != null && endTime != null;
         }
-      case AddEventStage.banner: {
-        return true;
-      }
-      case AddEventStage.info: {
-        return location.isNotEmpty;
-      }
-
+      case AddEventStage.banner:
+        {
+          return true;
+        }
+      case AddEventStage.info:
+        {
+          return location.isNotEmpty;
+        }
     }
   }
 
-  int getCurrentStageIndex() => AddEventStage.values.indexOf(
-    AddEventStage.values.firstWhere(
-          (element) => element.name == _stage.name,
-    ),
-  );
+  int getCurrentStageIndex() =>
+      AddEventStage.values.indexOf(
+        AddEventStage.values.firstWhere(
+              (element) => element.name == _stage.name,
+        ),
+      );
 
   int stagesLength() => AddEventStage.values.length;
 
@@ -151,13 +165,11 @@ class AddEventController {
   AddEventStage getCurrentStage() => _stage;
 
   void setCurrentStageValid(bool value) {
-
     isCurrentStageValid = value;
     changeNextButton();
   }
 
   void changeNextButton() {
-
     if (updateStagesButton != null) {
       updateStagesButton!();
     }
@@ -203,16 +215,18 @@ class AddEventController {
   ImageModel? getBanner() => bannerImage;
 
   DateTime? getStartDate() => startDate;
+
   DateTime? getEndDate() => endDate;
 
   TimeOfDay? getStartTime() => startTime;
+
   TimeOfDay? getEndTime() => endTime;
 
   String getTitle() => title;
 
   String getDesc() => description;
 
-  double getPrice() => price;
+  double? getPrice() => price;
 
   String getLocation() => location;
 

@@ -60,7 +60,7 @@ class _ThemeService extends State<ThemeService> {
 
               switch (routePage) {
                 case ThemeRoutePage.home:
-                  return const AppNavigator();
+                  return const HomeScreen();
                 case ThemeRoutePage.loading:
                   return Container();
                 case ThemeRoutePage.auth:

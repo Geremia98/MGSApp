@@ -149,7 +149,8 @@ userInfo(width) {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(100),
           child: UserModel.profilePic == null ||
-                  UserModel.profilePic!.downloadUrl == null
+                  UserModel.profilePic!.downloadUrl == null ||
+                  UserModel.profilePic!.downloadUrl!.isEmpty
               ? Image.asset(
                   'resources/profile_pic.jpeg',
                   alignment: Alignment.center,

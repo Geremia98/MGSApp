@@ -24,6 +24,18 @@ class EventModel {
     required this.end,
   });
 
+  Map<String, dynamic> toPayload() {
+    return {
+      firestoreEventTitleField : id,
+      firestoreEventTitleField: title,
+      firestoreEventDescriptionField: desc,
+      firestoreEventLocationField: location,
+      firestoreEventStartField: start,
+      firestoreEventEndField: end,
+      firestoreEventPriceField: price,
+    };
+  }
+
   factory EventModel.fromFirestore(String id, Map<String, dynamic> data) {
     return EventModel(
       id: id,
@@ -42,7 +54,6 @@ class EventModel {
       end: data.containsKey(firestoreEventEndField)
           ? (data[firestoreEventEndField] as Timestamp).toDate()
           : DateTime(1900),
-
       price: data.containsKey(firestoreEventPriceField)
           ? double.tryParse(data[firestoreEventPriceField].toString()) ?? 0
           : 0,

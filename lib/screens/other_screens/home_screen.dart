@@ -8,8 +8,11 @@ import 'package:mgs_app2/utilities/theme_data.dart';
 import 'package:mgs_app2/utilities/theme_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../add_event/add_event_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   static const String id = 'HomeScreen';
+
   const HomeScreen({super.key});
 
   @override
@@ -21,7 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
@@ -47,11 +49,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       profileImage: 'assets/images/male.jpg'),
                   EventiDelMeseReminder(
                       width: width,
-                      coloreReminder: MyTheme.getSfondoReminder(context:context)),
+                      coloreReminder:
+                          MyTheme.getSfondoReminder(context: context)),
                   MyPersonalRow(
-                      width: width,
-                      height: height,
-                      titolo: 'Consigliati'),
+                      width: width, height: height, titolo: 'Consigliati'),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -81,9 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   MyPersonalRow(
-                      width: width,
-                      height: height,
-                      titolo: 'I miei eventi'),
+                      width: width, height: height, titolo: 'I miei eventi'),
                   SizedBox(
                     height: height * 0.4,
                     child: ListView(
@@ -161,9 +160,9 @@ class EventiDelMeseReminder extends StatelessWidget {
           ),
         ],
         border: MyTheme.getCustomBorder(
-                context: context,
-                width: width*0.0015,
-              ),
+          context: context,
+          width: width * 0.0015,
+        ),
       ),
       child: Row(
         children: [
@@ -179,7 +178,7 @@ class EventiDelMeseReminder extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
               border: Border.all(
                 color: Colors.white,
-                width: width*0.01,
+                width: width * 0.01,
               ),
             ),
           ),
@@ -237,7 +236,7 @@ class SortOfAppBar extends StatelessWidget {
                   BorderRadius.circular(width * 0.02), // Bordi arrotondati
               border: MyTheme.getCustomBorder(
                 context: context,
-                width: width*0.002,
+                width: width * 0.002,
               ),
             ),
             child: Icon(
@@ -312,26 +311,31 @@ class MyPersonalRow extends StatelessWidget {
                 width: width * 0.02,
               ),
               GestureDetector(
-                        onTap: () => {
-                          Navigator.pushNamed(context, AllEventsScreen.id, arguments: titolo),
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(width * 0.006),
-                          decoration: BoxDecoration(
-                            // Colore di sfondo
-                            borderRadius: BorderRadius.circular(
-                                width * 0.02), // Bordi arrotondati
-                            border: MyTheme.getCustomBorder(
-                              context: context,
-                              width: width*0.0015,
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.arrow_forward_rounded, // Icona simile a quella mostrata
-                            size: width*0.05, // Dimensione dell'icona
-                          ),
-                        ),
-                      ),
+                onTap: () => {
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const AllEventsScreen(titolo: 'titolo',)),
+                  ),
+                },
+                child: Container(
+                  padding: EdgeInsets.all(width * 0.006),
+                  decoration: BoxDecoration(
+                    // Colore di sfondo
+                    borderRadius: BorderRadius.circular(
+                        width * 0.02), // Bordi arrotondati
+                    border: MyTheme.getCustomBorder(
+                      context: context,
+                      width: width * 0.0015,
+                    ),
+                  ),
+                  child: Icon(
+                    Icons.arrow_forward_rounded,
+                    // Icona simile a quella mostrata
+                    size: width * 0.05, // Dimensione dell'icona
+                  ),
+                ),
+              ),
             ],
           )
         ],
@@ -360,7 +364,10 @@ class MyConsigliatiCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(EventScreen.id);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) =>  EventScreen(),
+        ),);
       },
       child: Container(
         constraints:
@@ -368,11 +375,9 @@ class MyConsigliatiCard extends StatelessWidget {
         padding: EdgeInsets.only(right: width * 0.03),
         child: Card(
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
-              side: MyTheme.getCustomBorderSide(
-                context: context,
-                width: width * 0.0015
-              ),
+            borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
+            side: MyTheme.getCustomBorderSide(
+                context: context, width: width * 0.0015),
           ),
           child: Stack(children: [
             ClipRRect(
@@ -389,9 +394,9 @@ class MyConsigliatiCard extends StatelessWidget {
                       horizontal: width * 0.02, vertical: width * 0.01),
                   decoration: BoxDecoration(
                     color: Theme.of(context).scaffoldBackgroundColor,
-                      borderRadius:
-                          BorderRadius.all(Radius.circular(width * 0.01)),
-                    ),
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(width * 0.01)),
+                  ),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -438,7 +443,10 @@ class MyEventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(EventScreen.id);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => EventScreen()),
+        );
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: height * 0.005),
@@ -447,9 +455,9 @@ class MyEventCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
           border: MyTheme.getCustomBorder(
-                context: context,
-                width: width*0.0015,
-              ),
+            context: context,
+            width: width * 0.0015,
+          ),
         ),
         child: Row(
           children: [
@@ -562,6 +570,9 @@ class MyAppDrawer extends StatelessWidget {
               icon: Icons.arrow_back_rounded,
               title: 'Menù',
               isTitle: true,
+              onTap: () => Navigator.pop(
+                context,
+              ),
             ),
             Divider(
               height: height * 0.06,
@@ -572,61 +583,80 @@ class MyAppDrawer extends StatelessWidget {
               width: width,
               icon: Icons.person_3_rounded,
               title: 'Info personali',
-              routeName: PersonalScreen.id,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const PersonalScreen()),
+              ),
             ),
             ItemForMenu(
               height: height,
               width: width,
               icon: Icons.add,
               title: 'Crea evento',
-              routeName: CreationEventScreen.id,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AddEventScreen(),
+                ),
+              ),
             ),
             ItemForMenu(
               height: height,
               width: width,
               icon: Icons.bug_report_rounded,
               title: 'Report a bug',
-              routeName: FAQScreen.id,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const FAQScreen()),
+              ),
             ),
             ItemForMenu(
               height: height,
               width: width,
               icon: Icons.add,
               title: 'FAQ',
-              routeName: FAQScreen.id,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const FAQScreen()),
+              ),
             ),
             Row(
               children: [
                 Container(
-                margin: EdgeInsets.only(right: width*0.05, left: width*0.01, top: height *0.01, bottom: height*0.01),
-                child: GestureDetector(
-                            onTap: () => {
-                            //provider.toggleTheme()
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(width * 0.012),
-                              decoration: BoxDecoration(
-                                // Colore di sfondo
-                                borderRadius: BorderRadius.circular(
-                                    width * 0.02), // Bordi arrotondati
-                                border: MyTheme.getCustomBorder(
-                context: context,
-                width: width*0.0015,
-              ),
-                              ),
-                              child: Icon(
-                                size: width * 0.06,
-                                  Icons.dark_mode//provider.isLight ? Icons.dark_mode : Icons.sunny, // Dimensione dell'icona
-                              ),
-                            ),
+                  margin: EdgeInsets.only(
+                      right: width * 0.05,
+                      left: width * 0.01,
+                      top: height * 0.01,
+                      bottom: height * 0.01),
+                  child: GestureDetector(
+                    onTap: () => {
+                      //provider.toggleTheme()
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(width * 0.012),
+                      decoration: BoxDecoration(
+                        // Colore di sfondo
+                        borderRadius: BorderRadius.circular(
+                            width * 0.02), // Bordi arrotondati
+                        border: MyTheme.getCustomBorder(
+                          context: context,
+                          width: width * 0.0015,
+                        ),
+                      ),
+                      child: Icon(
+                          size: width * 0.06,
+                          Icons
+                              .dark_mode //provider.isLight ? Icons.dark_mode : Icons.sunny, // Dimensione dell'icona
                           ),
-                          ),
-                          Text(
-                    'asd', //provider.isLight ? 'Night Mode' : 'Day Mode',
-                    style: TextStyle(
-                      fontSize: width * 0.04,
                     ),
                   ),
+                ),
+                Text(
+                  'asd', //provider.isLight ? 'Night Mode' : 'Day Mode',
+                  style: TextStyle(
+                    fontSize: width * 0.04,
+                  ),
+                ),
               ],
             ),
             Divider(
@@ -638,7 +668,10 @@ class MyAppDrawer extends StatelessWidget {
               width: width,
               icon: Icons.logout_rounded,
               title: 'Log out',
-              routeName: FAQScreen.id,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const PersonalScreen()),
+              ),
             ),
           ],
         ),
@@ -654,16 +687,16 @@ class ItemForMenu extends StatelessWidget {
     required this.width,
     required this.icon,
     required this.title,
+    required this.onTap,
     this.isTitle = false,
-    this.routeName = '',
   });
 
   final double height;
   final double width;
   final IconData icon;
   final String title;
+  final void Function() onTap;
   final bool isTitle;
-  final String routeName;
 
   @override
   Widget build(BuildContext context) {
@@ -672,30 +705,26 @@ class ItemForMenu extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            margin: EdgeInsets.only(right: width*0.05, left: width*0.01),
+            margin: EdgeInsets.only(right: width * 0.05, left: width * 0.01),
             child: GestureDetector(
-                        onTap: () => {
-                          isTitle
-                    ? Navigator.pop(context)
-                    : (Navigator.pushNamed(context, routeName)),
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(width * 0.012),
-                          decoration: BoxDecoration(
-                            // Colore di sfondo
-                            borderRadius: BorderRadius.circular(
-                                width * 0.02), // Bordi arrotondati
-                            border: MyTheme.getCustomBorder(
-                context: context,
-                width: width*0.0015,
+              onTap: onTap,
+              child: Container(
+                padding: EdgeInsets.all(width * 0.012),
+                decoration: BoxDecoration(
+                  // Colore di sfondo
+                  borderRadius:
+                      BorderRadius.circular(width * 0.02), // Bordi arrotondati
+                  border: MyTheme.getCustomBorder(
+                    context: context,
+                    width: width * 0.0015,
+                  ),
+                ),
+                child: Icon(
+                  size: width * 0.06,
+                  icon, // Dimensione dell'icona
+                ),
               ),
-                          ),
-                          child: Icon(
-                            size: width * 0.06,
-                icon, // Dimensione dell'icona
-                          ),
-                        ),
-                      ),
+            ),
           ),
           Text(
             title,
