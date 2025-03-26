@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/login_screens/registration_controller.dart';
 import 'package:mgs_app2/screens/login_screens/registration_screen2.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-import 'package:mgs_app2/utilities/theme_data.dart';
 
 import '../../widgets/appbar.dart';
 import '../../widgets/font.dart';

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/on_boarding_screens/on_boarding_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
-  static const String id = 'WelcomeScreen';
   const WelcomeScreen({super.key});
 
   @override

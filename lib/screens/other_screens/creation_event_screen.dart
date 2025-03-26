@@ -4,9 +4,7 @@ import 'package:mgs_app2/utilities/theme_data.dart';
 import 'package:mgs_app2/utilities/utils.dart';
 
 class CreationEventScreen extends StatelessWidget {
-  static const String id = 'CreationEventScreen';
-
-  const CreationEventScreen({super.key});
+ const CreationEventScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

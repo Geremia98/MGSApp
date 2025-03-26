@@ -3,9 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/theme_colors.dart';
-import 'package:mgs_app2/utilities/theme_provider.dart';
 import 'package:mgs_app2/wrapper.dart';
-import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 

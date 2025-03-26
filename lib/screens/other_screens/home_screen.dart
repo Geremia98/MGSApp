@@ -2,17 +2,14 @@ import 'package:mgs_app2/screens/other_screens/creation_event_screen.dart';
 import 'package:mgs_app2/screens/other_screens/all_events_screen.dart';
 import 'package:mgs_app2/screens/other_screens/event_screen.dart';
 import 'package:mgs_app2/screens/other_screens/personal_screen.dart';
-import 'package:mgs_app2/screens/settings_screen.dart/FAQ_screen.dart';
+import 'package:mgs_app2/screens/other_screens/FAQ_screen.dart';
+import 'package:mgs_app2/screens/other_screens/FAQ_2_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/theme_data.dart';
-import 'package:mgs_app2/utilities/theme_provider.dart';
-import 'package:provider/provider.dart';
 
 import '../add_event/add_event_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  static const String id = 'HomeScreen';
-
   const HomeScreen({super.key});
 
   @override
@@ -315,7 +312,7 @@ class MyPersonalRow extends StatelessWidget {
 
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const AllEventsScreen(titolo: 'titolo',)),
+                    MaterialPageRoute(builder: (context) =>  AllEventsScreen(titolo: titolo)),
                   ),
                 },
                 child: Container(
@@ -607,7 +604,7 @@ class MyAppDrawer extends StatelessWidget {
               title: 'Report a bug',
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const FAQScreen()),
+                MaterialPageRoute(builder: (context) => const Faq2Screen()),
               ),
             ),
             ItemForMenu(
@@ -620,7 +617,7 @@ class MyAppDrawer extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const FAQScreen()),
               ),
             ),
-            Row(
+            Row( //darkmode/lightmode
               children: [
                 Container(
                   margin: EdgeInsets.only(

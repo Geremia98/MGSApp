@@ -4,7 +4,6 @@ import 'package:mgs_app2/utilities/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class AllEventsScreen extends StatefulWidget {
-  static const String id = 'AllEventsScreen';
   final String titolo;
   const AllEventsScreen({super.key, required this.titolo});
 
@@ -20,7 +19,8 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
     double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: Stack(children: [
+      body: Stack(
+        children: [
         SafeArea(
           bottom: false,
           child: SingleChildScrollView(

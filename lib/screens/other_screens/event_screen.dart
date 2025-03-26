@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/theme_data.dart';
 
 class EventScreen extends StatefulWidget {
-  static const String id = 'EventScreen';
-
+  
   final EventModel event = EventModel(
         'Giardinaggio',
         'Eccoci con l\'attesissima festa di fine anno. Saluteremo gli studenti diplomati e ci sarà musica, buon cibo e anche un ospite speciale! Sarà l\'occasione per augurarci buone vacanze!',

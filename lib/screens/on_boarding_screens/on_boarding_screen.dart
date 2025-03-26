@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../login_screens/registration_controller.dart';
 
 class OnBoardingScreen extends StatefulWidget {
-  static const String id = 'OnBoardingScreen3';
   const OnBoardingScreen({Key? key}) : super(key: key);
 
   @override
