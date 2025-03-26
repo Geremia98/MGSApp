@@ -35,7 +35,7 @@ class AddEventController {
   ImageModel? bannerImage;
 
   String location = '';
-  double? price;
+  double price = 0;
 
   bool isLoading = false;
 
