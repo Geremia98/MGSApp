@@ -4,3 +4,4 @@ const String firestoreEventStartField = 'start';
 const String firestoreEventEndField = 'end';
 const String firestoreEventPriceField = 'price';
 const String firestoreEventLocationField = 'location';
+const String firestoreEventCreatorUid = 'creatorUid';

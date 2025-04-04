@@ -4,6 +4,7 @@ import 'package:mgs_app2/models/image_model.dart';
 import '../services/firebase/firestore/firestore_events_fields.dart';
 
 class EventModel {
+  final String creatorUid;
   final String id;
   final String title;
   final String desc;
@@ -14,6 +15,7 @@ class EventModel {
   final DateTime? end;
 
   EventModel({
+    this.creatorUid = '',
     this.id = '',
     this.location = '',
     this.title = '',
@@ -26,21 +28,24 @@ class EventModel {
 
   Map<String, dynamic> toPayload() {
     return {
-      firestoreEventTitleField : id,
       firestoreEventTitleField: title,
       firestoreEventDescriptionField: desc,
       firestoreEventLocationField: location,
       firestoreEventStartField: start,
       firestoreEventEndField: end,
       firestoreEventPriceField: price,
+      firestoreEventCreatorUid: creatorUid,
     };
   }
 
-  factory EventModel.fromFirestore(String id, Map<String, dynamic> data) {
+  factory EventModel.fromFirestore(String id, Map<String, dynamic> data, ImageModel? banner) {
     return EventModel(
       id: id,
       title: data.containsKey(firestoreEventTitleField)
           ? data[firestoreEventTitleField]
+          : '',
+      creatorUid: data.containsKey(firestoreEventCreatorUid)
+          ? data[firestoreEventCreatorUid]
           : '',
       desc: data.containsKey(firestoreEventDescriptionField)
           ? data[firestoreEventDescriptionField]
@@ -57,6 +62,7 @@ class EventModel {
       price: data.containsKey(firestoreEventPriceField)
           ? double.tryParse(data[firestoreEventPriceField].toString()) ?? 0
           : 0,
+      image: banner,
     );
   }
 }

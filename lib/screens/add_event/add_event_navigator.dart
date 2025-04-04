@@ -51,7 +51,7 @@ class _AddEventNavigatorState extends State<AddEventNavigator> {
         text: controller.isLatestStage()
             ? 'Pubblica'
             : translator.translate('continue'),
-        onTap: () => controller.nextStage(),
+        onTap: () => controller.nextStage(context),
         isEnabled: controller.isCurrentStageValid,
         isLoading: controller.isLoading,
         //isEnabled: controller.isCurrentStageFilled(),

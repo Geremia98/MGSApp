@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/theme_colors.dart';
 import 'package:mgs_app2/wrapper.dart';
+import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 
@@ -14,7 +15,10 @@ Future<void> main() async {
       options: DefaultFirebaseOptions.currentPlatform
   );
 
-  runApp(const MyApp());
+  runApp( ChangeNotifierProvider(
+    create: (_) => BrightnessManager(),
+    child: const MyApp(),
+  ),);
 }
 
 class MyApp extends StatefulWidget {
@@ -25,39 +29,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  Brightness? _brightness;
-
-  @override
-  Widget build(BuildContext context) {
-
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-
-    return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            ...GlobalMaterialLocalizations.delegates,
-          ],
-          supportedLocales: const [
-            Locale('en', 'US'),
-            Locale('it', 'IT'),
-          ],
-          theme: _brightness == Brightness.light
-              ? getLightTheme()
-              : getDarkTheme(),
-          home: const Wrapper(),
-    );
-  }
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _brightness = WidgetsBinding.instance.window.platformBrightness;
   }
 
   @override
@@ -67,17 +42,65 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   @override
+  Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
+    final brightnessManager = Provider.of<BrightnessManager>(context);
+
+    print(brightnessManager.brightness);
+
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        ...GlobalMaterialLocalizations.delegates,
+      ],
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('it', 'IT'),
+      ],
+      theme: brightnessManager.brightness == Brightness.light
+          ? getLightTheme()
+          : getDarkTheme(),
+      home: const Wrapper(),
+    );
+  }
+
+  @override
   void didChangePlatformBrightness() {
     if (mounted) {
-      setState(() {
-        _brightness = WidgetsBinding.instance.window.platformBrightness;
-        SystemChrome.setSystemUIOverlayStyle(
-          _brightness == Brightness.light
-              ? SystemUiOverlayStyle.dark
-              : SystemUiOverlayStyle.light,
-        );
-      });
+      Provider.of<BrightnessManager>(context, listen: false).toggleBrightness();
     }
     super.didChangePlatformBrightness();
   }
 }
+
+class BrightnessManager extends ChangeNotifier {
+  static final BrightnessManager _instance = BrightnessManager._internal();
+  factory BrightnessManager() => _instance;
+
+  Brightness _brightness = WidgetsBinding.instance.platformDispatcher.platformBrightness;
+
+  Brightness get brightness => _brightness;
+
+  BrightnessManager._internal();
+
+  void toggleBrightness() {
+    _brightness = (_brightness == Brightness.light) ? Brightness.dark : Brightness.light;
+    _updateSystemUIOverlay();
+    notifyListeners(); // Notifica i listener per aggiornare la UI
+  }
+
+  void _updateSystemUIOverlay() {
+    SystemChrome.setSystemUIOverlayStyle(
+      _brightness == Brightness.light
+          ? SystemUiOverlayStyle.dark
+          : SystemUiOverlayStyle.light,
+    );
+  }
+}
+

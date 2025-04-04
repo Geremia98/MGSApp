@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/login_screens/registration_controller.dart';
 import 'package:mgs_app2/screens/login_screens/registration_scren4.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-import 'package:mgs_app2/utilities/constants.dart';
 import 'package:mgs_app2/widgets/selector.dart';
 import 'package:mgs_app2/widgets/text_field.dart';
 import 'dart:ui' as ui;
 
+import '../../utilities/constants_strings.dart';
 import '../../widgets/appbar.dart';
 import '../../widgets/font.dart';
 

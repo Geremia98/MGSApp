@@ -51,8 +51,9 @@ class AddEventController {
     _animateProgressBar ??= animateFunction;
   }
 
-  void nextStage() {
+  void nextStage(BuildContext context) {
     if (isLatestStage()) {
+      publish(context);
       return;
     }
 
@@ -95,7 +96,7 @@ class AddEventController {
     );
   }
 
-  void publish() async{
+  void publish(BuildContext context) async{
     isLoading = true;
 
     EventModel eventModel = EventModel(
@@ -110,6 +111,8 @@ class AddEventController {
     EventFirestore eventFirestore = EventFirestore();
 
     String result = await eventFirestore.addEvent(eventModel);
+
+    Navigator.of(context).pop();
 
     //TODO if result is empty non è andato a buon fine se no contiene la ref dell'evento
     changeNextButton();

@@ -1,12 +1,25 @@
+import 'dart:math' as math;
+
+import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
+import 'package:mgs_app2/models/event_firestore.dart';
 import 'package:mgs_app2/screens/other_screens/all_events_screen.dart';
 import 'package:mgs_app2/screens/other_screens/event_screen.dart';
+import 'package:mgs_app2/screens/other_screens/personal_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:mgs_app2/utilities/constants_dimensions.dart';
-import 'package:mgs_app2/widgets/my_app_drawer.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-import 'package:mgs_app2/utilities/theme_colors.dart';
+
+import '../../main.dart';
+import '../../models/event_model.dart';
+import '../../services/firebase/auth.dart';
+import '../../utilities/theme_colors.dart';
+import '../../wrapper.dart';
+import '../add_event/add_event_screen.dart';
+import 'FAQ_screen.dart';
 
 class HomeScreen extends StatefulWidget {
+  static const String id = 'HomeScreen';
+
   const HomeScreen({super.key});
 
   @override
@@ -15,11 +28,23 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+  late Future<List<EventModel>> retrieveEvents;
+  late Future<List<EventModel>> retrievePersonalEvents;
+
+  @override
+  void initState() {
+    super.initState();
+    EventFirestore eventFirestore = EventFirestore();
+
+    retrieveEvents = eventFirestore.retrieveEvents();
+    retrievePersonalEvents = eventFirestore.retrievePersonalEvents();
+  }
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+
     final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
@@ -28,184 +53,129 @@ class _HomeScreenState extends State<HomeScreen> {
         height: height,
         width: width,
       ),
-      body: Stack(children: [
-        SafeArea(
-          bottom: false,
+      body: SafeArea(
+        bottom: false,
+        child: Container(
+          height: height,
+          width: width,
+          padding: EdgeInsets.symmetric(horizontal: width * 0.04),
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: width * 0.04),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SortOfAppBar(
-                    iconData: Icons.grid_view_rounded,
-                      function: _globalKey.currentState!.openDrawer(),
-                      appConfig: appConfig,
-                      width: width,
-                      profileImage: 'assets/images/male.jpg'),
-                  EventiDelMeseReminder(
-                      appConfig: appConfig,
-                      width: width,
-                      coloreReminder: appConfig.getTheme().highlightColor),
-                  MyPersonalRow(
-                      appConfig: appConfig,
-                      width: width,
-                      height: height,
-                      titolo: 'Consigliati'),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        MyConsigliatiCard(
-                          appConfig: appConfig,
-                          height: height,
-                          width: width,
-                          title: 'Party di fine anno',
-                          date: '6 giugno',
-                          image: 'assets/images/party.png',
-                        ),
-                        MyConsigliatiCard(
-                          appConfig: appConfig,
-                          height: height,
-                          width: width,
-                          title: 'Giardinaggio',
-                          date: '21 aprile',
-                          image: 'assets/images/giardinaggio.png',
-                        ),
-                        MyConsigliatiCard(
-                          appConfig: appConfig,
-                          height: height,
-                          width: width,
-                          title: 'Meditazione',
-                          date: '3 maggio',
-                          image: 'assets/images/meditazione.png',
-                        ),
-                      ],
-                    ),
-                  ),
-                  MyPersonalRow(
-                      appConfig: appConfig,
-                      width: width,
-                      height: height,
-                      titolo: 'I miei eventi'),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SortOfAppBar(
+                    globalKey: _globalKey,
+                    width: width,
+                    profileImage: 'assets/images/male.jpg'),
+                EventiDelMeseReminder(
+                    width: width,
+                    coloreReminder: appConfig.getTheme().highlightColor),
+                MyPersonalRow(
+                    width: width, height: height, titolo: 'Consigliati'),
+                SizedBox(
+                  height: height * 0.2,
+                  child: FutureBuilder(
+                      future: retrieveEvents,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<EventModel>> snap) {
+                        if (snap.connectionState != ConnectionState.done) {
+                          return Center(
+                            child: CupertinoActivityIndicator(
+                              color: appConfig.getTheme().secondaryHeaderColor,
+                            ),
+                          );
+                        }
 
-                  //mi tocca mettere questa schifezza altrimenti
-                  //non riesco avisualizzaere correttamente la lista
-                  SizedBox(
-                    height: height * 0.4,
-                    child: ListView(
-                      shrinkWrap: true,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      children: [
-                        MyEventCard(
-                          appConfig: appConfig,
-                          height: height,
-                          width: width,
-                          image: 'assets/images/meditazione.png',
-                          dataInizio: '30 nov 2023',
-                          titolo: 'Weekend meditativo',
-                          luogo: 'Luogo Evento',
+                        if (snap.data == null || snap.data!.isEmpty) {
+                          //TODO mettere una scritta 'nessun evento'
+                          return SizedBox();
+                        }
+
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: math.min(snap.data!.length, 3),
+                          itemBuilder: (BuildContext context, int index) {
+                            EventModel event = snap.data![index];
+                            return MyConsigliatiCard(
+                              height: height,
+                              width: width,
+                              image: 'assets/images/party.png',
+                              date: DateFormat('dd/MM/yyyy')
+                                  .format(event.start ?? DateTime.now()),
+                              title: event.title,
+                            );
+                          },
+                        );
+                      }),
+                ),
+                MyPersonalRow(
+                    width: width, height: height, titolo: 'I miei eventi'),
+                FutureBuilder(
+                    future: retrievePersonalEvents,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<EventModel>> snap) {
+                      if (snap.connectionState != ConnectionState.done) {
+                        return Center(
+                          child: CupertinoActivityIndicator(
+                            color: appConfig.getTheme().secondaryHeaderColor,
+                          ),
+                        );
+                      }
+
+                      if (snap.data == null || snap.data!.isEmpty) {
+                        //TODO mettere una scritta 'nessun evento'
+                        return SizedBox();
+                      }
+
+                      return SizedBox(
+                        height: height * 0.4,
+                        child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          itemCount: math.max(snap.data!.length, 3),
+                          itemBuilder: (BuildContext context, int index) {
+                            EventModel event = snap.data![index];
+                            return MyEventCard(
+                              height: height,
+                              width: width,
+                              image: 'assets/images/party.png',
+                              dataInizio: DateFormat('dd/MM/yyyy')
+                                  .format(event.start ?? DateTime.now()),
+                              titolo: event.title,
+                              luogo: event.location,
+                            );
+                          },
                         ),
-                        MyEventCard(
-                          appConfig: appConfig,
-                          height: height,
-                          width: width,
-                          image: 'assets/images/ballo.png',
-                          dataInizio: '3 mag 2024',
-                          titolo: 'Corso di ballo',
-                          luogo: 'Milano',
-                        ),
-                        MyEventCard(
-                          appConfig: appConfig,
-                          height: height,
-                          width: width,
-                          image: 'assets/images/giardinaggio.png',
-                          dataInizio: '5 apr 2023',
-                          titolo: 'Corso giardinaggio',
-                          luogo: 'Oratorio Turro',
-                        ),
-                        MyEventCard(
-                          appConfig: appConfig,
-                          height: height,
-                          width: width,
-                          image: 'assets/images/party.png',
-                          dataInizio: '5 giu 2024',
-                          titolo: 'Party di fine anno',
-                          luogo: 'Campo Sportivo Salò',
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                      );
+                    }),
+              ],
             ),
           ),
         ),
-      ]),
+      ),
     );
   }
-}
 
-class SortOfAppBar extends StatelessWidget {
-  const SortOfAppBar(
-      {super.key,
-      required this.width,
-      required this.iconData,
-      required this.profileImage,
-      required this.appConfig,
-      required this.function});
+  List<Widget> buildEventsWidget(List<EventModel> events) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
 
-  final double width;
-  final String profileImage;
-  final AppConfig appConfig;
-  final void function;
-  final IconData iconData;
+    List<Widget> widgets = [];
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        GestureDetector(
-          onTap: () => {function},
-          child: Container(
-            padding: EdgeInsets.all(width * 0.01),
-            decoration: BoxDecoration(
-              borderRadius:
-                  BorderRadius.circular(width * 0.02), // Bordi arrotondati
-              border: getCustomBorder(
-                appConfig: appConfig,
-                width: width * bigRoutingButtonBorderThickness,
-              ),
-            ),
-            child: Icon(
-              iconData, // Icona simile a quella mostrata
-              size: width * 0.08, // Dimensione dell'icona
-            ),
-          ),
+    for (EventModel event in events) {
+      widgets.add(
+        MyConsigliatiCard(
+          height: height,
+          width: width,
+          image: 'assets/images/party.png',
+          date: DateFormat('dd/MM/YYYY').format(event.start ?? DateTime.now()),
+          title: event.title,
         ),
-        const Expanded(
-            child: SizedBox(
-          width: 10,
-        )),
-        Container(
-          width: width * 0.12,
-          height: width * 0.12,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(profileImage),
-              fit: BoxFit.cover,
-            ),
-            borderRadius: BorderRadius.all(
-                Radius.circular(width * homeScreenProfilePicRadius)),
-            border: Border.all(
-              color: Colors.white,
-              width: width * 0.001,
-            ),
-          ),
-        ),
-      ],
-    );
+      );
+    }
+
+    return widgets;
   }
 }
 
@@ -214,15 +184,16 @@ class EventiDelMeseReminder extends StatelessWidget {
     super.key,
     required this.width,
     required this.coloreReminder,
-    required this.appConfig,
   });
 
   final double width;
   final Color coloreReminder;
-  final AppConfig appConfig;
 
   @override
   Widget build(BuildContext context) {
+
+    final AppConfig appConfig = AppConfig(context);
+
     return Container(
       margin: EdgeInsets.only(top: width * 0.04),
       padding: EdgeInsets.symmetric(
@@ -238,7 +209,7 @@ class EventiDelMeseReminder extends StatelessWidget {
         ],
         border: getCustomBorder(
           appConfig: appConfig,
-          width: width * monthEventsReminderBorderThickness,
+          width: width * 0.0015,
         ),
       ),
       child: Row(
@@ -285,22 +256,85 @@ class EventiDelMeseReminder extends StatelessWidget {
   }
 }
 
+class SortOfAppBar extends StatelessWidget {
+  const SortOfAppBar({
+    super.key,
+    required this.globalKey,
+    required this.width,
+    required this.profileImage,
+  });
+
+  final GlobalKey<ScaffoldState> globalKey;
+  final double width;
+  final String profileImage;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final AppConfig appConfig = AppConfig(context);
+    return Row(
+      children: [
+        GestureDetector(
+          onTap: () => {
+            debugPrint('bottone menu premuto'),
+            globalKey.currentState!.openDrawer()
+          },
+          child: Container(
+            padding: EdgeInsets.all(width * 0.01),
+            decoration: BoxDecoration(
+              borderRadius:
+                  BorderRadius.circular(width * 0.02), // Bordi arrotondati
+              border: getCustomBorder(
+                width: width * 0.002,
+                appConfig: appConfig,
+              ),
+            ),
+            child: Icon(
+              Icons.grid_view_rounded, // Icona simile a quella mostrata
+              size: width * 0.08, // Dimensione dell'icona
+            ),
+          ),
+        ),
+        const Expanded(
+            child: SizedBox(
+          width: 10,
+        )),
+        Container(
+          width: width * 0.12,
+          height: width * 0.12,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(profileImage),
+              fit: BoxFit.cover,
+            ),
+            borderRadius: BorderRadius.all(Radius.circular(width * 0.5)),
+            border: Border.all(
+              color: Colors.white,
+              width: width * 0.001,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class MyPersonalRow extends StatelessWidget {
   const MyPersonalRow({
     super.key,
     required this.width,
     required this.titolo,
     required this.height,
-    required this.appConfig,
   });
 
   final double width;
   final double height;
   final String titolo;
-  final AppConfig appConfig;
 
   @override
   Widget build(BuildContext context) {
+
+    final AppConfig appConfig = AppConfig(context);
     return Container(
       padding: EdgeInsets.only(
           top: height * 0.035,
@@ -322,7 +356,7 @@ class MyPersonalRow extends StatelessWidget {
               Text(
                 'Vedi tutti',
                 style: TextStyle(
-                  fontSize: width * 0.041,
+                  fontSize: width * 0.035,
                 ),
               ),
               SizedBox(
@@ -333,7 +367,9 @@ class MyPersonalRow extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => AllEventsScreen(titolo: titolo)),
+                        builder: (context) => const AllEventsScreen(
+                              titolo: 'titolo',
+                            )),
                   ),
                 },
                 child: Container(
@@ -344,7 +380,7 @@ class MyPersonalRow extends StatelessWidget {
                         width * 0.02), // Bordi arrotondati
                     border: getCustomBorder(
                       appConfig: appConfig,
-                      width: width * smallRoutingButtonBorderThickness,
+                      width: width * 0.0015,
                     ),
                   ),
                   child: Icon(
@@ -370,7 +406,6 @@ class MyConsigliatiCard extends StatelessWidget {
     required this.date,
     required this.image,
     required this.title,
-    required this.appConfig,
   });
 
   final double height;
@@ -378,10 +413,11 @@ class MyConsigliatiCard extends StatelessWidget {
   final String title;
   final String date;
   final String image;
-  final AppConfig appConfig;
 
   @override
   Widget build(BuildContext context) {
+
+    final AppConfig appConfig = AppConfig(context);
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -399,8 +435,7 @@ class MyConsigliatiCard extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
             side: getCustomBorderSide(
-                appConfig: appConfig,
-                width: width * bigRecommendedEventsCardBorderThickness),
+                appConfig: appConfig, width: width * 0.0015),
           ),
           child: Stack(children: [
             ClipRRect(
@@ -453,7 +488,6 @@ class MyEventCard extends StatelessWidget {
     required this.titolo,
     required this.luogo,
     required this.dataInizio,
-    required this.appConfig,
   });
 
   final double height;
@@ -462,10 +496,12 @@ class MyEventCard extends StatelessWidget {
   final String titolo;
   final String luogo;
   final String dataInizio;
-  final AppConfig appConfig;
 
   @override
   Widget build(BuildContext context) {
+
+    final AppConfig appConfig = AppConfig(context);
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -481,7 +517,7 @@ class MyEventCard extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
           border: getCustomBorder(
             appConfig: appConfig,
-            width: width * smallMyEventsCardBorderThickness,
+            width: width * 0.0015,
           ),
         ),
         child: Row(
@@ -561,6 +597,217 @@ class MyEventCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class MyAppDrawer extends StatelessWidget {
+  const MyAppDrawer({
+    super.key,
+    required this.height,
+    required this.width,
+  });
+
+  final double height;
+  final double width;
+
+  @override
+  Widget build(BuildContext context) {
+    //final provider = Provider.of<ThemeProvider>(context);
+
+    final AppConfig appConfig = AppConfig(context);
+
+    return Drawer(
+      width: width * 0.7,
+      child: Container(
+        padding: EdgeInsets.only(
+            top: height * 0.1, left: width * 0.08, right: width * 0.08),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ItemForMenu(
+              height: height,
+              width: width,
+              icon: Icons.arrow_back_rounded,
+              title: 'Menù',
+              isTitle: true,
+              onTap: () => Navigator.pop(
+                context,
+              ),
+            ),
+            Divider(
+              height: height * 0.06,
+              thickness: width * 0.001,
+            ),
+            ItemForMenu(
+              height: height,
+              width: width,
+              icon: Icons.person_3_rounded,
+              title: 'Info personali',
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const PersonalScreen()),
+              ),
+            ),
+            ItemForMenu(
+              height: height,
+              width: width,
+              icon: Icons.add,
+              title: 'Crea evento',
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AddEventScreen(),
+                ),
+              ),
+            ),
+            ItemForMenu(
+              height: height,
+              width: width,
+              icon: Icons.bug_report_rounded,
+              title: 'Report a bug',
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const FAQScreen()),
+              ),
+            ),
+            ItemForMenu(
+              height: height,
+              width: width,
+              icon: Icons.add,
+              title: 'FAQ',
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const FAQScreen()),
+              ),
+            ),
+            Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(
+                      right: width * 0.05,
+                      left: width * 0.01,
+                      top: height * 0.01,
+                      bottom: height * 0.01),
+                  child: GestureDetector(
+                    onTap: () => {
+                    BrightnessManager().toggleBrightness()
+                      //provider.toggleTheme()
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(width * 0.012),
+                      decoration: BoxDecoration(
+                        // Colore di sfondo
+                        borderRadius: BorderRadius.circular(
+                            width * 0.02), // Bordi arrotondati
+                        border: getCustomBorder(
+                          appConfig: appConfig,
+                          width: width * 0.0015,
+                        ),
+                      ),
+                      child: Icon(
+                          size: width * 0.06,
+                          Icons
+                              .dark_mode //provider.isLight ? Icons.dark_mode : Icons.sunny, // Dimensione dell'icona
+                          ),
+                    ),
+                  ),
+                ),
+                Text(
+                  'asd', //provider.isLight ? 'Night Mode' : 'Day Mode',
+                  style: TextStyle(
+                    fontSize: width * 0.04,
+                  ),
+                ),
+              ],
+            ),
+            Divider(
+              height: height * 0.06,
+              thickness: width * 0.001,
+            ),
+            ItemForMenu(
+              height: height,
+              width: width,
+              icon: Icons.logout_rounded,
+              title: 'Log out',
+              onTap: () => logout(context),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void logout(context) async {
+    final FirebaseAuthService authService = FirebaseAuthService();
+    await authService.signOut(context);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const Wrapper(),
+      ),
+    );
+  }
+}
+
+class ItemForMenu extends StatelessWidget {
+  const ItemForMenu({
+    super.key,
+    required this.height,
+    required this.width,
+    required this.icon,
+    required this.title,
+    required this.onTap,
+    this.isTitle = false,
+  });
+
+  final double height;
+  final double width;
+  final IconData icon;
+  final String title;
+  final void Function() onTap;
+  final bool isTitle;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final AppConfig appConfig = AppConfig(context);
+
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: height * 0.01),
+      child: Row(
+        children: [
+          Container(
+            margin: EdgeInsets.only(right: width * 0.05, left: width * 0.01),
+            child: GestureDetector(
+              onTap: onTap,
+              child: Container(
+                padding: EdgeInsets.all(width * 0.012),
+                decoration: BoxDecoration(
+                  // Colore di sfondo
+                  borderRadius:
+                      BorderRadius.circular(width * 0.02), // Bordi arrotondati
+                  border: getCustomBorder(
+                    appConfig: appConfig,
+                    width: width * 0.0015,
+                  ),
+                ),
+                child: Icon(
+                  size: width * 0.06,
+                  icon, // Dimensione dell'icona
+                ),
+              ),
+            ),
+          ),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: isTitle ? width * 0.05 : width * 0.04,
+              fontWeight: isTitle ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ],
       ),
     );
   }
