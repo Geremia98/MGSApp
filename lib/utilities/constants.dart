@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 const String stringa = 'Ciao sono una costante';
 
 const Map<String, String> constantDropDownCountryList = {'IT': 'Italia', 'ES' : 'Spain'};

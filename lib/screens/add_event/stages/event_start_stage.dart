@@ -6,9 +6,7 @@ import 'package:mgs_app2/screens/add_event/add_event_controller.dart';
 import '../../../services/translator/translator.dart';
 import '../../../utilities/app_config.dart';
 import '../../../utilities/utils.dart';
-import '../../../widgets/button.dart';
 import '../../../widgets/font.dart';
-import '../../../widgets/text_field.dart';
 import '../../../widgets/title.dart';
 
 enum Months {
@@ -60,7 +58,6 @@ class _TitleStageState extends State<EventStartStage> {
   @override
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
-    final Translator translator = Translator();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

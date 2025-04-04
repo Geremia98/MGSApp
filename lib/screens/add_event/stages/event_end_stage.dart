@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mgs_app2/screens/add_event/add_event_controller.dart';
@@ -58,7 +57,6 @@ class _TitleStageState extends State<EventEndStage> {
   @override
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
-    final Translator translator = Translator();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

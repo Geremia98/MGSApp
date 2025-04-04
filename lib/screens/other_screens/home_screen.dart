@@ -317,7 +317,7 @@ class MyPersonalRow extends StatelessWidget {
               Text(
                 'Vedi tutti',
                 style: TextStyle(
-                  fontSize: width * 0.035,
+                  fontSize: width * 0.041,
                 ),
               ),
               SizedBox(

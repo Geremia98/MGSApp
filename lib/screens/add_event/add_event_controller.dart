@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/models/event_firestore.dart';
 import 'package:mgs_app2/models/event_model.dart';

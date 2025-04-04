@@ -1,11 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mgs_app2/screens/add_event/add_event_controller.dart';
-
-import '../../../models/image_model.dart';
-import '../../../services/translator/translator.dart';
 import '../../../utilities/app_config.dart';
 import '../../../widgets/image_upload.dart';
-import '../../../widgets/text_field.dart';
 import '../../../widgets/title.dart';
 
 class EventImageStage extends StatefulWidget {
@@ -34,7 +30,6 @@ class _TitleStageState extends State<EventImageStage> {
   @override
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
-    final Translator translator = Translator();
 
     controller.setCurrentStageValid(controller.getTitle().isNotEmpty);
 

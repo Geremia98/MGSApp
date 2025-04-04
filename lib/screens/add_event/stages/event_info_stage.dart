@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mgs_app2/screens/add_event/add_event_controller.dart';
 
-import '../../../services/translator/translator.dart';
 import '../../../utilities/app_config.dart';
 import '../../../widgets/text_field.dart';
 import '../../../widgets/title.dart';
@@ -31,7 +30,6 @@ class _TitleStageState extends State<EventInfoStage> {
   @override
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
-    final Translator translator = Translator();
 
     controller.setCurrentStageValid(controller.getLocation().isNotEmpty);
 

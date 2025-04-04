@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mgs_app2/models/event_model.dart';
-import 'package:mgs_app2/models/user_model.dart';
-
 import '../services/firebase/references.dart';
 
 class EventFirestore {
