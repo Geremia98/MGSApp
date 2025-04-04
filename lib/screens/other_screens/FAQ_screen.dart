@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/models/faq_couple.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-import 'package:mgs_app2/utilities/constants.dart';
+import 'package:mgs_app2/utilities/constants_strings.dart';
 
 class FAQScreen extends StatefulWidget {
   const FAQScreen({super.key});

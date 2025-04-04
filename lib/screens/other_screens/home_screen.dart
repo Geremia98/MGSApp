@@ -1,6 +1,7 @@
 import 'package:mgs_app2/screens/other_screens/all_events_screen.dart';
 import 'package:mgs_app2/screens/other_screens/event_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/widgets/my_app_drawer.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/theme_colors.dart';
@@ -38,8 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   SortOfAppBar(
+                    iconData: Icons.grid_view_rounded,
+                      function: _globalKey.currentState!.openDrawer(),
                       appConfig: appConfig,
-                      globalKey: _globalKey,
                       width: width,
                       profileImage: 'assets/images/male.jpg'),
                   EventiDelMeseReminder(
@@ -87,8 +89,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: width,
                       height: height,
                       titolo: 'I miei eventi'),
-                  
-                  //mi tocca mettere questa schifezza altrimenti 
+
+                  //mi tocca mettere questa schifezza altrimenti
                   //non riesco avisualizzaere correttamente la lista
                   SizedBox(
                     height: height * 0.4,
@@ -146,28 +148,26 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class SortOfAppBar extends StatelessWidget {
-  const SortOfAppBar({
-    super.key,
-    required this.globalKey,
-    required this.width,
-    required this.profileImage,
-    required this.appConfig,
-  });
+  const SortOfAppBar(
+      {super.key,
+      required this.width,
+      required this.iconData,
+      required this.profileImage,
+      required this.appConfig,
+      required this.function});
 
-  final GlobalKey<ScaffoldState> globalKey;
   final double width;
   final String profileImage;
   final AppConfig appConfig;
+  final void function;
+  final IconData iconData;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         GestureDetector(
-          onTap: () => {
-            debugPrint('bottone menu premuto'),
-            globalKey.currentState!.openDrawer()
-          },
+          onTap: () => {function},
           child: Container(
             padding: EdgeInsets.all(width * 0.01),
             decoration: BoxDecoration(
@@ -175,11 +175,11 @@ class SortOfAppBar extends StatelessWidget {
                   BorderRadius.circular(width * 0.02), // Bordi arrotondati
               border: getCustomBorder(
                 appConfig: appConfig,
-                width: width * 0.001,
+                width: width * bigRoutingButtonBorderThickness,
               ),
             ),
             child: Icon(
-              Icons.grid_view_rounded, // Icona simile a quella mostrata
+              iconData, // Icona simile a quella mostrata
               size: width * 0.08, // Dimensione dell'icona
             ),
           ),
@@ -196,7 +196,8 @@ class SortOfAppBar extends StatelessWidget {
               image: AssetImage(profileImage),
               fit: BoxFit.cover,
             ),
-            borderRadius: BorderRadius.all(Radius.circular(width * 0.5)),
+            borderRadius: BorderRadius.all(
+                Radius.circular(width * homeScreenProfilePicRadius)),
             border: Border.all(
               color: Colors.white,
               width: width * 0.001,
@@ -237,7 +238,7 @@ class EventiDelMeseReminder extends StatelessWidget {
         ],
         border: getCustomBorder(
           appConfig: appConfig,
-          width: width * 0.0005,
+          width: width * monthEventsReminderBorderThickness,
         ),
       ),
       child: Row(
@@ -283,8 +284,6 @@ class EventiDelMeseReminder extends StatelessWidget {
     );
   }
 }
-
-
 
 class MyPersonalRow extends StatelessWidget {
   const MyPersonalRow({
@@ -345,7 +344,7 @@ class MyPersonalRow extends StatelessWidget {
                         width * 0.02), // Bordi arrotondati
                     border: getCustomBorder(
                       appConfig: appConfig,
-                      width: width * 0.0005,
+                      width: width * smallRoutingButtonBorderThickness,
                     ),
                   ),
                   child: Icon(
@@ -400,7 +399,8 @@ class MyConsigliatiCard extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
             side: getCustomBorderSide(
-                appConfig: appConfig, width: width * 0.0005),
+                appConfig: appConfig,
+                width: width * bigRecommendedEventsCardBorderThickness),
           ),
           child: Stack(children: [
             ClipRRect(
@@ -481,7 +481,7 @@ class MyEventCard extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
           border: getCustomBorder(
             appConfig: appConfig,
-            width: width * 0.0004,
+            width: width * smallMyEventsCardBorderThickness,
           ),
         ),
         child: Row(

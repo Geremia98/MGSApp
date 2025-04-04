@@ -3,7 +3,7 @@ import 'package:mgs_app2/screens/add_event/add_event_screen.dart';
 import 'package:mgs_app2/screens/other_screens/faq_screen.dart';
 import 'package:mgs_app2/screens/other_screens/personal_screen.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-import 'package:mgs_app2/utilities/constants.dart';
+import 'package:mgs_app2/utilities/constants_strings.dart';
 import 'package:mgs_app2/utilities/theme_colors.dart';
 
 class MyAppDrawer extends StatelessWidget {
