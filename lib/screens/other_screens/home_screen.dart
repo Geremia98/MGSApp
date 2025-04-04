@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as i;
 import 'package:mgs_app2/models/event_firestore.dart';
 import 'package:mgs_app2/screens/other_screens/all_events_screen.dart';
 import 'package:mgs_app2/screens/other_screens/event_screen.dart';
@@ -74,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 MyPersonalRow(
                     width: width, height: height, titolo: 'Consigliati'),
                 SizedBox(
-                  height: height * 0.2,
+                  height: height * 0.23,
                   child: FutureBuilder(
                       future: retrieveEvents,
                       builder: (BuildContext context,
@@ -102,8 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               height: height,
                               width: width,
                               image: 'assets/images/party.png',
-                              date: DateFormat('dd/MM/yyyy')
-                                  .format(event.start ?? DateTime.now()),
+                              date: formatDate(event.start),
                               title: event.title,
                             );
                           },
@@ -133,15 +133,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: height * 0.4,
                         child: ListView.builder(
                           scrollDirection: Axis.vertical,
-                          itemCount: math.max(snap.data!.length, 3),
+                          itemCount: math.min(snap.data!.length, 3),
                           itemBuilder: (BuildContext context, int index) {
                             EventModel event = snap.data![index];
                             return MyEventCard(
                               height: height,
                               width: width,
                               image: 'assets/images/party.png',
-                              dataInizio: DateFormat('dd/MM/yyyy')
-                                  .format(event.start ?? DateTime.now()),
+                              dataInizio: formatDate(event.start),
                               titolo: event.title,
                               luogo: event.location,
                             );
@@ -155,6 +154,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  String formatDate(DateTime? date) {
+
+    i.Intl.defaultLocale = 'it_IT';
+
+    return i.DateFormat('d MMMM').format(date ?? DateTime.now());
+
   }
 
   List<Widget> buildEventsWidget(List<EventModel> events) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mgs_app2/models/event_firestore.dart';
 import 'package:mgs_app2/models/event_model.dart';
 import 'package:mgs_app2/models/image_model.dart';
+import 'package:mgs_app2/models/user_model.dart';
 
 
 enum AddEventStage {
@@ -106,6 +107,7 @@ class AddEventController {
       title: title,
       desc: description,
       price: price,
+      creatorUid: UserModel.uid,
     );
 
     EventFirestore eventFirestore = EventFirestore();
