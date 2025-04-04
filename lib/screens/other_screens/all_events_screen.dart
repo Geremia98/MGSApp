@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-import 'package:mgs_app2/utilities/theme_colors.dart' as MyTheme;
+import 'package:mgs_app2/utilities/theme_colors.dart';
 
 class AllEventsScreen extends StatefulWidget {
   final String titolo;
@@ -13,13 +13,11 @@ class AllEventsScreen extends StatefulWidget {
 class _AllEventsScreenState extends State<AllEventsScreen> {
   @override
   Widget build(BuildContext context) {
-   
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: Stack(
-        children: [
+      body: Stack(children: [
         SafeArea(
           bottom: false,
           child: SingleChildScrollView(
@@ -75,9 +73,7 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
                     ],
                   ),
                   MyPersonalRow(
-                      width: width,
-                      titolo: widget.titolo,
-                      height: height),
+                      width: width, titolo: widget.titolo, height: height),
                   ButtonRow(
                     height: height,
                     width: width,
@@ -174,7 +170,7 @@ class MyEventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
-    
+
     return GestureDetector(
       onTap: () {},
       child: Container(
@@ -183,10 +179,10 @@ class MyEventCard extends StatelessWidget {
             horizontal: width * 0.025, vertical: width * 0.025),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
-          border: MyTheme.getCustomBorder(
-                appConfig: appConfig,
-                width: width*0.0015,
-              ),
+          border: getCustomBorder(
+            appConfig: appConfig,
+            width: width * 0.0015,
+          ),
         ),
         child: Row(
           children: [
@@ -314,8 +310,7 @@ class MyEventCard extends StatelessWidget {
                         ),
                         Container(
                           margin: EdgeInsets.only(left: width * 0.001),
-                          child: LikeButton(
-                              width: width),
+                          child: LikeButton(width: width),
                         )
                       ],
                     ),
@@ -529,12 +524,14 @@ class _FilterButtonState extends State<FilterButton> {
       child: Container(
           padding: EdgeInsets.all(widget.width * 0.01),
           decoration: BoxDecoration(
-            color:
-                _isSelected ? widget.coloreBottonePremuto : Theme.of(context).scaffoldBackgroundColor,
+            color: _isSelected
+                ? widget.coloreBottonePremuto
+                : Theme.of(context).scaffoldBackgroundColor,
             // Colore di sfondo
             borderRadius:
                 BorderRadius.circular(widget.width * 0.02), // Bordi arrotondati
-            border: Border.all( // Colore del bordo
+            border: Border.all(
+              // Colore del bordo
               width: widget.width * 0.0015, // Larghezza del bordo
             ),
           ),
@@ -556,7 +553,8 @@ class _FilterButtonState extends State<FilterButton> {
                         child: Text(
                           'X',
                           style: TextStyle(
-                              fontSize: widget.width * 0.04,),
+                            fontSize: widget.width * 0.04,
+                          ),
                         ),
                       ),
                     )

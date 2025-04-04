@@ -1,7 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:mgs_app2/navigator/app_navigator.dart';
 import 'package:mgs_app2/screens/login_screens/login_screen.dart';
 import 'package:mgs_app2/screens/other_screens/home_screen.dart';
 import 'package:mgs_app2/services/translator/provider.dart';

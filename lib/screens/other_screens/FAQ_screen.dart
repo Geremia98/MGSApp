@@ -1,20 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mgs_app2/models/faq_couple.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-
-List<FAQCouple> faqsList = [
-  FAQCouple(
-      question: 'Come posso creare un evento?',
-      answer: 'Questo è un testo completamente a caso con lo scopo di vedere come sta graficamente la rispos all\'interno delle pagine.\nDiciamo che la divisione in paragrafi aiuta la lettura perchè aiuta a non affaticare la vista.'),
-  FAQCouple(
-      question: 'Posso creare un evento per un altro gruppo?',
-      answer: 'Questo è un testo completamente a caso con lo scopo di vedere come sta graficamente la rispos all\'interno delle pagine.\nDiciamo che la divisione in paragrafi aiuta la lettura perchè aiuta a non affaticare la vista.'),
-  FAQCouple(
-      question: 'È possibile creare un sottogruppo all\'interno del mio gruppo?',
-      answer: 'Questo è un testo completamente a caso con lo scopo di vedere come sta graficamente la rispos all\'interno delle pagine.\nDiciamo che la divisione in paragrafi aiuta la lettura perchè aiuta a non affaticare la vista.'),
-  FAQCouple(
-    question: 'Come creo un codice sconto per i miei ragazzi?',
-    answer: 'Questo è un testo completamente a caso con lo scopo di vedere come sta graficamente la rispos all\'interno delle pagine.\nDiciamo che la divisione in paragrafi aiuta la lettura perchè aiuta a non affaticare la vista.'),
-];
+import 'package:mgs_app2/utilities/constants.dart';
 
 class FAQScreen extends StatefulWidget {
   const FAQScreen({super.key});
@@ -235,9 +222,4 @@ class FAQList extends StatelessWidget {
   }
 }
 
-class FAQCouple {
-  final String question;
-  final String answer;
 
-  FAQCouple({required this.question, required this.answer});
-}
