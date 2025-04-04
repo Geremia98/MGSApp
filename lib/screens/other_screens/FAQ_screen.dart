@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mgs_app2/utilities/app_config.dart';
 
 List<FAQCouple> faqsList = [
   FAQCouple(
@@ -27,6 +28,7 @@ class _FAQScreenState extends State<FAQScreen> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
       body: Stack(children: [
@@ -51,6 +53,7 @@ class _FAQScreenState extends State<FAQScreen> {
                           // Bordi arrotondati
                           border: Border.all(
                             width: width * 0.002,
+                            color: appConfig.getTheme().cardColor
                             // Larghezza del bordo
                           ),
                         ),

@@ -1,12 +1,10 @@
 import 'package:line_icons/line_icons.dart';
 import 'package:mgs_app2/models/user_model.dart';
-import 'package:mgs_app2/screens/login_screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/login_screens/optional_registration_screen1.dart';
 import 'package:mgs_app2/screens/login_screens/registration_controller.dart';
 import 'package:mgs_app2/screens/login_screens/registration_screen2.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-import 'package:mgs_app2/utilities/theme_data.dart';
 import 'package:mgs_app2/utilities/utils.dart';
 import 'package:mgs_app2/widgets/appbar.dart';
 import 'package:mgs_app2/widgets/font.dart';
@@ -27,7 +25,6 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
 
   int _feelAge = 0;
   late bool _isDisabled;
-  late bool _isEternoGiovane;
   late Set<UserGender> _selected;
 
   TextEditingController textFieldValue = TextEditingController();
@@ -40,7 +37,6 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
     _selected = {controller.gender};
 
     _isDisabled = true;
-    _isEternoGiovane = false;
   }
 
   void calculateWetherEnablingTheButton() {
@@ -59,10 +55,6 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
   }
 
   bool isEternoGiovane() {
-
-    if (controller.birthDate == null) {
-      return false;
-    }
 
     return DateTime.now().year - controller.birthDate!.year - 2 > _feelAge;
   }
@@ -194,8 +186,7 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                           showSelectedIcon: false,
                           style: ButtonStyle(
                             side: MaterialStateProperty.all(BorderSide(
-                                color: MyTheme.getCiSonoButtonColor(
-                                    context: context))),
+                                color: ThemeData().hoverColor)),
                             backgroundColor:
                                 MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {

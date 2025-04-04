@@ -1,4 +1,3 @@
-import 'package:mgs_app2/screens/login_screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/login_screens/registration_controller.dart';
 import 'package:mgs_app2/screens/login_screens/registration_screen2.dart';
@@ -17,7 +16,6 @@ class OptionalRegistrationScreen2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
     final AppConfig appConfig = AppConfig(context);

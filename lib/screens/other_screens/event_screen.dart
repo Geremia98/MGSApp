@@ -1,6 +1,6 @@
+import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/models.dart';
 import 'package:flutter/material.dart';
-import 'package:mgs_app2/utilities/theme_data.dart';
 
 class EventScreen extends StatefulWidget {
   
@@ -27,6 +27,7 @@ class _EventScreenState extends State<EventScreen> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
       body: Stack(
@@ -52,7 +53,7 @@ class _EventScreenState extends State<EventScreen> {
                           padding: EdgeInsets.all(width * 0.02),
                           decoration: BoxDecoration(
                             // Colore di sfondo
-                            color: Theme.of(context).scaffoldBackgroundColor,
+                            color: appConfig.getTheme().scaffoldBackgroundColor,
                             borderRadius: BorderRadius.circular(
                                 width * 0.02), // Bordi arrotondati
                             border: Border.all(
@@ -105,7 +106,7 @@ class _EventScreenState extends State<EventScreen> {
                           widget.event.descrizione,
                           style: TextStyle(
                               fontSize: 16,
-                              color: MyTheme.getCustomDescriptionColor(context: context),
+                              color: appConfig.getTheme().dividerColor,
                           ),
                         ),
                       ),
@@ -174,7 +175,7 @@ class _EventScreenState extends State<EventScreen> {
                           child: ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: MyTheme.getCiSonoButtonColor(context: context),
+                              backgroundColor: ThemeData().hoverColor,
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 50, vertical: 16),
                               shape: RoundedRectangleBorder(
@@ -184,7 +185,7 @@ class _EventScreenState extends State<EventScreen> {
                             child: Text(
                               'Ci sono!',
                               style: TextStyle(
-                                color: MyTheme.getCiSonoButtonTextColor(context: context),
+                                color: ThemeData().hoverColor,
                                 fontSize: width*0.05,
                                 fontWeight: FontWeight.bold
                               ),
@@ -225,6 +226,8 @@ class EventDetailBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppConfig appConfig = AppConfig(context);
+
     return Container(
       height: height * 0.09,
       child: Row(
@@ -236,7 +239,7 @@ class EventDetailBox extends StatelessWidget {
             child: Icon(
               icon,
               size: width * 0.1,
-              color: MyTheme.getLighter(context: context),
+              color: appConfig.getTheme().focusColor,
             ),
           ),
           Column(

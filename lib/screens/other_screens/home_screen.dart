@@ -1,11 +1,10 @@
-import 'package:mgs_app2/screens/other_screens/creation_event_screen.dart';
 import 'package:mgs_app2/screens/other_screens/all_events_screen.dart';
 import 'package:mgs_app2/screens/other_screens/event_screen.dart';
 import 'package:mgs_app2/screens/other_screens/personal_screen.dart';
 import 'package:mgs_app2/screens/other_screens/FAQ_screen.dart';
-import 'package:mgs_app2/screens/other_screens/FAQ_2_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:mgs_app2/utilities/theme_data.dart';
+import 'package:mgs_app2/utilities/app_config.dart';
+import 'package:mgs_app2/utilities/theme_colors.dart' as MyTheme;
 
 import '../add_event/add_event_screen.dart';
 
@@ -23,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
       key: _globalKey,
@@ -41,20 +41,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   SortOfAppBar(
+                    appConfig: appConfig,
                       globalKey: _globalKey,
                       width: width,
                       profileImage: 'assets/images/male.jpg'),
                   EventiDelMeseReminder(
+                    appConfig: appConfig,
                       width: width,
-                      coloreReminder:
-                          MyTheme.getSfondoReminder(context: context)),
+                      coloreReminder: appConfig.getTheme().highlightColor),
                   MyPersonalRow(
+                    appConfig: appConfig,
                       width: width, height: height, titolo: 'Consigliati'),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
                         MyConsigliatiCard(
+                          appConfig: appConfig,
                           height: height,
                           width: width,
                           title: 'Party di fine anno',
@@ -62,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           image: 'assets/images/party.png',
                         ),
                         MyConsigliatiCard(
+                          appConfig: appConfig,
                           height: height,
                           width: width,
                           title: 'Giardinaggio',
@@ -69,6 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           image: 'assets/images/giardinaggio.png',
                         ),
                         MyConsigliatiCard(
+                          appConfig: appConfig,
                           height: height,
                           width: width,
                           title: 'Meditazione',
@@ -79,6 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   MyPersonalRow(
+                    appConfig: appConfig,
                       width: width, height: height, titolo: 'I miei eventi'),
                   SizedBox(
                     height: height * 0.4,
@@ -87,6 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       physics: const AlwaysScrollableScrollPhysics(),
                       children: [
                         MyEventCard(
+                          appConfig: appConfig,
                           height: height,
                           width: width,
                           image: 'assets/images/meditazione.png',
@@ -95,6 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           luogo: 'Luogo Evento',
                         ),
                         MyEventCard(
+                          appConfig: appConfig,
                           height: height,
                           width: width,
                           image: 'assets/images/ballo.png',
@@ -103,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           luogo: 'Milano',
                         ),
                         MyEventCard(
+                          appConfig: appConfig,
                           height: height,
                           width: width,
                           image: 'assets/images/giardinaggio.png',
@@ -111,6 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           luogo: 'Oratorio Turro',
                         ),
                         MyEventCard(
+                          appConfig: appConfig,
                           height: height,
                           width: width,
                           image: 'assets/images/party.png',
@@ -136,10 +146,12 @@ class EventiDelMeseReminder extends StatelessWidget {
     super.key,
     required this.width,
     required this.coloreReminder,
+    required this.appConfig,
   });
 
   final double width;
   final Color coloreReminder;
+  final AppConfig appConfig;
 
   @override
   Widget build(BuildContext context) {
@@ -157,8 +169,8 @@ class EventiDelMeseReminder extends StatelessWidget {
           ),
         ],
         border: MyTheme.getCustomBorder(
-          context: context,
-          width: width * 0.0015,
+          appConfig: appConfig,
+          width: width * 0.0005,
         ),
       ),
       child: Row(
@@ -211,11 +223,13 @@ class SortOfAppBar extends StatelessWidget {
     required this.globalKey,
     required this.width,
     required this.profileImage,
+    required this.appConfig,
   });
 
   final GlobalKey<ScaffoldState> globalKey;
   final double width;
   final String profileImage;
+  final AppConfig appConfig;
 
   @override
   Widget build(BuildContext context) {
@@ -232,8 +246,8 @@ class SortOfAppBar extends StatelessWidget {
               borderRadius:
                   BorderRadius.circular(width * 0.02), // Bordi arrotondati
               border: MyTheme.getCustomBorder(
-                context: context,
-                width: width * 0.002,
+                appConfig: appConfig,
+                width: width * 0.001,
               ),
             ),
             child: Icon(
@@ -272,11 +286,13 @@ class MyPersonalRow extends StatelessWidget {
     required this.width,
     required this.titolo,
     required this.height,
+    required this.appConfig,
   });
 
   final double width;
   final double height;
   final String titolo;
+  final AppConfig appConfig;
 
   @override
   Widget build(BuildContext context) {
@@ -309,10 +325,10 @@ class MyPersonalRow extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () => {
-
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) =>  AllEventsScreen(titolo: titolo)),
+                    MaterialPageRoute(
+                        builder: (context) => AllEventsScreen(titolo: titolo)),
                   ),
                 },
                 child: Container(
@@ -322,8 +338,8 @@ class MyPersonalRow extends StatelessWidget {
                     borderRadius: BorderRadius.circular(
                         width * 0.02), // Bordi arrotondati
                     border: MyTheme.getCustomBorder(
-                      context: context,
-                      width: width * 0.0015,
+                      appConfig: appConfig,
+                      width: width * 0.0005,
                     ),
                   ),
                   child: Icon(
@@ -349,6 +365,7 @@ class MyConsigliatiCard extends StatelessWidget {
     required this.date,
     required this.image,
     required this.title,
+    required this.appConfig,
   });
 
   final double height;
@@ -356,6 +373,7 @@ class MyConsigliatiCard extends StatelessWidget {
   final String title;
   final String date;
   final String image;
+  final AppConfig appConfig;
 
   @override
   Widget build(BuildContext context) {
@@ -363,8 +381,10 @@ class MyConsigliatiCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) =>  EventScreen(),
-        ),);
+          MaterialPageRoute(
+            builder: (context) => EventScreen(),
+          ),
+        );
       },
       child: Container(
         constraints:
@@ -374,7 +394,7 @@ class MyConsigliatiCard extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
             side: MyTheme.getCustomBorderSide(
-                context: context, width: width * 0.0015),
+                appConfig: appConfig, width: width * 0.0005),
           ),
           child: Stack(children: [
             ClipRRect(
@@ -427,6 +447,7 @@ class MyEventCard extends StatelessWidget {
     required this.titolo,
     required this.luogo,
     required this.dataInizio,
+    required this.appConfig,
   });
 
   final double height;
@@ -435,6 +456,7 @@ class MyEventCard extends StatelessWidget {
   final String titolo;
   final String luogo;
   final String dataInizio;
+  final AppConfig appConfig;
 
   @override
   Widget build(BuildContext context) {
@@ -452,8 +474,8 @@ class MyEventCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
           border: MyTheme.getCustomBorder(
-            context: context,
-            width: width * 0.0015,
+            appConfig: appConfig,
+            width: width * 0.0004,
           ),
         ),
         child: Row(
@@ -550,11 +572,12 @@ class MyAppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final provider = Provider.of<ThemeProvider>(context);
+    final AppConfig appConfig = AppConfig(context);
 
     return Drawer(
       width: width * 0.7,
       child: Container(
+        color: appConfig.getTheme().scaffoldBackgroundColor,
         padding: EdgeInsets.only(
             top: height * 0.1, left: width * 0.08, right: width * 0.08),
         child: Column(
@@ -562,6 +585,7 @@ class MyAppDrawer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ItemForMenu(
+              appConfig: appConfig,
               height: height,
               width: width,
               icon: Icons.arrow_back_rounded,
@@ -576,6 +600,7 @@ class MyAppDrawer extends StatelessWidget {
               thickness: width * 0.001,
             ),
             ItemForMenu(
+              appConfig: appConfig,
               height: height,
               width: width,
               icon: Icons.person_3_rounded,
@@ -586,6 +611,7 @@ class MyAppDrawer extends StatelessWidget {
               ),
             ),
             ItemForMenu(
+              appConfig: appConfig,
               height: height,
               width: width,
               icon: Icons.add,
@@ -598,16 +624,18 @@ class MyAppDrawer extends StatelessWidget {
               ),
             ),
             ItemForMenu(
+              appConfig: appConfig,
               height: height,
               width: width,
               icon: Icons.bug_report_rounded,
               title: 'Report a bug',
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Faq2Screen()),
+                MaterialPageRoute(builder: (context) => const FAQScreen()),
               ),
             ),
             ItemForMenu(
+              appConfig: appConfig,
               height: height,
               width: width,
               icon: Icons.add,
@@ -617,7 +645,8 @@ class MyAppDrawer extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const FAQScreen()),
               ),
             ),
-            Row( //darkmode/lightmode
+            Row(
+              //darkmode/lightmode
               children: [
                 Container(
                   margin: EdgeInsets.only(
@@ -636,8 +665,8 @@ class MyAppDrawer extends StatelessWidget {
                         borderRadius: BorderRadius.circular(
                             width * 0.02), // Bordi arrotondati
                         border: MyTheme.getCustomBorder(
-                          context: context,
-                          width: width * 0.0015,
+                          appConfig: appConfig,
+                          width: width * 0.0005,
                         ),
                       ),
                       child: Icon(
@@ -661,6 +690,7 @@ class MyAppDrawer extends StatelessWidget {
               thickness: width * 0.001,
             ),
             ItemForMenu(
+              appConfig: appConfig,
               height: height,
               width: width,
               icon: Icons.logout_rounded,
@@ -685,6 +715,7 @@ class ItemForMenu extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.onTap,
+    required this.appConfig,
     this.isTitle = false,
   });
 
@@ -694,6 +725,7 @@ class ItemForMenu extends StatelessWidget {
   final String title;
   final void Function() onTap;
   final bool isTitle;
+  final AppConfig appConfig;
 
   @override
   Widget build(BuildContext context) {
@@ -712,8 +744,8 @@ class ItemForMenu extends StatelessWidget {
                   borderRadius:
                       BorderRadius.circular(width * 0.02), // Bordi arrotondati
                   border: MyTheme.getCustomBorder(
-                    context: context,
-                    width: width * 0.0015,
+                    appConfig: appConfig,
+                    width: width * 0.0005,
                   ),
                 ),
                 child: Icon(

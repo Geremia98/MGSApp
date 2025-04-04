@@ -6,9 +6,7 @@ import 'package:mgs_app2/screens/add_event/add_event_controller.dart';
 import '../../../services/translator/translator.dart';
 import '../../../utilities/app_config.dart';
 import '../../../utilities/utils.dart';
-import '../../../widgets/button.dart';
 import '../../../widgets/font.dart';
-import '../../../widgets/text_field.dart';
 import '../../../widgets/title.dart';
 
 enum Months {

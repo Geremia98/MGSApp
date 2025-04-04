@@ -1,9 +1,7 @@
 import 'package:mgs_app2/screens/login_screens/registration_controller.dart';
 import 'package:mgs_app2/screens/login_screens/registration_screen1.dart';
-import 'package:mgs_app2/screens/other_screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-import 'package:mgs_app2/utilities/theme_data.dart';
 import 'package:mgs_app2/widgets/font.dart';
 import 'package:mgs_app2/widgets/text_field.dart';
 
@@ -184,10 +182,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                   shape: const CircleBorder(),
-                                  backgroundColor: MyTheme.getCiSonoButtonColor(
-                                      context: context),
-                                  padding: EdgeInsets.all(10),
-                                  fixedSize: Size.fromHeight(55),
+                                  backgroundColor: ThemeData().hoverColor,
+                                  padding: const EdgeInsets.all(10),
+                                  fixedSize: const Size.fromHeight(55),
                                 ),
                                 child: Image.asset('assets/images/google.png'),
                               ),
@@ -200,8 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                   shape: const CircleBorder(),
-                                  backgroundColor: MyTheme.getCiSonoButtonColor(
-                                      context: context),
+                                  backgroundColor: ThemeData().hoverColor,
                                   padding: EdgeInsets.all(10),
                                   fixedSize: Size.fromHeight(55),
                                 ),

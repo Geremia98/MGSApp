@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mgs_app2/utilities/theme_data.dart';
-import 'package:mgs_app2/utilities/theme_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:mgs_app2/utilities/app_config.dart';
+import 'package:mgs_app2/utilities/theme_colors.dart' as MyTheme;
 
 class AllEventsScreen extends StatefulWidget {
   final String titolo;
@@ -82,7 +81,7 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
                   ButtonRow(
                     height: height,
                     width: width,
-                    coloreBottonePremuto: MyTheme.getSfondoReminder(context: context),
+                    coloreBottonePremuto: ThemeData().highlightColor,
                   ),
                   Container(
                     height: height * 0.9,
@@ -174,6 +173,8 @@ class MyEventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppConfig appConfig = AppConfig(context);
+    
     return GestureDetector(
       onTap: () {},
       child: Container(
@@ -183,7 +184,7 @@ class MyEventCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
           border: MyTheme.getCustomBorder(
-                context: context,
+                appConfig: appConfig,
                 width: width*0.0015,
               ),
         ),

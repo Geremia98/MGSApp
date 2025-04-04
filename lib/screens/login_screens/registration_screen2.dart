@@ -1,11 +1,7 @@
-import 'package:line_icons/line_icons.dart';
-import 'package:mgs_app2/screens/login_screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/login_screens/registration_controller.dart';
 import 'package:mgs_app2/screens/login_screens/registration_screen3.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-import 'package:mgs_app2/utilities/theme_data.dart';
-import 'package:mgs_app2/utilities/utils.dart';
 import 'package:mgs_app2/widgets/image_upload.dart';
 
 import '../../widgets/appbar.dart';
@@ -50,7 +46,6 @@ class _RegistrationScreen2State extends State<RegistrationScreen2> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
     final AppConfig appConfig = AppConfig(context);

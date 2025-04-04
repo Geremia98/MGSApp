@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mgs_app2/screens/on_boarding_screens/on_boarding_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -45,7 +44,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               child: Center(
                 child: FilledButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, OnBoardingScreen.id);
                   },
                   child: Text(
                     'Let\'s go',

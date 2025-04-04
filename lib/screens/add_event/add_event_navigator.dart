@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:mgs_app2/screens/add_event/add_event_controller.dart';
-import 'package:provider/provider.dart';
 
 import '../../services/translator/translator.dart';
 import '../../utilities/app_config.dart';

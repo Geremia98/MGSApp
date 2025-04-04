@@ -105,7 +105,7 @@ class AddEventController {
       end: endDate,
       title: title,
       desc: description,
-      price: price ?? 0.0,
+      price: price,
     );
 
     EventFirestore eventFirestore = EventFirestore();

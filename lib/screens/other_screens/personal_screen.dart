@@ -6,7 +6,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:mgs_app2/utilities/theme_data.dart';
+import 'package:mgs_app2/models/user_model.dart';
+import 'package:mgs_app2/utilities/app_config.dart';
+import 'package:mgs_app2/utilities/theme_colors.dart';
+import 'package:mgs_app2/widgets/button.dart';
+import 'package:mgs_app2/widgets/text_field.dart';
 
 class PersonalScreen extends StatefulWidget {
   const PersonalScreen({super.key});
@@ -18,6 +22,8 @@ class PersonalScreen extends StatefulWidget {
 class PersonalScreenState extends State<PersonalScreen> {
   @override
   Widget build(BuildContext context) {
+    final AppConfig appConfig = AppConfig(context);
+    
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
@@ -49,8 +55,8 @@ class PersonalScreenState extends State<PersonalScreen> {
                         // Colore di sfondo
                         borderRadius: BorderRadius.circular(
                             width * 0.02), // Bordi arrotondati
-                        border: MyTheme.getCustomBorder(
-                          context: context,
+                        border: getCustomBorder(
+                          appConfig: appConfig,
                           width: width * 0.002,
                         ),
                       ),
@@ -116,39 +122,17 @@ class PersonalScreenState extends State<PersonalScreen> {
               style: TextStyle(
                   fontWeight: FontWeight.bold, fontSize: height * 0.03),
             ),
-            GestureDetector(
-                    onTap: () => {
-                      Navigator.pop(
-                        context,
-                      )
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(width * 0.02),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(180, 71, 242, 159),
-                        // Colore di sfondo
-                        borderRadius: BorderRadius.circular(
-                            width * 0.04), // Bordi arrotondati
-                        border: MyTheme.getCustomBorder(
-                          context: context,
-                          width: width * 0.001,
-                        ),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: height*0.003, horizontal: width*0.1),
-                        child: Text(
-                          'Modifica',
-                          style: TextStyle(
-                            fontSize: height*0.02,
-                            fontWeight: FontWeight.bold
-                          ),
-                        ),
-                      )
-                    ),
-                  ),
+            ButtonText(text: 'Modifica', onTap: () {}),
+            
+                buildTextField(
+            appConfig,
+            textCapitalization: TextCapitalization.sentences,
+            hintText: UserModel.name,
+            maxLines: 1,
+            enabled: false
+          ),
           ],
         ),
-        
       ),
     );
   }

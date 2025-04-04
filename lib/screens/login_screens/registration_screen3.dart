@@ -5,7 +5,6 @@ import 'package:mgs_app2/screens/login_screens/registration_controller.dart';
 import 'package:mgs_app2/screens/login_screens/registration_scren4.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants.dart';
-import 'package:mgs_app2/utilities/theme_data.dart';
 import 'package:mgs_app2/widgets/selector.dart';
 import 'package:mgs_app2/widgets/text_field.dart';
 import 'dart:ui' as ui;
@@ -54,7 +53,6 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
     final AppConfig appConfig = AppConfig(context);
@@ -186,8 +184,7 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                           showSelectedIcon: false,
                           style: ButtonStyle(
                             side: MaterialStateProperty.all(BorderSide(
-                                color: MyTheme.getCiSonoButtonColor(
-                                    context: context))),
+                                color: ThemeData().hoverColor)),
                             backgroundColor:
                                 MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {

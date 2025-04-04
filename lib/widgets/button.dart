@@ -52,16 +52,16 @@ class ButtonIcon extends StatelessWidget {
                 ),
               ),
               isLoading
-                  ? SizedBox(
+                  ? const SizedBox(
                 width: 10,
               )
-                  : SizedBox(),
+                  : const SizedBox(),
               isLoading
                   ? CupertinoActivityIndicator(
                 color:
                 AppConfig(context).getTheme().scaffoldBackgroundColor,
               )
-                  : SizedBox(),
+                  : const SizedBox(),
             ],
           ),
         ),
