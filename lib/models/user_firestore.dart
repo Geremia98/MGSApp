@@ -37,6 +37,7 @@ class UserFirestore {
         firestoreUsersIspettoriaField: UserModel.ispettoria,
         firestoreUsersCountryField: UserModel.country,
         firestoreUsersBossCodeField: UserModel.bossCode,
+        firestoreUsersMyEventsListField : UserModel.myEventsList,
       });
 
       return true;

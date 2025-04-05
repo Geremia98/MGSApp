@@ -4,7 +4,6 @@ import 'package:mgs_app2/models/event_model.dart';
 import 'package:mgs_app2/models/image_model.dart';
 import 'package:mgs_app2/models/user_model.dart';
 
-
 enum AddEventStage {
   title,
   desc,
@@ -12,10 +11,11 @@ enum AddEventStage {
   end,
   banner,
   info,
+  targetGroup,
+  targetPerson,
 }
 
 class AddEventController {
-
   final PageController pageController;
 
   late AddEventStage _stage;
@@ -37,8 +37,14 @@ class AddEventController {
   String location = '';
   double price = 0;
 
-  bool isLoading = false;
+  String targetCountry = '';
+  String targetIspettoria = '';
+  String targetGroup = '';
 
+  String targetAge = '';
+  bool isJustForMales = false;
+
+  bool isLoading = false;
 
   AddEventController({
     required this.pageController,
@@ -46,7 +52,6 @@ class AddEventController {
     _stage = AddEventStage.values.first;
     isCurrentStageValid = false;
   }
-
 
   void setAnimateProgressBar(void Function() animateFunction) {
     _animateProgressBar ??= animateFunction;
@@ -97,7 +102,7 @@ class AddEventController {
     );
   }
 
-  void publish(BuildContext context) async{
+  void publish(BuildContext context) async {
     isLoading = true;
 
     EventModel eventModel = EventModel(
@@ -108,6 +113,11 @@ class AddEventController {
       desc: description,
       price: price,
       creatorUid: UserModel.uid,
+      targetCountry: targetCountry,
+      targetIspettoria: targetIspettoria,
+      targetGruppo: targetGroup,
+      targetAge: targetAge,
+      isJustForMales: isJustForMales,
     );
 
     EventFirestore eventFirestore = EventFirestore();
@@ -149,13 +159,22 @@ class AddEventController {
         {
           return location.isNotEmpty;
         }
+      case AddEventStage.targetGroup:
+        {
+          return targetCountry.isNotEmpty &
+              targetGroup.isNotEmpty &
+              targetIspettoria.isNotEmpty;
+        }
+      case AddEventStage.targetPerson:
+        {
+          return targetAge.isNotEmpty;
+        }
     }
   }
 
-  int getCurrentStageIndex() =>
-      AddEventStage.values.indexOf(
+  int getCurrentStageIndex() => AddEventStage.values.indexOf(
         AddEventStage.values.firstWhere(
-              (element) => element.name == _stage.name,
+          (element) => element.name == _stage.name,
         ),
       );
 
@@ -178,7 +197,6 @@ class AddEventController {
       updateStagesButton!();
     }
   }
-
 
   void setTitle(String title) {
     this.title = title;
@@ -216,6 +234,26 @@ class AddEventController {
     this.price = double.tryParse(price) ?? 0;
   }
 
+  void setCountry(String country) {
+    targetCountry = country;
+  }
+
+  void setIspettoria(String ispettoria) {
+    targetIspettoria = ispettoria;
+  }
+
+  void setGroup(String group) {
+    targetGroup = group;
+  }
+
+  void setAge(String age) {
+    targetAge = age;
+  }
+
+  void setSex(bool isJustForMales) {
+    this.isJustForMales = isJustForMales;
+  }
+
   ImageModel? getBanner() => bannerImage;
 
   DateTime? getStartDate() => startDate;
@@ -234,4 +272,13 @@ class AddEventController {
 
   String getLocation() => location;
 
+  String getCountry() => targetCountry;
+
+  String getIspettoria() => targetIspettoria;
+
+  String getGroup() => targetGroup;
+
+  String getAge() => targetAge;
+
+  bool getIsJustForMales() => isJustForMales;
 }

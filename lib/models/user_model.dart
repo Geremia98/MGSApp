@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mgs_app2/models/event_model.dart';
 
 import '../services/firebase/firestore/firestore_users_fields.dart';
 import 'image_model.dart';
@@ -20,14 +21,14 @@ class UserModel {
   static String ispettoria = '';
   static String country = '';
   static String bossCode = '';
-
+  static List<EventModel> myEventsList = [];
 
   UserModel.fromFirestore(User user, Map<String, dynamic> data) {
     uid = user.uid;
     email = user.email ?? '';
     profilePic = data.containsKey(firestoreUsersProfilePictureHQField)
         ? ImageModel(
-        downloadUrl: data[firestoreUsersProfilePictureHQField] as String)
+            downloadUrl: data[firestoreUsersProfilePictureHQField] as String)
         : null;
     bossCode = data.containsKey(firestoreUsersBossCodeField)
         ? data[firestoreUsersBossCodeField] as String
@@ -49,9 +50,12 @@ class UserModel {
         : '';
     gender = data.containsKey(firestoreUsersGenderField)
         ? UserGender.values.firstWhere(
-          (type) => type.name == data[firestoreUsersGenderField],
-      orElse: () => UserGender.male,
-    )
+            (type) => type.name == data[firestoreUsersGenderField],
+            orElse: () => UserGender.male,
+          )
         : UserGender.male;
+    myEventsList = data.containsKey(firestoreUsersMyEventsListField)
+        ? (data[firestoreUsersMyEventsListField] as List).whereType<EventModel>().toList()
+        : [];
   }
 }

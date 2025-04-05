@@ -8,4 +8,4 @@ const String firestoreUsersCountryField = 'country';
 const String firestoreUsersIspettoriaField = 'ispettoria';
 const String firestoreUsersBossCodeField = 'bossCode';
 const String firestoreUsersProfilePictureHQField = 'profilePictureDownloadURL';
-
+const String firestoreUsersMyEventsListField = 'myEventsList';

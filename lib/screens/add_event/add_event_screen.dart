@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:mgs_app2/screens/add_event/add_event_controller.dart';
@@ -9,6 +8,8 @@ import 'package:mgs_app2/screens/add_event/stages/event_end_stage.dart';
 import 'package:mgs_app2/screens/add_event/stages/event_image_stage.dart';
 import 'package:mgs_app2/screens/add_event/stages/event_info_stage.dart';
 import 'package:mgs_app2/screens/add_event/stages/event_start_stage.dart';
+import 'package:mgs_app2/screens/add_event/stages/event_target_group_stage.dart';
+import 'package:mgs_app2/screens/add_event/stages/event_target_person.dart';
 import 'package:mgs_app2/screens/add_event/stages/event_title_stage.dart';
 
 import '../../utilities/app_config.dart';
@@ -82,6 +83,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       EventInfoStage(
                         controller: controller,
                       ),
+                      EventTargetGroupStage(controller: controller),
+                      EventTargetPersonStage(controller: controller),
                     ],
                   ),
                 ),

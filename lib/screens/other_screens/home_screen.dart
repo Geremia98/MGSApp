@@ -90,7 +90,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         if (snap.data == null || snap.data!.isEmpty) {
                           //TODO mettere una scritta 'nessun evento'
-                          return SizedBox();
+                          return SizedBox(
+                            child: Text('Nessun evento'),
+                          );
                         }
 
                         return ListView.builder(
@@ -126,7 +128,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       if (snap.data == null || snap.data!.isEmpty) {
                         //TODO mettere una scritta 'nessun evento'
-                        return SizedBox();
+                        return SizedBox(
+                          child: Text('Nessun evento'),
+                        );
                       }
 
                       return SizedBox(

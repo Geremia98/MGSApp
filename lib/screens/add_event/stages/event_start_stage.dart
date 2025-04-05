@@ -65,7 +65,7 @@ class _TitleStageState extends State<EventStartStage> {
         buildTitle(
           context,
           title: 'Inizio evento',
-          subtitle: 'Inserisci il titolo dell\'evento.',
+          subtitle: 'Giorno e ora in cui si comincia',
         ),
         SizedBox(
           height: appConfig.getHeight() * 5,

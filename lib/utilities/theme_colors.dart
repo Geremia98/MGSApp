@@ -35,10 +35,9 @@ final ThemeData _lightTheme = ThemeData(
 
   //colore puntatore TextField, bottoni attivi, progressBar
   primaryColor: const Color.fromARGB(255, 253, 0, 177),
-  primaryColorLight: const Color.fromARGB(255, 71, 254, 65),
 
-  //colore dei Titoli
-  secondaryHeaderColor: const Color.fromARGB(255, 48, 162, 94),
+  //colore dei Titoli, inside the TextField
+  secondaryHeaderColor: const Color.fromARGB(255, 149, 48, 162),
 
   //sfondo di tutta l'applicazione
   scaffoldBackgroundColor: Colors.white,
@@ -63,6 +62,12 @@ final ThemeData _lightTheme = ThemeData(
     labelLarge: TextStyle(color: Color.fromARGB(255, 7, 255, 135)),
     labelMedium: TextStyle(color: Color.fromARGB(255, 7, 32, 255)),
     labelSmall: TextStyle(color: Color.fromARGB(255, 7, 247, 255))
+  ),
+
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ButtonStyle(
+      backgroundColor: WidgetStatePropertyAll(Colors.white)
+    )
   ),
 
   //Da qua in poi ci sono i colori miei:

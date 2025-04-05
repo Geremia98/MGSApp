@@ -38,8 +38,8 @@ class _TitleStageState extends State<EventInfoStage> {
       children: [
         buildTitle(
           context,
-          title: 'Informazioni evento',
-          subtitle: 'Inserisci il titolo dell\'evento.',
+          title: 'Luogo e prezzo',
+          subtitle: 'Inserisci la città in cui si svolgerà l\'evento e il prezzo',
         ),
         SizedBox(
           height: appConfig.getHeight() * 5,

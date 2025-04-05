@@ -42,7 +42,7 @@ class _TitleStageState extends State<EventDescStage> {
         buildTitle(
           context,
           title: 'Descrizione evento',
-          subtitle: 'Inserisci la descrizione dell\'evento.',
+          subtitle: 'Ora inserisci una breve descrizione riguardo a cosa si farà',
         ),
         SizedBox(
           height: appConfig.getHeight() * 5,

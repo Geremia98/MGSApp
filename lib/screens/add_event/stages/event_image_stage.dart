@@ -38,8 +38,8 @@ class _TitleStageState extends State<EventImageStage> {
       children: [
         buildTitle(
           context,
-          title: 'Banner evento',
-          subtitle: 'Inserisci il banner per l\'evento',
+          title: 'Copertina',
+          subtitle: 'Inserisci l\'immagine che verrà usata come copertina dell\'evento',
         ),
         SizedBox(
           height: appConfig.getHeight() * 5,

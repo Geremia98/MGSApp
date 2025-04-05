@@ -158,60 +158,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: height * 0.025),
-                        child: Center(
-                            child: Text(
-                          'o continua con',
-                          style: TextStyle(
-                            fontSize: fontSizeMedium,
-                            fontWeight: FontWeight.w400,
-                            color: appConfig.getTheme().secondaryHeaderColor,
-                          ),
-                        )),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: width * 0.1),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  debugPrint(
-                                      'Premuto il pulsante GoogleSignIn');
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  shape: const CircleBorder(),
-                                  backgroundColor: ThemeData().hoverColor,
-                                  padding: const EdgeInsets.all(10),
-                                  fixedSize: const Size.fromHeight(55),
-                                ),
-                                child: Image.asset('assets/images/google.png'),
-                              ),
-                            ),
-                            SizedBox(width: width * 0.2),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  debugPrint('Premuto il pulsante AppleSignIn');
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  shape: const CircleBorder(),
-                                  backgroundColor: ThemeData().hoverColor,
-                                  padding: EdgeInsets.all(10),
-                                  fixedSize: Size.fromHeight(55),
-                                ),
-                                child: Image.asset(
-                                  'assets/images/apple.png',
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                       SizedBox(
-                        height: height * 0.035,
+                        height: height * 0.2,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
