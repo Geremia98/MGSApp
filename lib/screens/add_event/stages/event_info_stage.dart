@@ -25,6 +25,7 @@ class _TitleStageState extends State<EventInfoStage> {
     super.initState();
 
     controller = widget.controller;
+    controller.setCurrentStageValid(controller.getLocation().isNotEmpty);
   }
 
   @override

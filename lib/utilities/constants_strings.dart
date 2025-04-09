@@ -1,3 +1,4 @@
+import 'package:mgs_app2/models/event_model.dart';
 import 'package:mgs_app2/models/faq_couple.dart';
 
 const Map<String, String> constantDropDownCountryList = {
@@ -14,6 +15,13 @@ const Map<String, String> constantDropDownGroupList = {
   'Sesto': 'Sesto',
   'Don Bosco Milano': 'Don Bosco Milano',
   'Salesiani Nave': 'Salesiani Nave'
+};
+
+const Map<EventTargetGender, String> constantEventTargetGenderList = {
+  EventTargetGender.male: 'Maschile',
+  EventTargetGender.female: 'Femminile',
+  EventTargetGender.both: 'Entrambi',
+
 };
 
 const List<FAQCouple> faqsList = [

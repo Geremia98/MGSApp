@@ -4,6 +4,12 @@ import 'package:mgs_app2/services/firebase/firestore/firestore_users_fields.dart
 
 import '../services/firebase/firestore/firestore_events_fields.dart';
 
+enum EventTargetGender {
+  male,
+  female,
+  both,
+}
+
 class EventModel {
   final String creatorUid;
   final String id;
@@ -14,10 +20,11 @@ class EventModel {
   final ImageModel? image;
   final DateTime? start;
   final DateTime? end;
+  final DateTime? creationDate;
 
   final String targetCountry;
-  final String targetAge;
-  final bool isJustForMales;
+  final int? targetAge;
+  final EventTargetGender? targetGender;
   final String targetIspettoria;
   final String targetGruppo;
 
@@ -29,14 +36,14 @@ class EventModel {
     this.desc = '',
     this.price = 0,
     this.image,
+    this.creationDate,
     required this.start,
     required this.end,
-
     this.targetCountry = '',
-    this.targetAge = '',
+    this.targetAge,
     this.targetIspettoria = '',
     this.targetGruppo = '',
-    this.isJustForMales = false,
+    this.targetGender = EventTargetGender.both,
   });
 
   Map<String, dynamic> toPayload() {
@@ -48,16 +55,22 @@ class EventModel {
       firestoreEventEndField: end,
       firestoreEventPriceField: price,
       firestoreEventCreatorUid: creatorUid,
-      firestoreEventTargetAgeField: targetAge,
-      firestoreEventTargetCountryField: targetCountry,
-      firestoreEventTargetGruppoField: targetGruppo, 
-      firestoreEventTargetIspettoriaField: targetIspettoria,
-      firestoreEventTargetSexField: isJustForMales,
+      firestoreEventCreationDate: DateTime.now(),
+      firestoreEventTarget: {
+        firestoreEventTargetAgeField: targetAge,
+        firestoreEventTargetCountryField: targetCountry,
+        firestoreEventTargetGruppoField: targetGruppo,
+        firestoreEventTargetIspettoriaField: targetIspettoria,
+        firestoreEventTargetSexField: targetGender != null ? targetGender!.name : EventTargetGender.both,
+      }
     };
   }
 
   factory EventModel.fromFirestore(
       String id, Map<String, dynamic> data, ImageModel? banner) {
+
+    final Map<String, dynamic> target = data[firestoreEventTarget] ?? {};
+
     return EventModel(
       id: id,
       title: data.containsKey(firestoreEventTitleField)
@@ -75,6 +88,9 @@ class EventModel {
       start: data.containsKey(firestoreEventStartField)
           ? (data[firestoreEventStartField] as Timestamp).toDate()
           : DateTime(1900),
+      creationDate: data.containsKey(firestoreEventCreationDate)
+          ? (data[firestoreEventCreationDate] as Timestamp).toDate()
+          : DateTime(1900),
       end: data.containsKey(firestoreEventEndField)
           ? (data[firestoreEventEndField] as Timestamp).toDate()
           : DateTime(1900),
@@ -82,20 +98,20 @@ class EventModel {
           ? double.tryParse(data[firestoreEventPriceField].toString()) ?? 0
           : 0,
       image: banner,
-      isJustForMales: data.containsKey(firestoreEventTargetSexField)
-          ? data[firestoreEventTargetSexField]
-          :false,
-      targetAge: data.containsKey(firestoreEventTargetAgeField)
-          ? data[firestoreEventTargetAgeField]
+      targetGender: target.containsKey(firestoreEventTargetSexField)
+          ? EventTargetGender.values.firstWhere((value) => value.name == target[firestoreEventTargetSexField])
+          : EventTargetGender.both,
+      targetAge: target.containsKey(firestoreEventTargetAgeField)
+          ? int.tryParse(target[firestoreEventTargetAgeField] ?? '')
+          : null,
+      targetCountry: target.containsKey(firestoreEventTargetCountryField)
+          ? target[firestoreEventTargetCountryField]
           : '',
-      targetCountry: data.containsKey(firestoreEventTargetCountryField)
-          ? data[firestoreEventTargetCountryField]
+      targetGruppo: target.containsKey(firestoreEventTargetGruppoField)
+          ? target[firestoreEventTargetGruppoField]
           : '',
-      targetGruppo: data.containsKey(firestoreEventTargetGruppoField)
-          ? data[firestoreEventTargetGruppoField]
-          : '',
-      targetIspettoria: data.containsKey(firestoreUsersIspettoriaField)
-          ? data[firestoreUsersIspettoriaField]
+      targetIspettoria: target.containsKey(firestoreUsersIspettoriaField)
+          ? target[firestoreUsersIspettoriaField]
           : '',
     );
   }

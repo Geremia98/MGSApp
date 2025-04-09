@@ -1,28 +1,19 @@
+import 'package:intl/intl.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-import 'package:mgs_app2/utilities/models.dart';
 import 'package:flutter/material.dart';
 
-class EventScreen extends StatefulWidget {
-  
-  final EventModel event = EventModel(
-        'Giardinaggio',
-        'Eccoci con l\'attesissima festa di fine anno. Saluteremo gli studenti diplomati e ci sarà musica, buon cibo e anche un ospite speciale! Sarà l\'occasione per augurarci buone vacanze!',
-        'assets/images/giardinaggio.png',
-        DateTime.now(),
-        DateTime.now(),
-        'Brescia',
-        12,
-        false,
-        List.empty());
+import '../../models/event_model.dart';
 
-  EventScreen({super.key});
+class EventScreen extends StatefulWidget {
+  final EventModel event;
+
+  EventScreen({required this.event, super.key});
 
   @override
   State<EventScreen> createState() => _EventScreenState();
 }
 
 class _EventScreenState extends State<EventScreen> {
-
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -33,40 +24,42 @@ class _EventScreenState extends State<EventScreen> {
       body: Stack(
         children: [
           Container(
-            height: height*1.2,
+            height: height * 1.2,
           ),
           Container(
             height: height * 0.5,
-            child: Image.asset(
-              widget.event.immagineCaricata,
-              fit: BoxFit.cover,
-            ),
+            child: widget.event.image == null ||
+                    widget.event.image!.downloadUrl == null
+                ? SizedBox()
+                : Image.network(
+                    widget.event.image!.downloadUrl!,
+                    fit: BoxFit.cover,
+                  ),
           ),
           Positioned(
             top: height * 0.08,
             left: width * 0.05,
             child: GestureDetector(
-                        onTap: () => {
-                          Navigator.pop(context),
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(width * 0.02),
-                          decoration: BoxDecoration(
-                            // Colore di sfondo
-                            color: appConfig.getTheme().scaffoldBackgroundColor,
-                            borderRadius: BorderRadius.circular(
-                                width * 0.02), // Bordi arrotondati
-                            border: Border.all(
-                              width: width * 0.002, // Larghezza del bordo
-                            ),
-                          ),
-                          child: const Icon(
-                            Icons
-                                .arrow_back_rounded, // Icona simile a quella mostrata
-                            size: 24.0, // Dimensione dell'icona
-                          ),
-                        ),
-                      ),
+              onTap: () => {
+                Navigator.pop(context),
+              },
+              child: Container(
+                padding: EdgeInsets.all(width * 0.02),
+                decoration: BoxDecoration(
+                  // Colore di sfondo
+                  color: appConfig.getTheme().scaffoldBackgroundColor,
+                  borderRadius:
+                      BorderRadius.circular(width * 0.02), // Bordi arrotondati
+                  border: Border.all(
+                    width: width * 0.002, // Larghezza del bordo
+                  ),
+                ),
+                child: const Icon(
+                  Icons.arrow_back_rounded, // Icona simile a quella mostrata
+                  size: 24.0, // Dimensione dell'icona
+                ),
+              ),
+            ),
           ),
           Positioned(
               top: height * 0.4,
@@ -94,7 +87,7 @@ class _EventScreenState extends State<EventScreen> {
                               padding:
                                   EdgeInsets.symmetric(vertical: height * 0.02),
                               child: Text(
-                                widget.event.titolo,
+                                widget.event.title,
                                 style: const TextStyle(
                                   fontSize: 35,
                                   fontWeight: FontWeight.bold,
@@ -102,106 +95,112 @@ class _EventScreenState extends State<EventScreen> {
                               ),
                             ),
                             Container(
-                        child: Text(
-                          widget.event.descrizione,
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: appConfig.getTheme().dividerColor,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: height * 0.05),
-                        padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Container(
-                              width: width * 0.4,
-                              child: Column(
-                                children: [
-                                  EventDetailBox(
-                                      width: width,
-                                      height: height,
-                                      icon: Icons.calendar_month_rounded,
-                                      title: 'Data inizio',
-                                      subTitle: widget.event.dataInizio.day.toString()+ ' - ' + widget.event.dataInizio.month.toString() + ' - ' + widget.event.dataInizio.year.toString() +
-                                          '\n' +
-                                          widget.event.dataInizio.hour.toString()),
-                                  SizedBox(
-                                    height: height * 0.02,
-                                  ),
-                                  EventDetailBox(
-                                      width: width,
-                                      height: height,
-                                      icon: Icons.location_on_rounded,
-                                      title: 'Luogo',
-                                      subTitle: widget.event.luogo),
-                                ],
+                              child: Text(
+                                widget.event.desc,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: appConfig.getTheme().dividerColor,
+                                ),
                               ),
                             ),
                             Container(
-                              width: width * 0.4,
-                              child: Column(
-                                children: [
-                                  EventDetailBox(
-                                      width: width,
-                                      height: height,
-                                      icon: Icons.calendar_month_rounded,
-                                      title: 'Data fine',
-                                      subTitle: widget.event.dataFine.day.toString()+ ' - ' + widget.event.dataFine.month.toString() + ' - ' + widget.event.dataFine.year.toString() +
-                                          '\n' +
-                                          widget.event.dataFine.hour.toString()),
-                                  SizedBox(
-                                    height: height * 0.02,
+                              margin: EdgeInsets.only(top: height * 0.05),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: width * 0.05),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: <Widget>[
+                                  Container(
+                                    width: width * 0.4,
+                                    child: Column(
+                                      children: [
+                                        EventDetailBox(
+                                          width: width,
+                                          height: height,
+                                          icon: Icons.calendar_month_rounded,
+                                          title: 'Data inizio',
+                                          subTitle: DateFormat('dd-MM-yyyy')
+                                                  .format(widget.event.start!) +
+                                              '\n' +
+                                              DateFormat('hh:mm')
+                                                  .format(widget.event.start!),
+                                        ),
+                                        SizedBox(
+                                          height: height * 0.02,
+                                        ),
+                                        EventDetailBox(
+                                            width: width,
+                                            height: height,
+                                            icon: Icons.location_on_rounded,
+                                            title: 'Luogo',
+                                            subTitle: widget.event.location),
+                                      ],
+                                    ),
                                   ),
-                                  EventDetailBox(
-                                      width: width,
-                                      height: height,
-                                      icon: Icons.airplane_ticket_rounded,
-                                      title: 'Biglietto',
-                                      subTitle: '€ ' +
-                                          widget.event.prezzo.toString()),
+                                  Container(
+                                    width: width * 0.4,
+                                    child: Column(
+                                      children: [
+                                        EventDetailBox(
+                                            width: width,
+                                            height: height,
+                                            icon: Icons.calendar_month_rounded,
+                                            title: 'Data fine',
+                                            subTitle: DateFormat(
+                                                        'dd-MM-yyyy')
+                                                    .format(widget.event.end!) +
+                                                '\n' +
+                                                DateFormat('hh:mm')
+                                                    .format(widget.event.end!)),
+                                        SizedBox(
+                                          height: height * 0.02,
+                                        ),
+                                        EventDetailBox(
+                                            width: width,
+                                            height: height,
+                                            icon: Icons.airplane_ticket_rounded,
+                                            title: 'Biglietto',
+                                            subTitle: '€ ' +
+                                                widget.event.price.toString()),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: height * 0.005),
-                        child: Center(
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: ThemeData().hoverColor,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 50, vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: height * 0.005),
+                              child: Center(
+                                child: ElevatedButton(
+                                  onPressed: () {},
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: ThemeData().hoverColor,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 50, vertical: 16),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Ci sono!',
+                                    style: TextStyle(
+                                        color: ThemeData().hoverColor,
+                                        fontSize: width * 0.05,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               ),
                             ),
-                            child: Text(
-                              'Ci sono!',
-                              style: TextStyle(
-                                color: ThemeData().hoverColor,
-                                fontSize: width*0.05,
-                                fontWeight: FontWeight.bold
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      
                           ],
                         ),
                       ),
                     ],
                   ),
                 ),
-              )
-          ),
+              )),
         ],
       ),
     );

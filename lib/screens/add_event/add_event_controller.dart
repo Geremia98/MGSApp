@@ -37,12 +37,12 @@ class AddEventController {
   String location = '';
   double price = 0;
 
-  String targetCountry = '';
-  String targetIspettoria = '';
-  String targetGroup = '';
+  String? targetCountry;
+  String? targetIspettoria;
+  String? targetGroup;
 
-  String targetAge = '';
-  bool isJustForMales = false;
+  int? targetAge;
+  EventTargetGender? targetGender;
 
   bool isLoading = false;
 
@@ -103,7 +103,9 @@ class AddEventController {
   }
 
   void publish(BuildContext context) async {
+
     isLoading = true;
+    changeNextButton();
 
     EventModel eventModel = EventModel(
       location: location,
@@ -113,20 +115,24 @@ class AddEventController {
       desc: description,
       price: price,
       creatorUid: UserModel.uid,
-      targetCountry: targetCountry,
-      targetIspettoria: targetIspettoria,
-      targetGruppo: targetGroup,
+      targetCountry: targetCountry ?? '',
+      targetIspettoria: targetIspettoria ?? '',
+      targetGruppo: targetGroup ?? '',
       targetAge: targetAge,
-      isJustForMales: isJustForMales,
+      targetGender: targetGender,
+      image: bannerImage,
     );
 
     EventFirestore eventFirestore = EventFirestore();
 
     String result = await eventFirestore.addEvent(eventModel);
 
-    Navigator.of(context).pop();
+    if (result.isNotEmpty) {
+      Navigator.of(context).pop(eventModel);
+      return;
+    }
 
-    //TODO if result is empty non è andato a buon fine se no contiene la ref dell'evento
+    isLoading = false;
     changeNextButton();
   }
 
@@ -161,13 +167,13 @@ class AddEventController {
         }
       case AddEventStage.targetGroup:
         {
-          return targetCountry.isNotEmpty &
-              targetGroup.isNotEmpty &
-              targetIspettoria.isNotEmpty;
+          return targetCountry != null &&
+              targetGroup != null &&
+              targetIspettoria != null;
         }
       case AddEventStage.targetPerson:
         {
-          return targetAge.isNotEmpty;
+          return targetAge != null;
         }
     }
   }
@@ -234,24 +240,24 @@ class AddEventController {
     this.price = double.tryParse(price) ?? 0;
   }
 
-  void setCountry(String country) {
+  void setCountry(String? country) {
     targetCountry = country;
   }
 
-  void setIspettoria(String ispettoria) {
+  void setIspettoria(String? ispettoria) {
     targetIspettoria = ispettoria;
   }
 
-  void setGroup(String group) {
+  void setGroup(String? group) {
     targetGroup = group;
   }
 
   void setAge(String age) {
-    targetAge = age;
+    targetAge = int.tryParse(age);
   }
 
-  void setSex(bool isJustForMales) {
-    this.isJustForMales = isJustForMales;
+  void setGender(EventTargetGender? gender) {
+    targetGender = gender;
   }
 
   ImageModel? getBanner() => bannerImage;
@@ -272,13 +278,13 @@ class AddEventController {
 
   String getLocation() => location;
 
-  String getCountry() => targetCountry;
+  String? getCountry() => targetCountry;
 
-  String getIspettoria() => targetIspettoria;
+  String? getIspettoria() => targetIspettoria;
 
-  String getGroup() => targetGroup;
+  String? getGroup() => targetGroup;
 
-  String getAge() => targetAge;
+  int? getAge() => targetAge;
 
-  bool getIsJustForMales() => isJustForMales;
+  EventTargetGender? getGender() => targetGender;
 }

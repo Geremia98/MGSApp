@@ -25,7 +25,7 @@ class EventFirestore {
     FirebaseStorageService storageService = FirebaseStorageService();
 
     try {
-      QuerySnapshot snap = await eventsCR.get();
+      QuerySnapshot snap = await eventsCR.orderBy('creationDate', descending: true).get();
 
       for (QueryDocumentSnapshot doc in snap.docs) {
 
@@ -50,7 +50,7 @@ class EventFirestore {
     FirebaseStorageService storageService = FirebaseStorageService();
 
     try {
-      QuerySnapshot snap = await eventsCR.where(firestoreEventCreatorUid, isEqualTo: UserModel.uid).get();
+      QuerySnapshot snap = await eventsCR.where(firestoreEventCreatorUid, isEqualTo: UserModel.uid).orderBy('creationDate', descending: true).get();
 
       for (QueryDocumentSnapshot doc in snap.docs) {
 

@@ -16,15 +16,16 @@ class FirebaseStorageService {
     // Get reference to your Firebase Storage bucket
     final FirebaseStorage storage = FirebaseStorage.instance;
     Reference reference = storage.ref().child(
-        'events/$eventId/banner/');
+        'events/$eventId/');
     // List all items with the given prefix
     try {
       ListResult result = await reference.listAll();
 
+      print(result.items.length);
+
       Map<String, String> downloadUrls = {};
 
       for (Reference item in result.items) {
-
 
        return ImageModel(downloadUrl: await item.getDownloadURL());
       }
@@ -37,6 +38,44 @@ class FirebaseStorageService {
     return null;
   }
 
+  String? getExtensionFromMimeType(String? mimeType) {
+
+    if (mimeType == null) {
+      return null;
+    }
+
+    const mimeMap = {
+      'image/jpeg': 'jpg',
+      'image/png': 'png',
+      'image/gif': 'gif',
+      'image/webp': 'webp',
+      'image/bmp': 'bmp',
+      'image/svg+xml': 'svg',
+      'image/tiff': 'tiff',
+      'image/x-icon': 'ico',
+      'video/mp4': 'mp4',
+      'video/x-msvideo': 'avi',
+      'video/mpeg': 'mpeg',
+      'video/quicktime': 'mov',
+      'video/webm': 'webm',
+      'audio/mpeg': 'mp3',
+      'audio/wav': 'wav',
+      'audio/ogg': 'ogg',
+      'audio/webm': 'weba',
+      'application/pdf': 'pdf',
+      'application/zip': 'zip',
+      'application/json': 'json',
+      'text/plain': 'txt',
+      'text/html': 'html',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
+      'application/msword': 'doc',
+      'application/vnd.ms-excel': 'xls',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
+    };
+
+    return mimeMap[mimeType];
+  }
+
   Future<bool> storeEventBannerImage(
       String eventId,
       ImageModel banner,
@@ -44,8 +83,17 @@ class FirebaseStorageService {
 
     // Get reference to your Firebase Storage bucket
     final FirebaseStorage storage = FirebaseStorage.instance;
+
+    final String? extension = getExtensionFromMimeType(banner.extension);
+
+    if (extension == null) {
+      if (kDebugMode) {
+        print("image extension from mime not found");
+      }
+      return false;
+    }
     Reference reference = storage.ref().child(
-        'events/$eventId/banner/');
+        'events/$eventId/banner.$extension');
     // List all items with the given prefix
 
     if (banner.image == null) {
@@ -53,7 +101,6 @@ class FirebaseStorageService {
     }
     try {
       await reference.putData(banner.image!);
-
 
       return true;
     } catch (e) {

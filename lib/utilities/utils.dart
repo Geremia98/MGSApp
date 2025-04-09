@@ -5,6 +5,12 @@ import 'package:mgs_app2/screens/other_screens/home_screen.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/theme_colors.dart';
 
+String formatDateToDayMonth(DateTime? date) {
+  Intl.defaultLocale = 'it_IT';
+
+  return DateFormat('d MMMM').format(date ?? DateTime.now());
+}
+
 String formatDateFromDateTime(DateTime? dateTime) {
   if (dateTime == null) {
     return 'xx/xx/xx';

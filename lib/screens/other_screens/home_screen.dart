@@ -9,6 +9,8 @@ import 'package:mgs_app2/screens/other_screens/event_screen.dart';
 import 'package:mgs_app2/screens/other_screens/personal_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
+import 'package:mgs_app2/utilities/utils.dart';
+import 'package:mgs_app2/widgets/snackbar.dart';
 
 import '../../main.dart';
 import '../../models/event_model.dart';
@@ -29,13 +31,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+  final EventFirestore eventFirestore = EventFirestore();
   late Future<List<EventModel>> retrieveEvents;
   late Future<List<EventModel>> retrievePersonalEvents;
 
   @override
   void initState() {
     super.initState();
-    EventFirestore eventFirestore = EventFirestore();
 
     retrieveEvents = eventFirestore.retrieveEvents();
     retrievePersonalEvents = eventFirestore.retrievePersonalEvents();
@@ -53,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: MyAppDrawer(
         height: height,
         width: width,
+        onEventCreation: onEventCreation,
       ),
       body: SafeArea(
         bottom: false,
@@ -104,9 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             return MyConsigliatiCard(
                               height: height,
                               width: width,
-                              image: 'assets/images/party.png',
-                              date: formatDate(event.start),
-                              title: event.title,
+                              event: event,
                             );
                           },
                         );
@@ -143,10 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             return MyEventCard(
                               height: height,
                               width: width,
-                              image: 'assets/images/party.png',
-                              dataInizio: formatDate(event.start),
-                              titolo: event.title,
-                              luogo: event.location,
+                              event: event,
                             );
                           },
                         ),
@@ -160,12 +158,20 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  String formatDate(DateTime? date) {
+  void onEventCreation(EventModel? event) {
+    if (event == null) {
+      return;
+    }
 
-    i.Intl.defaultLocale = 'it_IT';
+    Navigator.of(context).pop();
 
-    return i.DateFormat('d MMMM').format(date ?? DateTime.now());
+    SnackBarStyle snackBarStyle = SnackBarStyle(context, _globalKey);
 
+    snackBarStyle.showSnackBar('Evento creato correttamente');
+
+    setState(() {
+      retrievePersonalEvents = eventFirestore.retrievePersonalEvents();
+    });
   }
 
   List<Widget> buildEventsWidget(List<EventModel> events) {
@@ -179,9 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
         MyConsigliatiCard(
           height: height,
           width: width,
-          image: 'assets/images/party.png',
-          date: DateFormat('dd/MM/YYYY').format(event.start ?? DateTime.now()),
-          title: event.title,
+          event: event,
         ),
       );
     }
@@ -202,7 +206,6 @@ class EventiDelMeseReminder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final AppConfig appConfig = AppConfig(context);
 
     return Container(
@@ -281,7 +284,6 @@ class SortOfAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final AppConfig appConfig = AppConfig(context);
     return Row(
       children: [
@@ -344,7 +346,6 @@ class MyPersonalRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final AppConfig appConfig = AppConfig(context);
     return Container(
       padding: EdgeInsets.only(
@@ -414,27 +415,23 @@ class MyConsigliatiCard extends StatelessWidget {
     super.key,
     required this.height,
     required this.width,
-    required this.date,
-    required this.image,
-    required this.title,
+    required this.event,
   });
 
   final double height;
   final double width;
-  final String title;
-  final String date;
-  final String image;
+  final EventModel event;
 
   @override
   Widget build(BuildContext context) {
-
+    print(event.image);
     final AppConfig appConfig = AppConfig(context);
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => EventScreen(),
+            builder: (context) => EventScreen(event: event),
           ),
         );
       },
@@ -451,10 +448,15 @@ class MyConsigliatiCard extends StatelessWidget {
           child: Stack(children: [
             ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
-                child: Image.asset(
-                  image,
-                  fit: BoxFit.cover,
-                )),
+                child: event.image == null || event.image!.downloadUrl == null
+                    ? Image.asset(
+                        'assets/images/party.png',
+                        fit: BoxFit.cover,
+                      )
+                    : Image.network(
+                        event.image!.downloadUrl!,
+                        fit: BoxFit.cover,
+                      )),
             Positioned(
                 left: width * 0.025,
                 bottom: width * 0.025,
@@ -470,13 +472,13 @@ class MyConsigliatiCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          title,
+                          event.title,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: width * 0.04),
                         ),
                         Text(
-                          date,
+                          formatDateToDayMonth(event.start),
                           style: TextStyle(
                             fontSize: width * 0.037,
                           ),
@@ -495,29 +497,25 @@ class MyEventCard extends StatelessWidget {
     super.key,
     required this.height,
     required this.width,
-    required this.image,
-    required this.titolo,
-    required this.luogo,
-    required this.dataInizio,
+    required this.event,
   });
 
   final double height;
   final double width;
-  final String image;
-  final String titolo;
-  final String luogo;
-  final String dataInizio;
+  final EventModel event;
 
   @override
   Widget build(BuildContext context) {
-
     final AppConfig appConfig = AppConfig(context);
 
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => EventScreen()),
+          MaterialPageRoute(
+              builder: (context) => EventScreen(
+                    event: event,
+                  )),
         );
       },
       child: Container(
@@ -539,10 +537,12 @@ class MyEventCard extends StatelessWidget {
               margin: EdgeInsets.only(right: width * 0.04),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(width * 0.01)),
-                child: Image.asset(
-                  image,
-                  fit: BoxFit.cover,
-                ),
+                child: event.image == null || event.image!.downloadUrl == null
+                    ? SizedBox()
+                    : Image.network(
+                        event.image!.downloadUrl!,
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
             Expanded(
@@ -552,7 +552,7 @@ class MyEventCard extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.only(bottom: height * 0.007),
                     child: Text(
-                      titolo,
+                      event.title,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: width * 0.04,
@@ -573,7 +573,7 @@ class MyEventCard extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                          luogo,
+                          event.location,
                           style: TextStyle(
                             fontSize: width * 0.035,
                           ),
@@ -595,7 +595,7 @@ class MyEventCard extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                          dataInizio,
+                          formatDateToDayMonth(event.start),
                           style: TextStyle(
                             fontSize: width * 0.035,
                           ),
@@ -618,8 +618,10 @@ class MyAppDrawer extends StatelessWidget {
     super.key,
     required this.height,
     required this.width,
+    required this.onEventCreation,
   });
 
+  final void Function(EventModel?) onEventCreation;
   final double height;
   final double width;
 
@@ -667,12 +669,18 @@ class MyAppDrawer extends StatelessWidget {
               width: width,
               icon: Icons.add,
               title: 'Crea evento',
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AddEventScreen(),
-                ),
-              ),
+              onTap: () async {
+                 Object? value =  await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddEventScreen(),
+                  ),
+                );
+
+                 if (value is EventModel) {
+                   onEventCreation(value);
+                 }
+              }
             ),
             ItemForMenu(
               height: height,
@@ -687,7 +695,7 @@ class MyAppDrawer extends StatelessWidget {
             ItemForMenu(
               height: height,
               width: width,
-              icon: Icons.add,
+              icon: Icons.question_mark,
               title: 'FAQ',
               onTap: () => Navigator.push(
                 context,
@@ -704,7 +712,7 @@ class MyAppDrawer extends StatelessWidget {
                       bottom: height * 0.01),
                   child: GestureDetector(
                     onTap: () => {
-                    BrightnessManager().toggleBrightness()
+                      BrightnessManager().toggleBrightness()
                       //provider.toggleTheme()
                     },
                     child: Container(
@@ -720,14 +728,14 @@ class MyAppDrawer extends StatelessWidget {
                       ),
                       child: Icon(
                           size: width * 0.06,
-                          Icons
-                              .dark_mode //provider.isLight ? Icons.dark_mode : Icons.sunny, // Dimensione dell'icona
+                          BrightnessManager().brightness == Brightness.light ? Icons
+                              .dark_mode :  Icons.sunny, // Dimensione dell'icona
                           ),
                     ),
                   ),
                 ),
                 Text(
-                  'asd', //provider.isLight ? 'Night Mode' : 'Day Mode',
+                  BrightnessManager().brightness == Brightness.light ? 'Tema scuro' :  'Tema chiaro', //provider.isLight ? 'Night Mode' : 'Day Mode',
                   style: TextStyle(
                     fontSize: width * 0.04,
                   ),
@@ -782,7 +790,6 @@ class ItemForMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final AppConfig appConfig = AppConfig(context);
 
     return Container(
