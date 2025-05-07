@@ -7,3 +7,5 @@ const double bigRecommendedEventsCardBorderThickness = 0.0005;
 const double smallMyEventsCardBorderThickness = 0.0004;
 
 const double homeScreenProfilePicRadius = 0.5;
+
+const double eventiDelMeseReminderFontSize = 0.04;

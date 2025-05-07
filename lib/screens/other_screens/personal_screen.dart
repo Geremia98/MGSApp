@@ -3,8 +3,6 @@
 //Se è boss mettere un positioned,
 //come un pallino o una piccola label sulla foto profilo
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/models/user_model.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
