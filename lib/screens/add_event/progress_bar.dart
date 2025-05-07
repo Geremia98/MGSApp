@@ -40,7 +40,7 @@ class _AddEventProgressBarState extends State<AddEventProgressBar> {
     controller.setAnimateProgressBar(animateProgressBar);
 
 
-    final double fullWidth = appConfig.getWidth() * 90;
+    final double fullWidth = appConfig.getWidth() * 82;
     final double singleStepWidth =
         (fullWidth / (AddEventStage.values.length - 1));
     double progress = (singleStepWidth * controller.getCurrentStageIndex());
@@ -51,18 +51,8 @@ class _AddEventProgressBarState extends State<AddEventProgressBar> {
 
     return Column(
       children: [
-        /*SizedBox(
-          height: 20,
-          child: Text(
-            '${controller.getCurrentStageIndex() + 1}/${controller.stagesLength()}',
-            style: textStyleClickable(context),
-          ),
-        ),
-        SizedBox(
-          height: 5,
-        ),*/
         Container(
-          width: appConfig.getWidth() * 90,
+          width: appConfig.getWidth() * 82,
           height: 6,
           child: AnimatedContainer(
             duration: Duration(milliseconds: 500),
@@ -73,7 +63,7 @@ class _AddEventProgressBarState extends State<AddEventProgressBar> {
             ),
             // Adjust the height of your progress bar
             decoration: BoxDecoration(
-              color: appConfig.getTheme().primaryColor,
+              color: appConfig.getTheme().focusColor,
               borderRadius: BorderRadius.circular(5.0),
             ),
           ),

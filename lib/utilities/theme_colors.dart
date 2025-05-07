@@ -34,10 +34,10 @@ final ThemeData _lightTheme = ThemeData(
   cardColor: const Color.fromARGB(255, 0, 35, 99),
 
   //colore puntatore TextField, bottoni attivi, progressBar
-  primaryColor: const Color.fromARGB(255, 253, 0, 177),
+  primaryColor: const Color.fromARGB(255, 0, 35, 99),
 
   //colore dei Titoli, inside the TextField
-  secondaryHeaderColor: const Color.fromARGB(255, 149, 48, 162),
+  secondaryHeaderColor: const Color.fromARGB(255, 0, 35, 99),
 
   //sfondo di tutta l'applicazione
   scaffoldBackgroundColor: Colors.white,
@@ -116,17 +116,3 @@ BorderSide getCustomBorderSide({
 
 
 
-//Classe per switchare il tema tra dark e ligh dal menù !!
-
-// class ThemeProvider extends ChangeNotifier {
-//   ThemeData _themeData = MyTheme.lightTheme;
-//   ThemeData get themeData => _themeData;
-//   bool isLight = true;
-
-//   void toggleTheme() {
-//     isLight = _themeData == MyTheme.lightTheme;
-//     isLight ? _themeData = MyTheme.nightTheme : _themeData = MyTheme.lightTheme;
-//     isLight = !isLight;
-//     notifyListeners();
-//   }
-// }

@@ -8,6 +8,7 @@ import 'package:mgs_app2/models/user_model.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/theme_colors.dart';
 import 'package:mgs_app2/widgets/button.dart';
+import 'package:mgs_app2/widgets/buttons.dart';
 import 'package:mgs_app2/widgets/text_field.dart';
 
 class PersonalScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class PersonalScreenState extends State<PersonalScreen> {
   @override
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
-    
+
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
@@ -41,30 +42,12 @@ class PersonalScreenState extends State<PersonalScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    onTap: () => {
-                      Navigator.pop(
-                        context,
-                      )
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(width * 0.02),
-                      decoration: BoxDecoration(
-                        // Colore di sfondo
-                        borderRadius: BorderRadius.circular(
-                            width * 0.02), // Bordi arrotondati
-                        border: getCustomBorder(
-                          appConfig: appConfig,
-                          width: width * 0.002,
-                        ),
-                      ),
-                      child: const Icon(
-                        Icons
-                            .arrow_back_rounded, // Icona simile a quella mostrata
-                        size: 24.0, // Dimensione dell'icona
-                      ),
-                    ),
-                  ),
+                  GoBackButton(
+                      icon: Icons.arrow_back_rounded,
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      appConfig: appConfig)
                 ],
               ),
             ),
@@ -121,14 +104,11 @@ class PersonalScreenState extends State<PersonalScreen> {
                   fontWeight: FontWeight.bold, fontSize: height * 0.03),
             ),
             ButtonText(text: 'Modifica', onTap: () {}),
-            
-                buildTextField(
-            appConfig,
-            textCapitalization: TextCapitalization.sentences,
-            hintText: UserModel.name,
-            maxLines: 1,
-            enabled: false
-          ),
+            buildTextField(appConfig,
+                textCapitalization: TextCapitalization.sentences,
+                hintText: UserModel.name,
+                maxLines: 1,
+                enabled: false),
           ],
         ),
       ),

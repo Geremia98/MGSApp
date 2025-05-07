@@ -70,7 +70,10 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                   children: <Widget>[
                     BackButtonAppBar(
                       iconData: Icons.arrow_back_rounded, 
-                      appConfig: appConfig, 
+                      appConfig: appConfig,
+                      onTap: () {
+                        Navigator.pop(context);
+                      }, 
                     ),
                     Center(
                       child: CircleAvatar(

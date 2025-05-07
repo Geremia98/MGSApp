@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:mgs_app2/screens/add_event/add_event_controller.dart';
+import 'package:mgs_app2/widgets/buttons.dart';
 
 import '../../services/translator/translator.dart';
 import '../../utilities/app_config.dart';
@@ -41,19 +41,21 @@ class _AddEventNavigatorState extends State<AddEventNavigator> {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       controller.isFirstStage()
           ? const SizedBox()
-          : ButtonIcon(
-        icon: LineIcons.arrowLeft,
-        onTap: () => controller.prevStage(),
-        isLoading: controller.isLoading,
-        //isEnabled: controller.isCurrentStageFilled(),
-      ),
+          : GoBackButton(
+            icon: Icons.arrow_back_rounded, 
+            onTap: () {
+              controller.prevStage();
+            }, 
+            appConfig: appConfig
+            ),
       ButtonText(
         text: controller.isLatestStage()
-            ? 'Pubblica'
+            ? 'Posta'
             : translator.translate('continue'),
         onTap: () => controller.nextStage(context),
         isEnabled: controller.isCurrentStageValid,
         isLoading: controller.isLoading,
+        fixedWidth: appConfig.getWidth()*30,
         //isEnabled: controller.isCurrentStageFilled(),
       ),
     ]);

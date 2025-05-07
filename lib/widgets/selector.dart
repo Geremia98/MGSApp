@@ -149,7 +149,7 @@ class _SelectorStyleState<T> extends State<SelectorStyle<T>> {
                 contentPadding: centerText ? EdgeInsets.only(left: 0) : EdgeInsets.only(left: 15),
                 filled: false,
                 enabled: widget.isEnable,
-                fillColor: _appConfig.getTheme().cardColor,
+                fillColor: _appConfig.getTheme().highlightColor,
                 suffixIcon: widget.hasSuffixIncon
                     ? SizedBox(
                         width: 5,
@@ -161,21 +161,21 @@ class _SelectorStyleState<T> extends State<SelectorStyle<T>> {
                       )
                     : null,
                 labelStyle: TextStyle(
-                  color: _appConfig.getTheme().secondaryHeaderColor,
+                  color: Colors.amber,
                   fontSize: _appConfig.getHeight() * 1.7,
                   fontWeight: FontWeight.w600,
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+                  borderSide: BorderSide(color: Colors.cyan),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 disabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+                  borderSide: BorderSide(color: Colors.pink),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: Colors.grey.withOpacity(0.5),
+                    color: Colors.greenAccent,
                   ),
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -190,7 +190,9 @@ class _SelectorStyleState<T> extends State<SelectorStyle<T>> {
               ),
               alignment: Alignment.center,
               // Aligns the text to the center
-              style: textStyleTextField(context),
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+              ),
               hint: Text(
                 _hintText ?? '',
                 style: _currentValue == null

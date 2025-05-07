@@ -55,7 +55,10 @@ class _RegistrationScreen4State extends State<RegistrationScreen4> {
                 children: <Widget>[
                   BackButtonAppBar(
                       iconData: Icons.arrow_back_rounded, 
-                      appConfig: appConfig, 
+                      appConfig: appConfig,
+                      onTap: () {
+                        Navigator.pop(context);
+                      }, 
                     ),
                   Center(
                     child: CircleAvatar(

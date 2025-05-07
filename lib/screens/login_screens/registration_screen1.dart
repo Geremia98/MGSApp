@@ -54,7 +54,6 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
   }
 
   bool isEternoGiovane() {
-
     return DateTime.now().year - controller.birthDate!.year - 2 > _feelAge;
   }
 
@@ -75,7 +74,10 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
       body: SafeArea(
         child: Container(
           height: appConfig.getHeight() * 100,
-          padding: EdgeInsets.only(right: appConfig.getWidth()*8, left: appConfig.getWidth()*8, top: appConfig.getHeight()*0.7),
+          padding: EdgeInsets.only(
+              right: appConfig.getWidth() * 8,
+              left: appConfig.getWidth() * 8,
+              top: appConfig.getHeight() * 0.7),
           child: Stack(
             children: [
               SingleChildScrollView(
@@ -84,8 +86,11 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     BackButtonAppBar(
-                      iconData: Icons.arrow_back_rounded, 
-                      appConfig: appConfig, 
+                      iconData: Icons.arrow_back_rounded,
+                      appConfig: appConfig,
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
                     ),
                     Center(
                       child: CircleAvatar(
@@ -180,8 +185,8 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                           onSelectionChanged: updateSexSelection,
                           showSelectedIcon: false,
                           style: ButtonStyle(
-                            side: MaterialStateProperty.all(BorderSide(
-                                color: ThemeData().hoverColor)),
+                            side: MaterialStateProperty.all(
+                                BorderSide(color: ThemeData().hoverColor)),
                             backgroundColor:
                                 MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
@@ -258,7 +263,8 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                             decoration: BoxDecoration(
                                 color: Colors.grey.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(
-                                    appConfig.getWidth() * 5), // Bordi arrotondati
+                                    appConfig.getWidth() *
+                                        5), // Bordi arrotondati
                                 border: Border.all(
                                   width: 1,
                                   color: Colors.grey.withOpacity(0.3),

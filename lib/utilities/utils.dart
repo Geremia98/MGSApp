@@ -1,9 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mgs_app2/screens/other_screens/home_screen.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-import 'package:mgs_app2/utilities/theme_colors.dart';
 
 String formatDateToDayMonth(DateTime? date) {
   Intl.defaultLocale = 'it_IT';
@@ -41,74 +39,6 @@ String formatTimeFromDateTime(DateTime dateTime) {
       : dateTime.minute < 10
           ? '${dateTime.hour} : 0${dateTime.minute}'
           : '${dateTime.hour} : ${dateTime.minute}';
-}
-
-class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({
-    super.key,
-    required this.width,
-    required this.titolo,
-    required this.appConfig,
-  });
-
-  final double width;
-  final String titolo;
-  final AppConfig appConfig;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        GestureDetector(
-          onTap: () => {
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-                (route) => false)
-          },
-          child: Container(
-            padding: EdgeInsets.all(width * 0.02),
-            decoration: BoxDecoration(
-              // Colore di sfondo
-              borderRadius:
-                  BorderRadius.circular(width * 0.02), // Bordi arrotondati
-              border: getCustomBorder(
-                appConfig: appConfig,
-                width: width * 0.002,
-              ),
-            ),
-            child: const Icon(
-              Icons.arrow_back_rounded, // Icona simile a quella mostrata
-              size: 24.0, // Dimensione dell'icona
-            ),
-          ),
-        ),
-        Expanded(
-          child: Center(
-              child: Text(
-            titolo,
-            style:
-                TextStyle(fontWeight: FontWeight.bold, fontSize: width * 0.06),
-          )),
-        ),
-        Container(
-          width: width * 0.12,
-          height: width * 0.12,
-          decoration: BoxDecoration(
-            image: const DecorationImage(
-              image: AssetImage('assets/images/male.jpg'),
-              fit: BoxFit.cover,
-            ),
-            borderRadius: BorderRadius.all(Radius.circular(width * 0.5)),
-            border: Border.all(
-              color: Colors.white,
-              width: width * 0.001,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }
 
 Widget buildAddNewImageButton(

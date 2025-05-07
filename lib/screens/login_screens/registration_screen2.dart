@@ -5,7 +5,6 @@ import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/widgets/back_button_app_bar.dart';
 import 'package:mgs_app2/widgets/image_upload.dart';
 
-import '../../widgets/appbar.dart';
 import '../../widgets/font.dart';
 
 class RegistrationScreen2 extends StatefulWidget {
@@ -64,7 +63,10 @@ class _RegistrationScreen2State extends State<RegistrationScreen2> {
                 children: <Widget>[
                   BackButtonAppBar(
                       iconData: Icons.arrow_back_rounded, 
-                      appConfig: appConfig, 
+                      appConfig: appConfig,
+                      onTap: () {
+                        Navigator.pop(context);
+                      }, 
                     ),
                   Center(
                     child: CircleAvatar(

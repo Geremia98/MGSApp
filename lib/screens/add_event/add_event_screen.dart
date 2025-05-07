@@ -11,9 +11,9 @@ import 'package:mgs_app2/screens/add_event/stages/event_start_stage.dart';
 import 'package:mgs_app2/screens/add_event/stages/event_target_group_stage.dart';
 import 'package:mgs_app2/screens/add_event/stages/event_target_person.dart';
 import 'package:mgs_app2/screens/add_event/stages/event_title_stage.dart';
+import 'package:mgs_app2/widgets/back_button_app_bar.dart';
 
 import '../../utilities/app_config.dart';
-import '../../widgets/appbar.dart';
 
 class AddEventScreen extends StatefulWidget {
   const AddEventScreen({
@@ -43,23 +43,30 @@ class _AddEventScreenState extends State<AddEventScreen> {
     final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
-      appBar: buildAppBar(
-        context,
-        appConfig,
-        text: '',
-        icon: LineIcons.times,
-        hasLeading: true,
-      ),
       body: SafeArea(
         child: Stack(
           children: [
             Column(
               children: [
+                Container(
+                  padding: EdgeInsets.only(
+                      left: appConfig.getWidth() * 8,
+                      right: appConfig.getWidth() * 8,
+                      bottom: appConfig.getHeight() * 2,
+                      top: appConfig.getHeight() * 1.3),
+                  child: BackButtonAppBar(
+                    iconData: Icons.close_rounded,
+                    appConfig: appConfig,
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
                 AddEventProgressBar(
                   controller: controller,
                 ),
                 SizedBox(
-                  height: appConfig.getHeight() * 3,
+                  height: appConfig.getHeight() * 6,
                 ),
                 Expanded(
                   child: PageView(
@@ -96,7 +103,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
               child: Container(
                 width: appConfig.getWidth() * 100,
                 padding:
-                    EdgeInsets.symmetric(horizontal: appConfig.getWidth() * 10),
+                    EdgeInsets.symmetric(horizontal: appConfig.getWidth() * 8),
                 child: AddEventNavigator(
                   controller,
                 ),

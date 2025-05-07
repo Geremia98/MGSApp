@@ -215,7 +215,7 @@ class ButtonTextAsTextField extends StatelessWidget {
 BoxDecoration buttonTextDecoration(BuildContext context) {
   final AppConfig appConfig = AppConfig(context);
   return BoxDecoration(
-    color: appConfig.getTheme().primaryColor,
+    color: appConfig.getTheme().focusColor,
     //boxShadow: boxShadowButton,
     borderRadius: BorderRadius.circular(10),
   );

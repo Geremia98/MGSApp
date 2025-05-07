@@ -58,21 +58,31 @@ class _TitleStageState extends State<EventInfoStage> {
             initialValue: controller.getLocation(),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
-        Padding(
+        Container(
           padding: EdgeInsets.symmetric(
             horizontal: appConfig.getWidth() * 10,
           ),
-          child: buildTextField(
-            appConfig,
-            textCapitalization: TextCapitalization.sentences,
-            textInputType: const TextInputType.numberWithOptions(decimal: true),
-            hintText: 'Prezzo',
-            maxLength: 30,
-            onChanged: onPriceChange,
-            initialValue: controller.getPrice().toString(),
+          child: Row(
+            children: [
+              
+              Container(
+                width: appConfig.getWidth()*30,
+                child: buildTextField(
+                  appConfig,
+                  textCapitalization: TextCapitalization.sentences,
+                  textInputType: const TextInputType.numberWithOptions(decimal: false),
+                  hintText: 'Prezzo',
+                  maxLength: 30,
+                  onChanged: onPriceChange,
+                  initialValue: controller.getPrice().toString(),
+                ),
+              ),
+              SizedBox(width: appConfig.getWidth()*2,),
+              const Text('€'),
+            ],
           ),
         ),
       ],

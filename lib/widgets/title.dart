@@ -5,18 +5,16 @@ import '../utilities/app_config.dart';
 import 'font.dart';
 
 Widget buildTitle(
-    BuildContext context, {
-      String title = '',
-      String subtitle = '',
-      bool isSection = false,
-      TextAlign textAlign = TextAlign.center,
-    }) {
-
+  BuildContext context, {
+  String title = '',
+  String subtitle = '',
+  bool isSection = false,
+  TextAlign textAlign = TextAlign.center,
+}) {
   final AppConfig appConfig = AppConfig(context);
   return Container(
     width: appConfig.getWidth() * 100,
-    padding:
-    EdgeInsets.symmetric(horizontal: appConfig.getWidth() * 10),
+    padding: EdgeInsets.symmetric(horizontal: appConfig.getWidth() * 10),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -24,7 +22,8 @@ Widget buildTitle(
           width: appConfig.getWidth() * 80,
           child: Text(
             title,
-            style: isSection ? textStyleSection(context) : textStyleTitle(context),
+            style:
+                isSection ? textStyleSection(context) : textStyleTitle(context),
             maxLines: 2,
             textAlign: textAlign,
           ),
@@ -35,21 +34,19 @@ Widget buildTitle(
         subtitle.isEmpty
             ? const SizedBox()
             : SizedBox(
-          width: appConfig.getWidth() * 80,
-          child: Text(
-            subtitle,
-            style: textStyleSubtitle(context),
-            maxLines: 4,
-            textAlign: textAlign,
-          ),
-        ),
+                width: appConfig.getWidth() * 80,
+                child: Text(
+                  subtitle,
+                  style: textStyleSubtitle(context),
+                  maxLines: 4,
+                  textAlign: textAlign,
+                ),
+              ),
         //buildLogo(context),
       ],
     ),
   );
 }
-
-
 
 TextStyle textStyleTitle(BuildContext context) {
   final AppConfig appConfig = AppConfig(context);
@@ -71,11 +68,10 @@ TextStyle textStyleSection(BuildContext context) {
   );
 }
 
-
-
 TextStyle textStyleSubtitle(BuildContext context) {
+  final AppConfig appConfig = AppConfig(context);
   return TextStyle(
-    color: Colors.grey.withOpacity(0.7),
+    color: appConfig.getTheme().primaryColor,
     fontSize: fontSizeSubtitle,
     fontWeight: FontWeight.w400,
     overflow: TextOverflow.ellipsis,
