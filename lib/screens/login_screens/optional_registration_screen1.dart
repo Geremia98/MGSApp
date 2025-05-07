@@ -25,10 +25,6 @@ class OptionalRegistrationScreen1 extends StatelessWidget {
     final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
-      appBar: buildAppBar(
-        context,
-        hasLeading: true,
-      ),
       body: SafeArea(
         child: Container(
           height: appConfig.getHeight() * 100,

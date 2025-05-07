@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:mgs_app2/utilities/theme_colors.dart';
+import 'package:mgs_app2/widgets/buttons.dart';
 
 import '../utilities/app_config.dart';
 import 'font.dart';
@@ -9,6 +11,7 @@ const IconData backArrowAndroid = Icons.arrow_back;
 
 AppBar buildAppBar(
   BuildContext context,
+  AppConfig appConfig,
    {
      String text = '',
   bool hasLeading = false,
@@ -17,13 +20,11 @@ AppBar buildAppBar(
   IconData? icon,
   void Function(BuildContext context)? onBackPressed,
 }) {
-  AppConfig appConfig = AppConfig(context);
 
   onBackPressed ??= _onBackPressed;
 
   return AppBar(
     elevation: 0,
-    titleSpacing: 0,
     actions: suffixAction == null ? null : [suffixAction],
     backgroundColor:
         backgroundColor ?? appConfig.getTheme().scaffoldBackgroundColor,
@@ -37,23 +38,10 @@ AppBar buildAppBar(
       style: textStyleAppBar(context),
     ),
     leading: hasLeading
-        ? Platform.isIOS
-            ? IconButton(
-                icon: Icon(
-                  icon ?? backArrowIphone,
-                  size: 16,
-                  color: appConfig.getTheme().secondaryHeaderColor,
-                ),
-                onPressed: () => onBackPressed!(context),
-              )
-            : IconButton(
-                icon: Icon(
-                  icon ?? backArrowAndroid,
-                  size: 16,
-                  color: appConfig.getTheme().secondaryHeaderColor,
-                ),
-                onPressed: () => onBackPressed!(context),
-              )
+        ? GoBackButton(
+          icon: Icons.arrow_back_rounded, 
+          onTap: ()=> onBackPressed!(context), 
+          appConfig: appConfig)
         : Container(),
   );
 }

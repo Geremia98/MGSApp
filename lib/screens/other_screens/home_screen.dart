@@ -3,11 +3,10 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:mgs_app2/models/event_firestore.dart';
 import 'package:mgs_app2/models/event_model.dart';
-import 'package:mgs_app2/screens/other_screens/personal_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/eventi_mese_reminder.dart';
-import 'package:mgs_app2/widgets/home_page_widgets/home_page_drawer.dart';
+import 'package:mgs_app2/widgets/home_page_widgets/home_screen_drawer.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/my_consigliati_card.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/my_events_card.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/sort_of_app_bar.dart';
@@ -67,7 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
                    iconData: Icons.grid_view_rounded,
                     appConfig: appConfig,
                     globalKey: _globalKey,
-                    width: width,
                     profileImage: 'assets/images/male.jpg'),
                 EventiDelMeseReminder(
                     appConfig: appConfig,

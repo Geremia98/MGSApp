@@ -3,28 +3,23 @@ import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/utilities/theme_colors.dart';
 
-class SortOfAppBar extends StatelessWidget {
-  const SortOfAppBar(
+class BackButtonAppBar extends StatelessWidget {
+  const BackButtonAppBar(
       {super.key,
       required this.iconData,
-      required this.profileImage,
-      required this.appConfig,
-      required this.globalKey});
+      required this.appConfig,});
 
-  final String profileImage;
   final AppConfig appConfig;
   final IconData iconData;
-  final GlobalKey<ScaffoldState> globalKey;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         GestureDetector(
-          onTap: () => {
-            debugPrint('bottone menu premuto'),
-            globalKey.currentState!.openDrawer()
-          },
+          onTap: () => Navigator.pop(
+                context,
+              ),
           child: Container(
             padding: EdgeInsets.all(appConfig.getWidth() * 1.2),
             decoration: BoxDecoration(
@@ -45,22 +40,6 @@ class SortOfAppBar extends StatelessWidget {
             child: SizedBox(
           width: 10,
         )),
-        Container(
-          width: appConfig.getWidth() * 12,
-          height: appConfig.getWidth() * 12,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(profileImage),
-              fit: BoxFit.cover,
-            ),
-            borderRadius: BorderRadius.all(
-                Radius.circular(appConfig.getWidth() * homeScreenProfilePicRadius)),
-            border: Border.all(
-              color: Colors.white,
-              width: appConfig.getWidth() * 30,
-            ),
-          ),
-        ),
       ],
     );
   }

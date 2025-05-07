@@ -1,4 +1,3 @@
-import 'package:line_icons/line_icons.dart';
 import 'package:mgs_app2/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/login_screens/optional_registration_screen1.dart';
@@ -6,7 +5,7 @@ import 'package:mgs_app2/screens/login_screens/registration_controller.dart';
 import 'package:mgs_app2/screens/login_screens/registration_screen2.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/utils.dart';
-import 'package:mgs_app2/widgets/appbar.dart';
+import 'package:mgs_app2/widgets/back_button_app_bar.dart';
 import 'package:mgs_app2/widgets/font.dart';
 
 import '../../widgets/text_field.dart';
@@ -70,21 +69,13 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-
     final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
-      appBar: buildAppBar(
-        context,
-        hasLeading: true,
-        icon: LineIcons.times,
-      ),
       body: SafeArea(
         child: Container(
           height: appConfig.getHeight() * 100,
-          padding: EdgeInsets.only(right: width * 0.1, left: width * 0.1),
+          padding: EdgeInsets.only(right: appConfig.getWidth()*8, left: appConfig.getWidth()*8, top: appConfig.getHeight()*0.7),
           child: Stack(
             children: [
               SingleChildScrollView(
@@ -92,9 +83,13 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    BackButtonAppBar(
+                      iconData: Icons.arrow_back_rounded, 
+                      appConfig: appConfig, 
+                    ),
                     Center(
                       child: CircleAvatar(
-                          radius: width * 0.18,
+                          radius: appConfig.getWidth() * 18,
                           backgroundColor:
                               const Color.fromARGB(255, 255, 221, 109),
                           child: Padding(
@@ -108,7 +103,7 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                     Column(
                       children: [
                         SizedBox(
-                          height: height * 0.025,
+                          height: appConfig.getHeight() * 2.5,
                         ),
                         Center(
                           child: Text(
@@ -263,7 +258,7 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                             decoration: BoxDecoration(
                                 color: Colors.grey.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(
-                                    width * 0.05), // Bordi arrotondati
+                                    appConfig.getWidth() * 5), // Bordi arrotondati
                                 border: Border.all(
                                   width: 1,
                                   color: Colors.grey.withOpacity(0.3),

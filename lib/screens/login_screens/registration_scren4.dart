@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/login_screens/registration_controller.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
+import 'package:mgs_app2/widgets/back_button_app_bar.dart';
 
-import '../../widgets/appbar.dart';
 import '../../widgets/font.dart';
 import '../../widgets/text_field.dart';
 
@@ -43,20 +43,20 @@ class _RegistrationScreen4State extends State<RegistrationScreen4> {
 
     return Scaffold(
       key: scaffoldKey,
-      appBar: buildAppBar(
-        context,
-        hasLeading: true,
-      ),
       body: SafeArea(
         child: Container(
           height: appConfig.getHeight() * 100,
-          padding: EdgeInsets.only(right: width * 0.1, left: width * 0.1),
+          padding: EdgeInsets.only(right: appConfig.getWidth()*8, left: appConfig.getWidth()*8, top: appConfig.getHeight()*0.7),
           child: Stack(
             children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  BackButtonAppBar(
+                      iconData: Icons.arrow_back_rounded, 
+                      appConfig: appConfig, 
+                    ),
                   Center(
                     child: CircleAvatar(
                         radius: width * 0.2,
@@ -136,7 +136,7 @@ class _RegistrationScreen4State extends State<RegistrationScreen4> {
                 bottom: 0,
                 left: 0,
                 child: SizedBox(
-                  width: appConfig.getWidth() * 80,
+                  width: appConfig.getWidth() * 83,
                   child: FilledButton(
                     style: ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(

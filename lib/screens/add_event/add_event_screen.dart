@@ -45,6 +45,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     return Scaffold(
       appBar: buildAppBar(
         context,
+        appConfig,
         text: '',
         icon: LineIcons.times,
         hasLeading: true,

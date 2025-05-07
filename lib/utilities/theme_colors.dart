@@ -95,7 +95,6 @@ ThemeData getLightTheme() => _lightTheme;
 Border getCustomBorder({
     double width = 1.0,
     AppConfig? appConfig,
-
   }) {
     return Border.all(
       width: width,
