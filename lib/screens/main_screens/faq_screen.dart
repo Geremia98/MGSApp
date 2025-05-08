@@ -74,7 +74,9 @@ class _FAQScreenState extends State<FAQScreen> {
                           'Mandaci una mail',
                           style: TextStyle(
                               fontSize: appConfig.getWidth() * 4,
-                              decoration: TextDecoration.underline),
+                              decoration: TextDecoration.underline,
+                              decorationColor: appConfig.getTheme().primaryColor
+                          ),
                         ),
                       ),
                     ),
@@ -165,7 +167,9 @@ class _FAQItemWidgetState extends State<FAQItemWidget>
                     child: Text(
                       widget.question,
                       style: TextStyle(
-                          fontSize: appConfig.getWidth()*4,),
+                          fontSize: appConfig.getWidth()*4,
+                          fontWeight: FontWeight.w600,
+                        ),
                     ),
                   ),
                   // Icona di espansione animata
@@ -192,7 +196,7 @@ class _FAQItemWidgetState extends State<FAQItemWidget>
                 padding: const EdgeInsets.only(right: 14, left: 14, bottom: 14),
                 child: Text(
                   widget.answer,
-                  style: TextStyle(fontSize: appConfig.getWidth()*3.5, color: Colors.black),
+                  style: TextStyle(fontSize: appConfig.getWidth()*3.5, ),
                 ),
               ),
             ),

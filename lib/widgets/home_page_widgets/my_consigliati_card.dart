@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/models/event_model.dart';
-import 'package:mgs_app2/screens/other_screens/event_screen.dart';
+import 'package:mgs_app2/screens/main_screens/event_screen.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/utilities/theme_colors.dart';

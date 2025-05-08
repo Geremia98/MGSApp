@@ -94,15 +94,12 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                     ),
                     Center(
                       child: CircleAvatar(
-                          radius: appConfig.getWidth() * 18,
+                          radius: appConfig.getWidth() * 22,
                           backgroundColor:
                               const Color.fromARGB(255, 255, 221, 109),
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 20),
-                            child: Image.asset(
-                              'assets/images/sammy-registration1.png',
-                              height: 190,
-                            ),
+                          child: Image.asset(
+                            'assets/images/sammy-registration1.png',
+                            height: 190,
                           )),
                     ),
                     Column(
@@ -129,7 +126,7 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                             '(Le tue informazioni sensibili andranno vendute al miglior offerente)',
                             textAlign: TextAlign.start,
                             style: TextStyle(
-                              fontSize: fontSizeMedium,
+                              fontSize: appConfig.getWidth()*4,
                               fontWeight: FontWeight.w500,
                               color: appConfig.getTheme().secondaryHeaderColor,
                             ),
@@ -176,7 +173,10 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                         SegmentedButton<UserGender>(
                           segments: const <ButtonSegment<UserGender>>[
                             ButtonSegment(
-                                value: UserGender.male, label: Text('Maschio')),
+                                value: UserGender.male, 
+                                label: Text('Maschio'),
+
+                            ),
                             ButtonSegment(
                                 value: UserGender.female,
                                 label: Text('Femmina'))
@@ -282,7 +282,7 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                       ],
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     Row(
                       children: [
@@ -371,10 +371,10 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                         },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: appConfig.getTheme().primaryColor,
-                    disabledBackgroundColor: Colors.grey.withOpacity(0.2),
+                    disabledBackgroundColor: appConfig.getTheme().disabledColor,
                     padding: const EdgeInsets.symmetric(vertical: 13),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                   child: Padding(

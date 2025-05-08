@@ -6,6 +6,7 @@ import 'package:mgs_app2/utilities/theme_colors.dart';
 import 'package:mgs_app2/wrapper.dart';
 import 'package:provider/provider.dart';
 
+
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -49,8 +50,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     ]);
 
     final brightnessManager = Provider.of<BrightnessManager>(context);
-
-    print(brightnessManager.brightness);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

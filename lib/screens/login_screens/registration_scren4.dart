@@ -36,8 +36,6 @@ class _RegistrationScreen4State extends State<RegistrationScreen4> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
 
     final AppConfig appConfig = AppConfig(context);
 
@@ -60,9 +58,10 @@ class _RegistrationScreen4State extends State<RegistrationScreen4> {
                         Navigator.pop(context);
                       }, 
                     ),
+                    SizedBox(height: appConfig.getHeight()*3,),
                   Center(
                     child: CircleAvatar(
-                        radius: width * 0.2,
+                        radius: appConfig.getWidth() * 25,
                         backgroundColor:
                             const Color.fromARGB(255, 162, 186, 228),
                         child: Image.asset(
@@ -90,7 +89,7 @@ class _RegistrationScreen4State extends State<RegistrationScreen4> {
                     child: Text(
                       '(Yep, le tue credenziali)',
                       style: TextStyle(
-                        fontSize: fontSizeMedium,
+                        fontSize: appConfig.getWidth()*4,
                         fontWeight: FontWeight.w500,
                         color: appConfig.getTheme().secondaryHeaderColor,
                       ),
@@ -158,26 +157,26 @@ class _RegistrationScreen4State extends State<RegistrationScreen4> {
                     child: _isLoading
                         ? Center(
                             child: Container(
-                              margin: EdgeInsets.all(height * 0.01),
+                              margin: EdgeInsets.all(appConfig.getHeight() * 1),
                               child: CircularProgressIndicator(
                                 color:
                                     appConfig.getTheme().secondaryHeaderColor,
                               ),
                             ),
                           )
-                        : Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              'Registrati',
-                              style: TextStyle(
-                                fontSize: fontSizeButton,
-                                fontWeight: FontWeight.w700,
-                                color: appConfig
-                                    .getTheme()
-                                    .scaffoldBackgroundColor,
-                              ),
+                        : Container(
+                          padding: EdgeInsets.all(appConfig.getWidth()*2),
+                          child: Text(
+                            'Registrati',
+                            style: TextStyle(
+                              fontSize: fontSizeButton,
+                              fontWeight: FontWeight.w700,
+                              color: appConfig
+                                  .getTheme()
+                                  .scaffoldBackgroundColor,
                             ),
                           ),
+                        ),
                   ),
                 ),
               ),

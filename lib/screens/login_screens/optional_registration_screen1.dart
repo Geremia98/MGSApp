@@ -18,8 +18,6 @@ class OptionalRegistrationScreen1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
 
     final AppConfig appConfig = AppConfig(context);
 
@@ -27,7 +25,7 @@ class OptionalRegistrationScreen1 extends StatelessWidget {
       body: SafeArea(
         child: Container(
           height: appConfig.getHeight() * 100,
-          padding: EdgeInsets.only(right: width * 0.1, left: width * 0.1),
+          padding: EdgeInsets.only(right: appConfig.getWidth() * 10, left: appConfig.getWidth() * 10, top: appConfig.getHeight()*5 ),
           child: Stack(
             children: [
               Column(
@@ -36,28 +34,25 @@ class OptionalRegistrationScreen1 extends StatelessWidget {
                 children: <Widget>[
                   Center(
                     child: CircleAvatar(
-                        radius: width * 0.18,
+                        radius: appConfig.getWidth() * 22,
                         backgroundColor:
                             const Color.fromARGB(255, 255, 221, 109),
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 20),
-                          child: Image.asset(
-                            'assets/images/sammy-registration1.png',
-                            height: 190,
-                          ),
+                        child: Image.asset(
+                          'assets/images/sammy-registration1.png',
+                          height: 190,
                         )),
                   ),
                   Column(
                     children: [
                       SizedBox(
-                        height: height * 0.025,
+                        height: appConfig.getHeight() * 4,
                       ),
                       Center(
                         child: Text(
-                          '${controller.name}, devi superarla questa\ncosa dell\'età, su...',
+                          '${controller.name},\ndevi superarla questa\ncosa dell\'età, su...',
                           textAlign: TextAlign.right,
                           style: TextStyle(
-                            fontSize: fontSizeTitle,
+                            fontSize: appConfig.getWidth()*7,
                             fontWeight: FontWeight.w700,
                             height: 1.2,
                             color: appConfig.getTheme().secondaryHeaderColor,
@@ -65,23 +60,21 @@ class OptionalRegistrationScreen1 extends StatelessWidget {
                         ),
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 40,
                       ),
                       Column(
                         children: [
-                          Center(
-                            child: Text(
-                              '(Che poi... potrebbe andare peggio: pensa a chi è pelato!)',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontSize: fontSizeMedium,
-                                fontWeight: FontWeight.w500,
-                                color:
-                                    appConfig.getTheme().secondaryHeaderColor,
-                              ),
+                          Text(
+                            'Che poi potrebbe andare peggio.\nPensa a chi è pelato...',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: appConfig.getWidth()*4,
+                              fontWeight: FontWeight.w500,
+                              color:
+                                  appConfig.getTheme().secondaryHeaderColor,
                             ),
                           ),
-                          SizedBox(height: 50),
+                          SizedBox(height: 30),
                           FilledButton(
                             onPressed: () {
                               Navigator.push(
@@ -105,7 +98,7 @@ class OptionalRegistrationScreen1 extends StatelessWidget {
                             ),
                             child: Padding(
                               padding: EdgeInsets.only(
-                                  left: width * 0.05, right: width * 0.05),
+                                  left: appConfig.getWidth() * 5, right: appConfig.getWidth() * 5),
                               child: Text(
                                 'In realtà lo sono...',
                                 style: TextStyle(
@@ -148,7 +141,7 @@ class OptionalRegistrationScreen1 extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: EdgeInsets.only(
-                          left: width * 0.05, right: width * 0.05),
+                          left: appConfig.getWidth() * 5, right: appConfig.getWidth() * 5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [

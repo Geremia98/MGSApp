@@ -89,7 +89,7 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                     ),
                     Center(
                       child: Text(
-                        '... a quale gruppo\n   appartieni?',
+                        'A quale gruppo\n   appartieni?',
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontSize: fontSizeTitle,
@@ -100,14 +100,14 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                       ),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     Center(
                       child: Text(
                         '(No, non quello sanguigno)',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: fontSizeMedium,
+                          fontSize: appConfig.getWidth()*3.5,
                           fontWeight: FontWeight.w500,
                           color: appConfig.getTheme().secondaryHeaderColor,
                         ),
@@ -163,7 +163,7 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                     Row(
                       children: [
                         Text(
-                          'Sei il boss:  ',
+                          'Sei il boss?  ',
                           style: TextStyle(
                             fontSize: fontSizeBig,
                             color: appConfig.getTheme().secondaryHeaderColor,
@@ -226,15 +226,18 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                     _selected.first == true
                         ? Column(
                             children: [
-                              SizedBox(height: 20),
-                              buildTextField(
-                                appConfig,
-                                hintText: 'Codice Boss',
-                                onChanged: (value) => {
-                                  setState(() {
-                                    controller.setBossCode(value);
-                                  }),
-                                },
+                              SizedBox(height: 10),
+                              Container(
+                                width: appConfig.getWidth()*40,
+                                child: buildTextField(
+                                  appConfig,
+                                  hintText: 'Codice Boss',
+                                  onChanged: (value) => {
+                                    setState(() {
+                                      controller.setBossCode(value);
+                                    }),
+                                  },
+                                ),
                               ),
                               SizedBox(
                                 height: 100,

@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/login_screens/login_screen.dart';
-import 'package:mgs_app2/screens/other_screens/home_screen.dart';
+import 'package:mgs_app2/screens/main_screens/home_screen.dart';
 import 'package:mgs_app2/services/translator/provider.dart';
 import 'package:mgs_app2/services/translator/translator.dart';
 import 'package:mgs_app2/wrapper.dart';

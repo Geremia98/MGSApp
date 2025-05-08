@@ -53,7 +53,6 @@ class _RegistrationScreen2State extends State<RegistrationScreen2> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          height: appConfig.getHeight() * 100,
           padding: EdgeInsets.only(right: appConfig.getWidth()*8, left: appConfig.getWidth()*8, top: appConfig.getHeight()*0.7),
           child: Stack(
             children: [
@@ -68,6 +67,7 @@ class _RegistrationScreen2State extends State<RegistrationScreen2> {
                         Navigator.pop(context);
                       }, 
                     ),
+                    SizedBox(height: appConfig.getHeight()*4,),
                   Center(
                     child: CircleAvatar(
                         radius: width * 0.25,
@@ -101,7 +101,7 @@ class _RegistrationScreen2State extends State<RegistrationScreen2> {
                       '(Sarà la tua foto profilo)',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: fontSizeMedium,
+                        fontSize: appConfig.getWidth()*4,
                         fontWeight: FontWeight.w500,
                         color: appConfig.getTheme().secondaryHeaderColor,
                       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/utilities/theme_colors.dart';
+import 'package:mgs_app2/widgets/home_page_widgets/my_profile_pic.dart';
 
 class SortOfAppBar extends StatelessWidget {
   const SortOfAppBar(
@@ -28,8 +29,8 @@ class SortOfAppBar extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.all(appConfig.getWidth() * 1.2),
             decoration: BoxDecoration(
-              borderRadius:
-                  BorderRadius.circular(appConfig.getWidth() * 1.8), // Bordi arrotondati
+              borderRadius: BorderRadius.circular(
+                  appConfig.getWidth() * 1.8), // Bordi arrotondati
               border: getCustomBorder(
                 width: appConfig.getWidth() * bigRoutingButtonBorderThickness,
                 appConfig: appConfig,
@@ -45,23 +46,16 @@ class SortOfAppBar extends StatelessWidget {
             child: SizedBox(
           width: 10,
         )),
-        Container(
-          width: appConfig.getWidth() * 12,
-          height: appConfig.getWidth() * 12,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(profileImage),
-              fit: BoxFit.cover,
-            ),
-            borderRadius: BorderRadius.all(
-                Radius.circular(appConfig.getWidth() * homeScreenProfilePicRadius)),
-            border: Border.all(
-              color: Colors.white,
-              width: appConfig.getWidth() * 30,
-            ),
-          ),
+        MyProfilePicture(
+          appConfig: appConfig, 
+          profileImage: profileImage,
+          borderThickness: homeScreenProfilePicBorderThickness,
+          borderRadius: homeScreenProfilePicBorderRadius,
+          dimension: homeScreenProfilePicDimension,
         ),
       ],
     );
   }
 }
+
+
