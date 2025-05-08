@@ -100,7 +100,10 @@ Widget buildTextField(
                     color: iconColor,
                   ),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+              borderSide: BorderSide(
+                color: appConfig.getTheme().primaryColor,
+                width: appConfig.getWidth()*0.1
+              ),
               borderRadius: BorderRadius.circular(10),
             ),
             disabledBorder: OutlineInputBorder(
@@ -108,7 +111,7 @@ Widget buildTextField(
               borderRadius: BorderRadius.circular(10),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+              borderSide: BorderSide(color: appConfig.getTheme().primaryColor),
               borderRadius: BorderRadius.circular(10),
             ),
             errorBorder: OutlineInputBorder(

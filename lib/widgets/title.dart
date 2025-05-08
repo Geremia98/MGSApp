@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mgs_app2/utilities/constants_dimensions.dart';
 
 import '../utilities/app_config.dart';
 import 'font.dart';
@@ -14,7 +15,7 @@ Widget buildTitle(
   final AppConfig appConfig = AppConfig(context);
   return Container(
     width: appConfig.getWidth() * 100,
-    padding: EdgeInsets.symmetric(horizontal: appConfig.getWidth() * 10),
+    padding: EdgeInsets.symmetric(horizontal: appConfig.getWidth() * paddingForCreationEventHorizontal),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [

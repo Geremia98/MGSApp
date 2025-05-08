@@ -11,6 +11,7 @@ import 'package:mgs_app2/screens/add_event/stages/event_start_stage.dart';
 import 'package:mgs_app2/screens/add_event/stages/event_target_group_stage.dart';
 import 'package:mgs_app2/screens/add_event/stages/event_target_person.dart';
 import 'package:mgs_app2/screens/add_event/stages/event_title_stage.dart';
+import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/widgets/back_button_app_bar.dart';
 
 import '../../utilities/app_config.dart';
@@ -50,8 +51,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
               children: [
                 Container(
                   padding: EdgeInsets.only(
-                      left: appConfig.getWidth() * 8,
-                      right: appConfig.getWidth() * 8,
+                      left: appConfig.getWidth() * paddingForCreationEventHorizontal,
+                      right: appConfig.getWidth() * paddingForCreationEventHorizontal,
                       bottom: appConfig.getHeight() * 2,
                       top: appConfig.getHeight() * 1.3),
                   child: BackButtonAppBar(
@@ -103,7 +104,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
               child: Container(
                 width: appConfig.getWidth() * 100,
                 padding:
-                    EdgeInsets.symmetric(horizontal: appConfig.getWidth() * 8),
+                    EdgeInsets.symmetric(horizontal: appConfig.getWidth() * paddingForCreationEventHorizontal),
                 child: AddEventNavigator(
                   controller,
                 ),

@@ -64,11 +64,12 @@ final ThemeData _lightTheme = ThemeData(
     labelSmall: TextStyle(color: Color.fromARGB(255, 7, 247, 255))
   ),
 
-  elevatedButtonTheme: ElevatedButtonThemeData(
+  elevatedButtonTheme: const ElevatedButtonThemeData(
     style: ButtonStyle(
       backgroundColor: WidgetStatePropertyAll(Colors.white)
     )
   ),
+
 
   //Da qua in poi ci sono i colori miei:
   /*coloreSfondoDay*/splashColor: Colors.white,

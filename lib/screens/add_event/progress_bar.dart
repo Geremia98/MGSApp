@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/add_event/add_event_controller.dart';
+import 'package:mgs_app2/utilities/constants_dimensions.dart';
 
 import '../../utilities/app_config.dart';
 
@@ -40,7 +41,7 @@ class _AddEventProgressBarState extends State<AddEventProgressBar> {
     controller.setAnimateProgressBar(animateProgressBar);
 
 
-    final double fullWidth = appConfig.getWidth() * 82;
+    final double fullWidth = appConfig.getWidth() * dimensionProgressBar;
     final double singleStepWidth =
         (fullWidth / (AddEventStage.values.length - 1));
     double progress = (singleStepWidth * controller.getCurrentStageIndex());
@@ -52,7 +53,7 @@ class _AddEventProgressBarState extends State<AddEventProgressBar> {
     return Column(
       children: [
         Container(
-          width: appConfig.getWidth() * 82,
+          width: appConfig.getWidth() * dimensionProgressBar,
           height: 6,
           child: AnimatedContainer(
             duration: Duration(milliseconds: 500),

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:mgs_app2/models/event_model.dart';
 import 'package:mgs_app2/screens/add_event/add_event_controller.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
+import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/utilities/constants_strings.dart';
 import 'package:mgs_app2/widgets/title.dart';
 
@@ -43,7 +44,7 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
         ),
         Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: appConfig.getWidth() * 10,
+            horizontal: appConfig.getWidth() * paddingForCreationEventHorizontal,
           ),
           child: Column(
             children: [
@@ -54,14 +55,34 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
                 title: 'Genere:',
               ),
               SizedBox(height: 20),
-              buildTextField(
-                appConfig,
-                textCapitalization: TextCapitalization.characters,
-                textInputType: const TextInputType.numberWithOptions(decimal: false),
-                hintText: 'Età',
-                maxLength: 30,
-                onChanged: onTargetDateChanged,
-                initialValue: controller.getAge() != null ? controller.getAge().toString() : '',
+              Row(
+                children: [
+                  Flexible(
+                    flex: 2,
+                    child: buildTextField(
+                      appConfig,
+                      textCapitalization: TextCapitalization.characters,
+                      textInputType: const TextInputType.numberWithOptions(decimal: false),
+                      hintText: 'Età minima',
+                      onChanged: onTargetDateChanged,
+                      initialValue: controller.getAge() != null ? controller.getAge().toString() : '',
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: appConfig.getWidth()*3),
+                    child: const Text('--')),
+                  Flexible(
+                    flex: 2,
+                    child: buildTextField(
+                      appConfig,
+                      textCapitalization: TextCapitalization.characters,
+                      textInputType: const TextInputType.numberWithOptions(decimal: false),
+                      hintText: 'Età massima',
+                      onChanged: onTargetDateChanged,
+                      initialValue: controller.getAge() != null ? controller.getAge().toString() : '',
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

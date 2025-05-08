@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mgs_app2/models/faq_couple.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_strings.dart';
+import 'package:mgs_app2/widgets/buttons.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FAQScreen extends StatefulWidget {
   const FAQScreen({super.key});
@@ -11,10 +13,10 @@ class FAQScreen extends StatefulWidget {
 }
 
 class _FAQScreenState extends State<FAQScreen> {
+  
+
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
     final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
@@ -22,69 +24,61 @@ class _FAQScreenState extends State<FAQScreen> {
         SafeArea(
           bottom: false,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+            padding: EdgeInsets.symmetric(horizontal: appConfig.getWidth() * 5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => {
-                        Navigator.pop(context),
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(width * 0.02),
-                        decoration: BoxDecoration(
-                          // Colore di sfondo
-                          borderRadius: BorderRadius.circular(width * 0.02),
-                          // Bordi arrotondati
-                          border: Border.all(
-                            width: width * 0.002,
-                            color: appConfig.getTheme().cardColor
-                            // Larghezza del bordo
-                          ),
-                        ),
-                        child: const Icon(
-                          Icons.arrow_back_rounded,
-                          // Icona simile a quella mostrata
-                          size: 24.0,
-                          // Dimensione dell'icona
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                GoBackButton(
+                    icon: Icons.arrow_back_rounded,
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    appConfig: appConfig),
                 Container(
                   padding: EdgeInsets.only(
-                    top: height * 0.035,
-                    bottom: height * 0.01,
+                    top: appConfig.getHeight() * 3.5,
+                    bottom: appConfig.getHeight() * 1,
                   ),
                   child: Text(
                     'FAQ',
                     style: TextStyle(
-                      fontSize: width * 0.07,
+                      fontSize: appConfig.getWidth() * 7,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                Expanded(child: FAQList(
-                      faqs: faqsList,
-                    )),
+                const Expanded(
+                    child: FAQList(
+                  faqs: faqsList,
+                )),
                 Container(
                   padding: EdgeInsets.only(
-                    top: height * 0.03,
-                    bottom: height * 0.04,
+                    top: appConfig.getHeight() * 3,
+                    bottom: appConfig.getHeight() * 3,
                   ),
-                  child: Center(
-                    child: Text(
-                      'Quello che cerco non è presente ...',
-                      style: TextStyle(
-                        color: Colors.purple,
-                        fontSize: width * 0.04,
-                        decoration: TextDecoration.underline
+                  child: Column(children: [
+                    Center(
+                      child: Text(
+                        'Quello che cerchi non c\'è?',
+                        style: TextStyle(
+                          fontSize: appConfig.getWidth() * 4,
+                        ),
                       ),
                     ),
-                  ),
+                    GestureDetector(
+                      onTap: () {
+                        
+                      },
+                      child: Center(
+                        child: Text(
+                          'Mandaci una mail',
+                          style: TextStyle(
+                              fontSize: appConfig.getWidth() * 4,
+                              decoration: TextDecoration.underline),
+                        ),
+                      ),
+                    ),
+                  ]),
                 ),
               ],
             ),
@@ -147,11 +141,15 @@ class _FAQItemWidgetState extends State<FAQItemWidget>
 
   @override
   Widget build(BuildContext context) {
+    final AppConfig appConfig = AppConfig(context);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(196, 237, 237, 237),
-        border: Border.all(color: Colors.grey.shade300),
+        color: appConfig.getTheme().highlightColor,
+        border: Border.all(
+          color: appConfig.getTheme().primaryColor,
+          width: appConfig.getWidth()*0.05
+          ),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -160,21 +158,20 @@ class _FAQItemWidgetState extends State<FAQItemWidget>
           InkWell(
             onTap: _handleTap,
             child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               child: Row(
                 children: [
                   Expanded(
                     child: Text(
                       widget.question,
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                          fontSize: appConfig.getWidth()*4,),
                     ),
                   ),
                   // Icona di espansione animata
                   RotationTransition(
                     turns: _arrowAnimation,
-                    child: const Icon(Icons.expand_more, color: Colors.black),
+                    child: const Icon(Icons.expand_more),
                   ),
                 ],
               ),
@@ -195,7 +192,7 @@ class _FAQItemWidgetState extends State<FAQItemWidget>
                 padding: const EdgeInsets.only(right: 14, left: 14, bottom: 14),
                 child: Text(
                   widget.answer,
-                  style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
+                  style: TextStyle(fontSize: appConfig.getWidth()*3.5, color: Colors.black),
                 ),
               ),
             ),
@@ -221,5 +218,3 @@ class FAQList extends StatelessWidget {
         });
   }
 }
-
-

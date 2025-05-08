@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mgs_app2/screens/add_event/add_event_controller.dart';
+import 'package:mgs_app2/utilities/constants_dimensions.dart';
 
 import '../../../utilities/app_config.dart';
 import '../../../widgets/text_field.dart';
@@ -47,7 +48,7 @@ class _TitleStageState extends State<EventInfoStage> {
         ),
         Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: appConfig.getWidth() * 10,
+            horizontal: appConfig.getWidth() * paddingForCreationEventHorizontal,
           ),
           child: buildTextField(
             appConfig,
@@ -63,7 +64,7 @@ class _TitleStageState extends State<EventInfoStage> {
         ),
         Container(
           padding: EdgeInsets.symmetric(
-            horizontal: appConfig.getWidth() * 10,
+            horizontal: appConfig.getWidth() * paddingForCreationEventHorizontal,
           ),
           child: Row(
             children: [

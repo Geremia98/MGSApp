@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mgs_app2/screens/add_event/add_event_controller.dart';
+import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import '../../../utilities/app_config.dart';
 import '../../../widgets/image_upload.dart';
 import '../../../widgets/title.dart';
@@ -46,7 +47,7 @@ class _TitleStageState extends State<EventImageStage> {
         ),
         Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: appConfig.getWidth() * 10,
+            horizontal: appConfig.getWidth() * paddingForCreationEventHorizontal,
           ),
           child: Center(
             child: ImageUploadCard(

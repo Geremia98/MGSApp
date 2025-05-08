@@ -9,3 +9,6 @@ const double smallMyEventsCardBorderThickness = 0.0004;
 const double homeScreenProfilePicRadius = 10;
 
 const double eventiDelMeseReminderFontSize = 0.04;
+
+const double paddingForCreationEventHorizontal = 6;
+const double dimensionProgressBar = 86;

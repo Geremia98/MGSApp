@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mgs_app2/screens/add_event/add_event_controller.dart';
+import 'package:mgs_app2/utilities/constants_dimensions.dart';
 
 import '../../../services/translator/translator.dart';
 import '../../../utilities/app_config.dart';
@@ -72,7 +73,7 @@ class _TitleStageState extends State<EventStartStage> {
         ),
         Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: appConfig.getWidth() * 10,
+            horizontal: appConfig.getWidth() * paddingForCreationEventHorizontal,
           ),
           child: Row(
             children: [
@@ -132,7 +133,7 @@ class _TitleStageState extends State<EventStartStage> {
         ),
         Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: appConfig.getWidth() * 10,
+            horizontal: appConfig.getWidth() * paddingForCreationEventHorizontal,
           ),
           child: Row(
             children: [

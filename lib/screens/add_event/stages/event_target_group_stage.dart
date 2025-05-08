@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/add_event/add_event_controller.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
+import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/widgets/title.dart';
 
 import '../../../utilities/constants_strings.dart';
@@ -45,7 +46,7 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
         ),
         Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: appConfig.getWidth() * 10,
+            horizontal: appConfig.getWidth() * paddingForCreationEventHorizontal,
           ),
           child: Column(
             children: [

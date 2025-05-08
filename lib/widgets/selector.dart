@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mgs_app2/utilities/constants_dimensions.dart';
 
 import '../utilities/app_config.dart';
 import 'font.dart';
@@ -124,7 +125,7 @@ class _SelectorStyleState<T> extends State<SelectorStyle<T>> {
         children: <Widget>[
           _title != null && _title.isNotEmpty
               ? SizedBox(
-                  width: _appConfig.getWidth() * 79,
+                  width: _appConfig.getWidth() * dimensionProgressBar,
                   child: Text(
                     _title,
                     textAlign: TextAlign.left,
@@ -145,6 +146,7 @@ class _SelectorStyleState<T> extends State<SelectorStyle<T>> {
             child: DropdownButtonFormField<T>(
               key: _dropdownButtonKey,
               elevation: 5,
+              dropdownColor: _appConfig.getTheme().highlightColor,
               decoration: InputDecoration(
                 contentPadding: centerText ? EdgeInsets.only(left: 0) : EdgeInsets.only(left: 15),
                 filled: false,
@@ -166,7 +168,10 @@ class _SelectorStyleState<T> extends State<SelectorStyle<T>> {
                   fontWeight: FontWeight.w600,
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.cyan),
+                  borderSide: BorderSide(
+                    color: _appConfig.getTheme().primaryColor,
+                    width: _appConfig.getWidth()*0.1
+                  ),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 disabledBorder: OutlineInputBorder(
@@ -175,7 +180,8 @@ class _SelectorStyleState<T> extends State<SelectorStyle<T>> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: Colors.greenAccent,
+                    color: _appConfig.getTheme().primaryColor,
+                    width: _appConfig.getWidth()*0.2
                   ),
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -189,10 +195,6 @@ class _SelectorStyleState<T> extends State<SelectorStyle<T>> {
                 ),
               ),
               alignment: Alignment.center,
-              // Aligns the text to the center
-              style: TextStyle(
-                fontWeight: FontWeight.normal,
-              ),
               hint: Text(
                 _hintText ?? '',
                 style: _currentValue == null
