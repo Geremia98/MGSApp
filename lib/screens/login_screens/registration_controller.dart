@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/models/image_model.dart';
 import 'package:mgs_app2/models/user_firestore.dart';
@@ -39,7 +38,7 @@ class RegistrationController {
     this.gender = gender;
   }
 
-  void setBirthday(DateTime date) {
+  void setBirthday(DateTime? date) {
     birthDate = date;
   }
 

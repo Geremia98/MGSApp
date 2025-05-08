@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mgs_app2/screens/main_screens/personal_screen.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/utilities/theme_colors.dart';
@@ -46,12 +47,18 @@ class SortOfAppBar extends StatelessWidget {
             child: SizedBox(
           width: 10,
         )),
-        MyProfilePicture(
-          appConfig: appConfig, 
-          profileImage: profileImage,
-          borderThickness: homeScreenProfilePicBorderThickness,
-          borderRadius: homeScreenProfilePicBorderRadius,
-          dimension: homeScreenProfilePicDimension,
+        GestureDetector(
+          onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const PersonalScreen()),
+              ),
+          child: MyProfilePicture(
+            appConfig: appConfig, 
+            profileImage: profileImage,
+            borderThickness: homeScreenProfilePicBorderThickness,
+            borderRadius: homeScreenProfilePicBorderRadius,
+            dimension: homeScreenProfilePicDimension,
+          ),
         ),
       ],
     );

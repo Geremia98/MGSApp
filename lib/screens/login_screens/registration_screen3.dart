@@ -139,26 +139,6 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                           controller.setGroup(value),
                       title: 'Gruppo:',
                     ),
-                    /*CustomRowRegistration3(
-                        height: height,
-                        width: width,
-                        hint: 'Mare Nostrum',
-                        lista: constantDropDownCountryList,
-                        titolo: 'Paese: '),
-                    CustomRowRegistration3(
-                      height: height,
-                      width: width,
-                      lista: constantDropDownIspettoriaList,
-                      hint: 'Golfo di Napoli',
-                      titolo: 'Ispettoria: ',
-                    ),
-                    CustomRowRegistration3(
-                      height: height,
-                      width: width,
-                      lista: constantDropDownGroupList,
-                      titolo: 'Gruppo: ',
-                      hint: 'Atlantide',
-                    ),*/
                     SizedBox(height: 40),
                     Row(
                       children: [
