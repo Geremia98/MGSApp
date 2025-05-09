@@ -20,7 +20,7 @@ const double homeScreenProfilePicBorderRadius = 2.5;
 
 //PersonalPage
 const double personaPageProfilePicBorderThickness = 0.1;
-const double personalPageProfilePicDimension = 35;
+const double personalPageProfilePicDimension = 26;
 const double personalePageProfilePicBorderRadius = 5;
 const double buttonsAndTextFieldsThickness = 0.1;
 const double borderThicknessWhenOnFocus = 0.4;

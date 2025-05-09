@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../utilities/app_config.dart';
-import '../utilities/theme_colors.dart';
+import '../utilities/my_theme_data.dart';
 import 'font.dart';
 
 class SnackBarStyle {

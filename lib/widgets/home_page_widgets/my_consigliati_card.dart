@@ -3,7 +3,7 @@ import 'package:mgs_app2/models/event_model.dart';
 import 'package:mgs_app2/screens/main_screens/event_screen.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
-import 'package:mgs_app2/utilities/theme_colors.dart';
+import 'package:mgs_app2/utilities/my_theme_data.dart';
 import 'package:mgs_app2/utilities/utils.dart';
 
 class MyConsigliatiCard extends StatelessWidget {

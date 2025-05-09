@@ -6,7 +6,7 @@ import 'package:mgs_app2/screens/main_screens/faq_screen.dart';
 import 'package:mgs_app2/screens/main_screens/personal_screen.dart';
 import 'package:mgs_app2/services/firebase/auth.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-import 'package:mgs_app2/utilities/theme_colors.dart';
+import 'package:mgs_app2/utilities/my_theme_data.dart';
 import 'package:mgs_app2/wrapper.dart';
 
 class HomePageDrawer extends StatelessWidget {

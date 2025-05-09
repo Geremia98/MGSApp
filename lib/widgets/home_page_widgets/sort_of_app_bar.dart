@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/main_screens/personal_screen.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
-import 'package:mgs_app2/utilities/theme_colors.dart';
+import 'package:mgs_app2/utilities/my_theme_data.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/my_profile_pic.dart';
 
 class SortOfAppBar extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
-import 'package:mgs_app2/utilities/theme_colors.dart';
+import 'package:mgs_app2/utilities/my_theme_data.dart';
 
 class EventiDelMeseReminder extends StatelessWidget {
   const EventiDelMeseReminder({

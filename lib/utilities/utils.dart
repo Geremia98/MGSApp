@@ -41,6 +41,12 @@ String formatTimeFromDateTime(DateTime dateTime) {
           : '${dateTime.hour} : ${dateTime.minute}';
 }
 
+String obscureExceptLast(String text, {int visible = 2, String mask = '*'}) {
+  if (text.length <= visible) return text;
+  return mask * (text.length - visible) + text.substring(text.length - visible);
+}
+
+
 Widget buildAddNewImageButton(
     BuildContext context, double width, double raggio, double height) {
   final AppConfig appConfig = AppConfig(context);

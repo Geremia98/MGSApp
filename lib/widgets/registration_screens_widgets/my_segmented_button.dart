@@ -52,58 +52,61 @@ class _MySegmentedButtonState<T> extends State<MySegmentedButton<T>> {
   @override
   Widget build(BuildContext context) {
     _appConfig = AppConfig(context);
-    return Row(
-      children: [
-        Text(
-          _title,
-          style: TextStyle(
-            color: _appConfig.getTheme().secondaryHeaderColor,
-            fontWeight: fontWeightLabels,
-            fontSize: fontSizeLables,
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: _appConfig.getHeight()*0.7),
+      child: Row(
+        children: [
+          Text(
+            _title,
+            style: TextStyle(
+              color: _appConfig.getTheme().secondaryHeaderColor,
+              fontWeight: fontWeightLabels,
+              fontSize: fontSizeLables,
+            ),
           ),
-        ),
-        SizedBox(width: 8),
-        SegmentedButton<T>(
-          segments: <ButtonSegment<T>>[
-            ButtonSegment(value: _leftValue, label: Text(_leftString)),
-            ButtonSegment(value: _rightValue, label: Text(_rightString))
-          ],
-          selected: _selected,
-          onSelectionChanged: (newValue) {
-                  if (widget.isEnable) {
-                    setState(() {
-                    _selected = newValue!;
-                  });
-                  if (_onValueChange != null) {
-                    _onValueChange!(_selected);
-                  }
-                  }
-                },
-          showSelectedIcon: false,
-          style: SegmentedButton.styleFrom(
-        overlayColor: Colors.transparent,
-            // colore di fondo “normale”
-        backgroundColor: _appConfig.getTheme().scaffoldBackgroundColor,
-        // colore di fondo quando selezionato
-        selectedBackgroundColor: widget.isEnable ? _appConfig.getTheme().primaryColor :  _appConfig.getTheme().splashColor,
-        
-        // colore del testo “normale”
-        foregroundColor: _appConfig.getTheme().primaryColor,
-        // colore del testo quando selezionato
-        selectedForegroundColor: _appConfig.getTheme().scaffoldBackgroundColor,
-        // bordo e forma
-        side: BorderSide(
-          width: buttonsAndTextFieldsThickness,
-          color: widget.isEnable ? _appConfig.getTheme().primaryColor : _appConfig.getTheme().disabledColor
-        ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(toggleSwitchRadiusBorder)),
-        // padding interno
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
-        // stile del testo (se vuoi applicarlo in modo uniforme)
-        textStyle: const TextStyle(fontSize: fontSizeTextAndFormField, fontWeight: FontWeight.w300),
+          SizedBox(width: 8),
+          SegmentedButton<T>(
+            segments: <ButtonSegment<T>>[
+              ButtonSegment(value: _leftValue, label: Text(_leftString)),
+              ButtonSegment(value: _rightValue, label: Text(_rightString))
+            ],
+            selected: _selected,
+            onSelectionChanged: (newValue) {
+                    if (widget.isEnable) {
+                      setState(() {
+                      _selected = newValue!;
+                    });
+                    if (_onValueChange != null) {
+                      _onValueChange!(_selected);
+                    }
+                    }
+                  },
+            showSelectedIcon: false,
+            style: SegmentedButton.styleFrom(
+          overlayColor: Colors.transparent,
+              // colore di fondo “normale”
+          backgroundColor: _appConfig.getTheme().scaffoldBackgroundColor,
+          // colore di fondo quando selezionato
+          selectedBackgroundColor: widget.isEnable ? _appConfig.getTheme().primaryColor :  _appConfig.getTheme().splashColor,
+          
+          // colore del testo “normale”
+          foregroundColor: _appConfig.getTheme().primaryColor,
+          // colore del testo quando selezionato
+          selectedForegroundColor: _appConfig.getTheme().scaffoldBackgroundColor,
+          // bordo e forma
+          side: BorderSide(
+            width: buttonsAndTextFieldsThickness,
+            color: widget.isEnable ? _appConfig.getTheme().primaryColor : _appConfig.getTheme().disabledColor
           ),
-        )
-      ],
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(toggleSwitchRadiusBorder)),
+          // padding interno
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
+          // stile del testo (se vuoi applicarlo in modo uniforme)
+          textStyle: const TextStyle(fontSize: fontSizeTextAndFormField, fontWeight: FontWeight.w300),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

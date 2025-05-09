@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
+import 'package:mgs_app2/utilities/my_colors.dart';
+
+
+ThemeData getDarkTheme() => _darkTheme;
+ThemeData getLightTheme() => _lightTheme;
 
 final ThemeData _lightTheme = ThemeData(
+
+  extensions: const <ThemeExtension<dynamic>>[
+      CustomColors.light,
+    ],
 
   fontFamily: 'Montserrat',
   iconTheme: const IconThemeData(
@@ -59,6 +68,10 @@ final ThemeData _lightTheme = ThemeData(
 
 final ThemeData _darkTheme = ThemeData(
 
+  extensions: const <ThemeExtension<dynamic>>[
+      CustomColors.dark,
+    ],
+
   fontFamily: 'Montserrat',
   iconTheme: const IconThemeData(
     color: Color.fromARGB(255, 239, 245, 255),
@@ -101,64 +114,6 @@ final ThemeData _darkTheme = ThemeData(
   /*coloreErroreDay*/indicatorColor:  const Color.fromARGB(255, 227, 46, 33),
 
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-ThemeData getDarkTheme() => _darkTheme;
-ThemeData getLightTheme() => _lightTheme;
-
 
 
 

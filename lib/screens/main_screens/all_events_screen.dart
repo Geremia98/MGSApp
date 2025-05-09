@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-import 'package:mgs_app2/utilities/theme_colors.dart';
+import 'package:mgs_app2/utilities/my_theme_data.dart';
 
 class AllEventsScreen extends StatefulWidget {
   final String titolo;
