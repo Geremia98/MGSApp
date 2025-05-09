@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
+import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/widgets/font.dart';
 
 Widget buildMyTextFormField(
@@ -30,9 +31,9 @@ Widget buildMyTextFormField(
   textColor ??= appConfig.getTheme().secondaryHeaderColor;
 
   return Padding(
-    padding: EdgeInsets.symmetric(vertical: appConfig.getHeight()*1),
+    padding: EdgeInsets.symmetric(vertical: appConfig.getHeight()*0.7),
     child: Container(
-        width: appConfig.getWidth()*80,
+        width: appConfig.getWidth()*100,
         child: Row(
           children: <Widget>[
                 Text(
@@ -40,8 +41,8 @@ Widget buildMyTextFormField(
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     color: appConfig.getTheme().secondaryHeaderColor,
-                    fontWeight: FontWeight.w500,
-                    fontSize: appConfig.getHeight() * 1.8,
+                    fontWeight: fontWeightLabels,
+                    fontSize: fontSizeLables,
                   ),
                 ),
             SizedBox(
@@ -59,10 +60,9 @@ Widget buildMyTextFormField(
             obscureText: obscureText,
             style: TextStyle(
               letterSpacing: 0.8,
-              fontSize: appConfig.getWidth()*4, 
+              fontSize: fontSizeTextAndFormField, 
               fontWeight: FontWeight.w500,
               color: appConfig.getTheme().primaryColor
-    
             ),
             controller: controller,
             onSaved: onSaved,
@@ -103,35 +103,35 @@ Widget buildMyTextFormField(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: appConfig.getTheme().primaryColor,
-                  width: appConfig.getWidth()*0.1
+                  width: buttonsAndTextFieldsThickness
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
               disabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: appConfig.getTheme().disabledColor,
-                  width: appConfig.getWidth()*0.05
+                  width: buttonsAndTextFieldsThickness
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: appConfig.getTheme().primaryColor,
-                  width: appConfig.getWidth()*0.15
+                  width: borderThicknessWhenOnFocus
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
               errorBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: appConfig.getTheme().indicatorColor,
-                  width: appConfig.getWidth()*0.15
+                  width: borderThicknessWhenOnFocus
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: appConfig.getTheme().primaryColor,
-                  width: appConfig.getWidth()*0.1
+                  width: borderThicknessWhenOnFocus
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),

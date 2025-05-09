@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mgs_app2/main.dart';
 import 'package:mgs_app2/models/event_model.dart';
 import 'package:mgs_app2/screens/add_event/add_event_screen.dart';
-import 'package:mgs_app2/screens/other_screens/FAQ_screen.dart';
+import 'package:mgs_app2/screens/main_screens/faq_screen.dart';
 import 'package:mgs_app2/screens/main_screens/personal_screen.dart';
 import 'package:mgs_app2/services/firebase/auth.dart';
 import 'package:mgs_app2/utilities/app_config.dart';

@@ -3,12 +3,13 @@ import 'package:mgs_app2/models/faq_couple.dart';
 
 const Map<String, String> constantDropDownCountryList = {
   'IT': 'Italia',
-  'ES': 'Spain'
+  'ES': 'Spain',
+  'EN': 'England'
 };
 const Map<String, String> constantDropDownIspettoriaList = {
   'Triveneto': 'Triveneto',
   'Centrale': 'Centrale',
-  'Lombardo-Emiliana': 'Lombardo-Emiliana',
+  'Lombardo-Emiliana': 'Lomba-Emiliana',
   'Sud': 'Sud'
 };
 const Map<String, String> constantDropDownGroupList = {

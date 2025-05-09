@@ -2,12 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 
-
-TextStyle textStyleTextField(BuildContext context) => TextStyle(
-  color: AppConfig(context).getTheme().secondaryHeaderColor,
-  fontWeight: FontWeight.w500,
-);
-
 class SelectorForPersonalScreen<T> extends StatefulWidget {
   final void Function(T) onValueChange;
   final Map<T, String> items;
@@ -29,7 +23,7 @@ class SelectorForPersonalScreen<T> extends StatefulWidget {
     this.itemWidget,
     required this.title,
     this.hintText = '',
-    this.isEnable = true,
+    required this.isEnable,
     this.hasSuffixIncon = true,
     this.openOnCreate = false,
     this.centerText = false,
@@ -120,18 +114,18 @@ class _SelectorForPersonalScreenState<T> extends State<SelectorForPersonalScreen
         canvasColor: _appConfig.getTheme().cardColor,
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: _appConfig.getHeight()*1),
+        padding: EdgeInsets.symmetric(vertical: _appConfig.getHeight()*1.1),
         child: Container(
-          width: _appConfig.getWidth()*80,
+          width: _appConfig.getWidth()*100,
           child: Row(
             children: <Widget>[
                   Text(
                     _title,
                     textAlign: TextAlign.left,
                     style: TextStyle(
-                      color: _appConfig.getTheme().secondaryHeaderColor,
-                      fontWeight: FontWeight.w500,
-                      fontSize: _appConfig.getHeight() * 1.8,
+                    color: _appConfig.getTheme().secondaryHeaderColor,
+                      fontWeight: fontWeightLabels,
+                      fontSize: fontSizeLables,
                     ),
                   ),
               SizedBox(
@@ -141,7 +135,8 @@ class _SelectorForPersonalScreenState<T> extends State<SelectorForPersonalScreen
                 child: Container(
                   width: _appConfig.getWidth()*10,
                   alignment: Alignment.center,
-                  height: 41,
+                  height: _appConfig.getHeight()*4.4,
+
                   child: DropdownButtonFormField<T>(
                     key: _dropdownButtonKey,
                     elevation: 5,
@@ -156,8 +151,10 @@ class _SelectorForPersonalScreenState<T> extends State<SelectorForPersonalScreen
                               width: 5,
                               child: Icon(
                                 Icons.keyboard_arrow_down,
-                                size: 18,
-                                color: _appConfig.getTheme().secondaryHeaderColor,
+                                size: 20,
+                                color: widget.isEnable ?
+                                  _appConfig.getTheme().primaryColor
+                                  : _appConfig.getTheme().disabledColor,
                               ),
                             )
                           : null,
@@ -167,43 +164,52 @@ class _SelectorForPersonalScreenState<T> extends State<SelectorForPersonalScreen
                         fontWeight: FontWeight.w600,
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: _appConfig.getTheme().primaryColor,
-                          width: _appConfig.getWidth()*0.1
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                borderSide: BorderSide(
+                  color: _appConfig.getTheme().primaryColor,
+                  width: buttonsAndTextFieldsThickness
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
                       disabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.pink),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                borderSide: BorderSide(
+                  color: _appConfig.getTheme().disabledColor,
+                  width: buttonsAndTextFieldsThickness
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: _appConfig.getTheme().primaryColor,
-                          width: _appConfig.getWidth()*0.2
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                borderSide: BorderSide(
+                  color: _appConfig.getTheme().primaryColor,
+                  width: borderThicknessWhenOnFocus
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
                       errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red.withOpacity(0.5)),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                borderSide: BorderSide(
+                  color: _appConfig.getTheme().indicatorColor,
+                  width: buttonsAndTextFieldsThickness
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
                       focusedErrorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                borderSide: BorderSide(
+                  color: _appConfig.getTheme().indicatorColor,
+                  width: buttonsAndTextFieldsThickness
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
                     ),
                     alignment: Alignment.center,
                     hint: Text(
                       _hintText ?? '',
                       style: _currentValue == null
-                          ? TextStyle(
+                          ? const TextStyle(
                               color: Colors.grey,
-                              fontSize: _appConfig.getHeight() * 1.7,
+                              fontSize: fontSizeTextAndFormField,
                             )
                           : TextStyle(
                               color: _appConfig.getTheme().primaryColor,
-                              fontSize: _appConfig.getHeight() * 1.7,
+                              fontSize: fontSizeTextAndFormField,
                             ),
                     ),
                     //itemHeight: sections.isNotEmpty ? _appConfig.getHeight() * 2 * sections.length : _appConfig.getHeight() * 2,
@@ -251,20 +257,17 @@ class _SelectorForPersonalScreenState<T> extends State<SelectorForPersonalScreen
       return DropdownMenuItem(
         value: key,
         enabled: isEnabled,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 0),
-          child: SizedBox(
-            height: _appConfig.getHeight() * 2,
-            child: Center(
-              child: Text(
-                _items[key]!,
-                style: TextStyle(
-                  color: isEnabled
-                      ? _appConfig.getTheme().secondaryHeaderColor
-                      : Colors.grey,
-                  fontSize: _appConfig.getHeight() * 1.7,
-                  fontWeight: FontWeight.w600,
-                ),
+        child: SizedBox(
+          height: _appConfig.getHeight() * 5,
+          child: Center(
+            child: Text(
+              _items[key]!,
+              style: TextStyle(
+                color: isEnabled
+                    ? _appConfig.getTheme().primaryColor
+                    : _appConfig.getTheme().primaryColor,
+                fontSize: fontSizeTextAndFormField,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -275,19 +278,16 @@ class _SelectorForPersonalScreenState<T> extends State<SelectorForPersonalScreen
     return DropdownMenuItem(
       value: key,
       enabled: isEnabled,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 0),
-        child: SizedBox(
-          height: _appConfig.getHeight() * 2,
-          child: Text(
-            _items[key]!,
-            style: TextStyle(
-              color: isEnabled
-                  ? _appConfig.getTheme().secondaryHeaderColor
-                  : Colors.grey,
-              fontSize: _appConfig.getHeight() * 1.7,
-              fontWeight: FontWeight.w600,
-            ),
+      child: SizedBox(
+        height: _appConfig.getHeight() * 3,
+        child: Text(
+          _items[key]!,
+          style: TextStyle(
+            color: isEnabled
+                    ? _appConfig.getTheme().primaryColor
+                    : _appConfig.getTheme().primaryColor,
+            fontSize: fontSizeTextAndFormField,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),

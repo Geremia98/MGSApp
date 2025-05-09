@@ -13,7 +13,8 @@ import 'package:mgs_app2/widgets/buttons.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/my_profile_pic.dart';
 import 'package:mgs_app2/widgets/personal_page_widgets/selector_for_personal_screen.dart';
 import 'package:mgs_app2/widgets/personal_page_widgets/text_form_field_for_personal_screen.dart';
-import 'package:mgs_app2/utilities/utils.dart';
+import 'package:mgs_app2/widgets/registration_screens_widgets/my_date_picker.dart';
+import 'package:mgs_app2/widgets/registration_screens_widgets/my_segmented_button.dart';
 
 class PersonalScreen extends StatefulWidget {
   const PersonalScreen({super.key});
@@ -24,8 +25,9 @@ class PersonalScreen extends StatefulWidget {
 
 class PersonalScreenState extends State<PersonalScreen> {
   RegistrationController controller = RegistrationController();
-  late bool _isDisabled;
-  late Set<UserGender> _selected;
+  late bool _isModifyOptionEnable;
+  late Set<bool> _selectedBoss;
+  late Set<UserGender> _selectedUserGender;
 
   @override
   void initState() {
@@ -38,18 +40,11 @@ class PersonalScreenState extends State<PersonalScreen> {
     controller.setIspettoria(UserModel.ispettoria);
     controller.setGroup(UserModel.group);
 
-    _selected = {controller.gender};
-    _isDisabled = true;
+    _selectedBoss = {controller.bossCode.isNotEmpty};
+    _selectedUserGender = {controller.gender};
+    _isModifyOptionEnable = false;
+    print(controller.birthDate);
     super.initState();
-  }
-
-  void updateSexSelection(Set<UserGender> newSelection) {
-    setState(() {
-      _selected = newSelection;
-      newSelection.first == UserGender.male;
-    });
-
-    controller.setGender(newSelection.first);
   }
 
   @override
@@ -61,10 +56,10 @@ class PersonalScreenState extends State<PersonalScreen> {
         physics: const AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.symmetric(
           horizontal: appConfig.getWidth() * 5,
-          vertical: appConfig.getHeight() * 7,
+          vertical: appConfig.getHeight() * 8,
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Padding(
@@ -89,7 +84,11 @@ class PersonalScreenState extends State<PersonalScreen> {
                     margin: EdgeInsets.symmetric(
                         vertical: appConfig.getHeight() * 0.8),
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        setState(() {
+                          _isModifyOptionEnable = true;
+                        });
+                      },
                       child: Container(
                         padding: EdgeInsets.all(appConfig.getWidth() * 1.5),
                         decoration: BoxDecoration(
@@ -116,209 +115,128 @@ class PersonalScreenState extends State<PersonalScreen> {
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal:
-                    appConfig.getWidth() * paddingForCreationEventHorizontal,
+                    appConfig.getWidth() * paddingForPersonalPageLables,
               ),
-              child: buildMyTextFormField(
-                appConfig,
-                textCapitalization: TextCapitalization.sentences,
-                hintText: 'Inserisci il nome',
-                labelText: 'Nome: ',
-                maxLength: 30,
-                initialValue: UserModel.name,
-                enabled: false,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal:
-                    appConfig.getWidth() * paddingForCreationEventHorizontal,
-              ),
-              child: buildMyTextFormField(
-                appConfig,
-                textCapitalization: TextCapitalization.sentences,
-                hintText: 'Inserisci il cognome',
-                labelText: 'Cognome: ',
-                maxLength: 30,
-                initialValue: UserModel.surname,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal:
-                    appConfig.getWidth() * paddingForCreationEventHorizontal,
-              ),
-              child: buildMyTextFormField(
-                appConfig,
-                textCapitalization: TextCapitalization.sentences,
-                hintText: 'Inserisci il numero di telefono',
-                labelText: 'Cellulare: ',
-                maxLength: 30,
-                initialValue: '3881113429',
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: appConfig.getHeight() * 0.5,
-                horizontal:
-                    appConfig.getWidth() * paddingForCreationEventHorizontal,
-              ),
-              child: Row(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(
-                    'Sesso:  ',
-                    style: TextStyle(
-                      color: appConfig.getTheme().secondaryHeaderColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  SegmentedButton<UserGender>(
-                    segments: const <ButtonSegment<UserGender>>[
-                      ButtonSegment(
-                        value: UserGender.male,
-                        label: Text('Maschio'),
-                      ),
-                      ButtonSegment(
-                          value: UserGender.female, label: Text('Femmina'))
-                    ],
-                    selected: _selected,
-                    onSelectionChanged: updateSexSelection,
-                    showSelectedIcon: false,
-                    style: ButtonStyle(
-                      side: MaterialStateProperty.all(
-                          BorderSide(color: ThemeData().hoverColor)),
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.selected)) {
-                            return appConfig.getTheme().primaryColor;
-                          }
-                          return Colors.grey.withOpacity(0.2);
-                        },
-                      ),
-                      foregroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.selected)) {
-                            return appConfig
-                                .getTheme()
-                                .scaffoldBackgroundColor; // Color when selected
-                          }
-                          return appConfig
-                              .getTheme()
-                              .secondaryHeaderColor; // Default text color
-                        },
-                      ),
-                      textStyle: MaterialStateProperty.resolveWith<TextStyle>(
-                          (Set<MaterialState> states) {
-                        return TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: appConfig.getTheme().scaffoldBackgroundColor,
-                        );
-                      }),
-                    ),
-                  )
+                  buildMyTextFormField(
+              appConfig,
+              textCapitalization: TextCapitalization.sentences,
+              hintText: 'Inserisci il nome',
+              labelText: 'Nome: ',
+              maxLength: 30,
+              initialValue: UserModel.name,
+              enabled: _isModifyOptionEnable,
+            ),
+            buildMyTextFormField(
+              appConfig,
+              textCapitalization: TextCapitalization.sentences,
+              hintText: 'Inserisci il cognome',
+              labelText: 'Cognome: ',
+              maxLength: 30,
+              initialValue: UserModel.surname,
+              enabled: _isModifyOptionEnable,
+            ),
+            buildMyTextFormField(
+              appConfig,
+              textCapitalization: TextCapitalization.sentences,
+              hintText: 'Inserisci il numero di telefono',
+              labelText: 'Cellulare: ',
+              maxLength: 30,
+              initialValue: '3881113429',
+              enabled: _isModifyOptionEnable,
+            ),
+            MySegmentedButton(
+                leftString: 'Maschio',
+                rightString: 'Femmina',
+                selected: _selectedUserGender,
+                onValueChange: (value) {
+                  setState(() {
+                    _selectedUserGender = value;
+                  });
+                  print(_selectedUserGender.toString());
+                },
+                title: 'Sesso: ',
+                leftValue: UserGender.male,
+                rightValue: UserGender.female,
+                isEnable: _isModifyOptionEnable
+            ),
+            SizedBox(height: appConfig.getHeight()*0.5,),
+            MyDatePicker(
+              title: 'Data di nascita: ',
+              birthday: controller.birthDate,
+              isEnable: _isModifyOptionEnable,
+              onPressed: () async {
+                final DateTime? dateNascita = await showDatePicker(
+                    context: context,
+                    firstDate: DateTime(1960),
+                    lastDate: DateTime(2014));
+                if (dateNascita != null) {
+                  setState(() {
+                    controller.setBirthday(dateNascita);
+                  });
+                }
+              },
+            ),
+            Divider(
+              indent: appConfig.getWidth() * 15,
+              endIndent: appConfig.getWidth() * 15,
+              height: appConfig.getHeight() * 2,
+              color: appConfig.getTheme().primaryColor,
+              thickness: personaPageProfilePicBorderThickness,
+            ),
+            SelectorForPersonalScreen(
+                isEnable: _isModifyOptionEnable,
+                constantDropDownCountryList,
+                controller.country,
+                onValueChange: (String value) =>
+                    controller.setCountry(value),
+                title: 'Paese: '
+            ),
+            SelectorForPersonalScreen(
+                isEnable: _isModifyOptionEnable,
+                constantDropDownIspettoriaList,
+                controller.ispettoria,
+                onValueChange: (String value) =>
+                    {controller.setIspettoria(value)},
+                title: 'Ispettoria: '
+            ),
+            SelectorForPersonalScreen(
+                isEnable: _isModifyOptionEnable,
+                constantDropDownGroupList,
+                controller.group,
+                onValueChange: (String value) => controller.setGroup(value),
+                title: 'Gruppo: '
+            ),
+            MySegmentedButton(
+                isEnable: _isModifyOptionEnable,
+                leftString: 'Si',
+                rightString: 'No',
+                leftValue: true,
+                rightValue: false,
+                selected: _selectedBoss,
+                onValueChange: (value) {
+                  setState(() {
+                    _selectedBoss = value;
+                  });
+                  print(_selectedBoss.toString());
+                },
+                title: 'Boss? '
+            ),
+            buildMyTextFormField(
+              appConfig,
+              textCapitalization: TextCapitalization.sentences,
+              hintText: 'XXXXXXXXXX',
+              labelText: 'Codice dei Boss ',
+              maxLength: 30,
+              initialValue: '',
+              enabled: _isModifyOptionEnable,
+            ),
+              
                 ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: appConfig.getHeight() * 0.5,
-                horizontal:
-                    appConfig.getWidth() * paddingForCreationEventHorizontal,
-              ),
-              child: Row(
-                children: [
-                  Text(
-                    'Nato il:  ',
-                    style: TextStyle(
-                      color: appConfig.getTheme().secondaryHeaderColor,
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    formatDateFromDateTime(controller.birthDate),
-                    style: TextStyle(
-                      color: appConfig.getTheme().secondaryHeaderColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(width: 18),
-                  GestureDetector(
-                    onTap: () async {
-                      final DateTime? dateNascita = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime(1960),
-                          lastDate: DateTime(2014));
-                      if (dateNascita != null) {
-                        setState(() {
-                          controller.setBirthday(dateNascita);
-                        });
-                      }
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(
-                              appConfig.getWidth() * 5), // Bordi arrotondati
-                          border: Border.all(
-                            width: 1,
-                            color: Colors.grey.withOpacity(0.3),
-                          )),
-                      child: Icon(
-                        Icons.mode_edit_rounded,
-                        // Icona simile a quella mostrata
-                        size: 16,
-                        color: appConfig
-                            .getTheme()
-                            .secondaryHeaderColor, // Dimensione dell'icona
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding:
-                  EdgeInsets.symmetric(vertical: appConfig.getHeight() * 1.5),
-              child: Divider(
-                indent: appConfig.getWidth() * 15,
-                endIndent: appConfig.getWidth() * 15,
-                height: appConfig.getHeight() * 2,
-                color: appConfig.getTheme().primaryColor,
-                thickness: personaPageProfilePicBorderThickness,
-              ),
-            ),
-            Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal:
-                      appConfig.getWidth() * paddingForCreationEventHorizontal,
-                ),
-                child: SelectorForPersonalScreen(
-                    constantDropDownCountryList, controller.country,
-                    onValueChange: (String value) =>
-                        controller.setCountry(value),
-                    title: 'Paese: ')),
-            SizedBox(height: 15),
-            Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal:
-                      appConfig.getWidth() * paddingForCreationEventHorizontal,
-                ),
-                child: SelectorForPersonalScreen(
-                    constantDropDownIspettoriaList, controller.ispettoria,
-                    onValueChange: (String value) =>
-                        controller.setIspettoria(value),
-                    title: 'Ispettoria: ')),
-            SizedBox(height: 15),
-            Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal:
-                      appConfig.getWidth() * paddingForCreationEventHorizontal,
-                ),
-                child: SelectorForPersonalScreen(
-                    constantDropDownGroupList, controller.group,
-                    onValueChange: (String value) => controller.setGroup(value),
-                    title: 'Gruppo: ')),
           ],
         ),
       ),

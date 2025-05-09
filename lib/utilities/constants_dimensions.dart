@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 const double bigRoutingButtonBorderThickness = 0.08;
 const double smallRoutingButtonBorderThickness = 0.0005;
 
@@ -20,3 +22,10 @@ const double homeScreenProfilePicBorderRadius = 2.5;
 const double personaPageProfilePicBorderThickness = 0.1;
 const double personalPageProfilePicDimension = 35;
 const double personalePageProfilePicBorderRadius = 5;
+const double buttonsAndTextFieldsThickness = 0.1;
+const double borderThicknessWhenOnFocus = 0.4;
+const double toggleSwitchRadiusBorder = 20;
+const double fontSizeTextAndFormField = 16;
+const FontWeight fontWeightLabels = FontWeight.w500;
+const double fontSizeLables = 16;
+const double paddingForPersonalPageLables = paddingForCreationEventHorizontal;

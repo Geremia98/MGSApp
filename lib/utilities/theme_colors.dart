@@ -35,8 +35,8 @@ final ThemeData _lightTheme = ThemeData(
   ),
 
 
-  //Da qua in poi ci sono i colori miei:
-  /*coloreSfondoDay*/splashColor: Colors.white,
+  //Usato per il toggleSwitch quando è disattivato
+  /*coloreSfondoDay*/splashColor: const Color.fromARGB(255, 199, 212, 236),
   /*ColoreTestoDay*/hoverColor: const Color.fromARGB(255, 0, 35, 99),
 
   //colore del Reminder nella HomeScreen
@@ -50,6 +50,9 @@ final ThemeData _lightTheme = ThemeData(
   /*coloreDisabledButtonDay*/disabledColor: const Color.fromARGB(255, 224, 226, 228),
   /*coloreErroreDay*/indicatorColor:  const Color.fromARGB(255, 227, 46, 33),
 
+  segmentedButtonTheme: SegmentedButtonThemeData(
+    style: ButtonStyle()
+  )
 );
 
 
