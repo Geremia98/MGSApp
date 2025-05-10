@@ -240,10 +240,11 @@ BoxDecoration buttonTextDisabledDecoration(BuildContext context) {
 
 TextStyle textStyleButton(BuildContext context) {
   return TextStyle(
-    color: AppConfig(context).getTheme().scaffoldBackgroundColor,
     fontSize: fontSizeButton,
-    fontWeight: FontWeight.w600,
-    overflow: TextOverflow.ellipsis,
+    fontWeight: FontWeight.w700,
+    color: AppConfig(context)
+        .getTheme()
+        .scaffoldBackgroundColor,
   );
 }
 

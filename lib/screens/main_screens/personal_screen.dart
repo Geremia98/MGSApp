@@ -160,6 +160,7 @@ class PersonalScreenState extends State<PersonalScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+
                   buildMyTextFormField(
                     appConfig,
                     textCapitalization: TextCapitalization.sentences,
