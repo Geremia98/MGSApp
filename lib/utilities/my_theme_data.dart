@@ -110,7 +110,7 @@ final ThemeData _darkTheme = ThemeData(
 
   //colore Description della schermata Evento in dettaglio
   /*coloreDescriptionTestDay*/dividerColor:  const Color.fromARGB(255, 40, 59, 93),
-  /*coloreDisabledButtonDay*/disabledColor: const Color.fromARGB(255, 205, 218, 241),
+  /*coloreDisabledButtonDay*/disabledColor: const Color.fromARGB(255, 121, 129, 144),
   /*coloreErroreDay*/indicatorColor:  const Color.fromARGB(255, 227, 46, 33),
 
 );

@@ -1,8 +1,3 @@
-//boss si/no
-
-//Se è boss mettere un positioned,
-//come un pallino o una piccola label sulla foto profilo
-
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/models/user_model.dart';
 import 'package:mgs_app2/screens/login_screens/registration_controller.dart';
@@ -15,7 +10,6 @@ import 'package:mgs_app2/widgets/home_page_widgets/my_profile_pic.dart';
 import 'package:mgs_app2/widgets/personal_page_widgets/my_squared_icon_button.dart';
 import 'package:mgs_app2/widgets/personal_page_widgets/selector_for_personal_screen.dart';
 import 'package:mgs_app2/widgets/personal_page_widgets/text_form_field_for_personal_screen.dart';
-
 import 'package:mgs_app2/widgets/registration_screens_widgets/my_date_picker.dart';
 import 'package:mgs_app2/widgets/registration_screens_widgets/my_segmented_button.dart';
 
@@ -48,6 +42,7 @@ class PersonalScreenState extends State<PersonalScreen> {
     _selectedUserGender = {UserModel.gender};
     _isModifyOptionEnable = false;
     super.initState();
+    print('Init state chiamato');
   }
 
   void updateUserInfo() {
@@ -59,6 +54,17 @@ class PersonalScreenState extends State<PersonalScreen> {
     UserModel.ispettoria = controller.ispettoria;
     UserModel.group = controller.group;
     UserModel.bossCode = controller.bossCode;
+  }
+
+  void ricostruisciWidgetConValoriIniziali(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => const PersonalScreen(),
+        transitionDuration: Duration.zero,
+        reverseTransitionDuration: Duration.zero,
+      ),
+    );
   }
 
   @override
@@ -82,20 +88,15 @@ class PersonalScreenState extends State<PersonalScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  GoBackButton(
-                      icon: Icons.arrow_back_rounded,
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      appConfig: appConfig),
-                  MyProfilePicture(
-                      appConfig: appConfig,
-                      profileImage: 'assets/images/male.jpg',
-                      borderRadius: personalePageProfilePicBorderRadius,
-                      borderThickness: personaPageProfilePicBorderThickness,
-                      dimension: personalPageProfilePicDimension),
                   Column(
                     children: [
+                      GoBackButton(
+                        icon: Icons.arrow_back_rounded,
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        appConfig: appConfig,
+                      ),
                       MySquaredIconButton(
                         activeColor: appConfig.getTheme().primaryColor,
                         disabledColor: appConfig.getTheme().splashColor,
@@ -107,21 +108,46 @@ class PersonalScreenState extends State<PersonalScreen> {
                           });
                         },
                       ),
+                    ],
+                  ),
+                  MyProfilePicture(
+                    appConfig: appConfig,
+                    profileImage: 'assets/images/male.jpg',
+                    borderRadius: personalePageProfilePicBorderRadius,
+                    borderThickness: personaPageProfilePicBorderThickness,
+                    dimension: personalPageProfilePicDimension,
+                  ),
+                  Column(
+                    children: [
                       MySquaredIconButton(
-                          activeColor: Theme.of(context)
-                              .extension<CustomColors>()!
-                              .enabledCheckSquaredButton,
-                          disabledColor: Theme.of(context)
-                              .extension<CustomColors>()!
-                              .disabledCheckSquaredButton,
-                          icon: Icons.check_rounded,
-                          isEnable: _isModifyOptionEnable,
-                          onTap: () {
-                            setState(() {
-                              updateUserInfo();
-                              _isModifyOptionEnable = !_isModifyOptionEnable;
-                            });
-                          })
+                        activeColor: Theme.of(context)
+                            .extension<CustomColors>()!
+                            .enabledCheckSquaredButton,
+                        disabledColor: Theme.of(context)
+                            .extension<CustomColors>()!
+                            .disabledCheckSquaredButton,
+                        icon: Icons.check_rounded,
+                        isEnable: _isModifyOptionEnable,
+                        onTap: () {
+                          setState(() {
+                            updateUserInfo();
+                            _isModifyOptionEnable = !_isModifyOptionEnable;
+                          });
+                        },
+                      ),
+                      MySquaredIconButton(
+                        activeColor: Theme.of(context)
+                            .extension<CustomColors>()!
+                            .enabledUndoSquaredButton,
+                        disabledColor: Theme.of(context)
+                            .extension<CustomColors>()!
+                            .disabledUndoSquaredButton,
+                        icon: Icons.close_rounded,
+                        isEnable: _isModifyOptionEnable,
+                        onTap: () {
+                          ricostruisciWidgetConValoriIniziali(context);
+                        },
+                      ),
                     ],
                   )
                 ],
@@ -168,18 +194,19 @@ class PersonalScreenState extends State<PersonalScreen> {
                     enabled: _isModifyOptionEnable,
                   ),
                   MySegmentedButton(
-                      leftString: 'Maschio',
-                      rightString: 'Femmina',
-                      selected: _selectedUserGender,
-                      onValueChange: (value) {
-                        setState(() {
-                          _selectedUserGender = value;
-                        });
-                      },
-                      title: 'Sesso: ',
-                      leftValue: UserGender.male,
-                      rightValue: UserGender.female,
-                      isEnable: _isModifyOptionEnable),
+                    leftString: 'Maschio',
+                    rightString: 'Femmina',
+                    selected: _selectedUserGender,
+                    onValueChange: (value) {
+                      setState(() {
+                        _selectedUserGender = value;
+                      });
+                    },
+                    title: 'Sesso: ',
+                    leftValue: UserGender.male,
+                    rightValue: UserGender.female,
+                    isEnable: _isModifyOptionEnable,
+                  ),
                   SizedBox(
                     height: appConfig.getHeight() * 0.5,
                   ),
@@ -189,9 +216,10 @@ class PersonalScreenState extends State<PersonalScreen> {
                     isEnable: _isModifyOptionEnable,
                     onPressed: () async {
                       final DateTime? dateNascita = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime(1960),
-                          lastDate: DateTime(2014));
+                        context: context,
+                        firstDate: DateTime(1960),
+                        lastDate: DateTime(2014),
+                      );
                       if (dateNascita != null) {
                         setState(() {
                           controller.setBirthday(dateNascita);
@@ -200,39 +228,43 @@ class PersonalScreenState extends State<PersonalScreen> {
                     },
                   ),
                   SelectorForPersonalScreen(
-                      isEnable: _isModifyOptionEnable,
-                      constantDropDownCountryList,
-                      controller.country,
-                      onValueChange: (String value) =>
-                          controller.setCountry(value),
-                      title: 'Paese: '),
+                    isEnable: _isModifyOptionEnable,
+                    constantDropDownCountryList,
+                    controller.country,
+                    onValueChange: (String value) =>
+                        controller.setCountry(value),
+                    title: 'Paese: ',
+                  ),
                   SelectorForPersonalScreen(
-                      isEnable: _isModifyOptionEnable,
-                      constantDropDownIspettoriaList,
-                      controller.ispettoria,
-                      onValueChange: (String value) =>
-                          {controller.setIspettoria(value)},
-                      title: 'Ispettoria: '),
+                    isEnable: _isModifyOptionEnable,
+                    constantDropDownIspettoriaList,
+                    controller.ispettoria,
+                    onValueChange: (String value) =>
+                        {controller.setIspettoria(value)},
+                    title: 'Ispettoria: ',
+                  ),
                   SelectorForPersonalScreen(
-                      isEnable: _isModifyOptionEnable,
-                      constantDropDownGroupList,
-                      controller.group,
-                      onValueChange: (String value) =>
-                          controller.setGroup(value),
-                      title: 'Gruppo: '),
+                    isEnable: _isModifyOptionEnable,
+                    constantDropDownGroupList,
+                    controller.group,
+                    onValueChange: (String value) =>
+                        controller.setGroup(value),
+                    title: 'Gruppo: ',
+                  ),
                   MySegmentedButton(
-                      isEnable: _isModifyOptionEnable,
-                      leftString: 'Si',
-                      rightString: 'No',
-                      leftValue: true,
-                      rightValue: false,
-                      selected: _selectedBoss,
-                      onValueChange: (value) {
-                        setState(() {
-                          _selectedBoss = value;
-                        });
-                      },
-                      title: 'Boss? '),
+                    isEnable: _isModifyOptionEnable,
+                    leftString: 'Si',
+                    rightString: 'No',
+                    leftValue: true,
+                    rightValue: false,
+                    selected: _selectedBoss,
+                    onValueChange: (value) {
+                      setState(() {
+                        _selectedBoss = value;
+                      });
+                    },
+                    title: 'Boss? ',
+                  ),
                   controller.bossCode.isNotEmpty || _selectedBoss.first == true
                       ? buildMyTextFormField(
                           obscureText: true,
