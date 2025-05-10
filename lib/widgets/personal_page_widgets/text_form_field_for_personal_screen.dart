@@ -5,6 +5,7 @@ import 'package:mgs_app2/widgets/font.dart';
 
 Widget buildMyTextFormField(
   AppConfig appConfig, {
+    double textPadding = 15,
   String labelText = '',
   TextInputType textInputType = TextInputType.text,
   IconData? icon,
@@ -25,6 +26,7 @@ Widget buildMyTextFormField(
   bool showError = true,
   bool enabled = true,
   int maxLength = 100,
+  bool helperText = false,
 }) {
   labelColor ??= Colors.grey;
   iconColor ??= Colors.grey;
@@ -33,7 +35,7 @@ Widget buildMyTextFormField(
   return Padding(
     padding: EdgeInsets.symmetric(vertical: appConfig.getHeight()*0.7),
     child: Container(
-        width: appConfig.getWidth()*100,
+        width: appConfig.getWidth()*maxLength,
         child: Row(
           children: <Widget>[
                 Text(
@@ -41,18 +43,20 @@ Widget buildMyTextFormField(
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     color: appConfig.getTheme().secondaryHeaderColor,
-                    fontWeight: fontWeightLabels,
-                    fontSize: fontSizeLables,
+                    fontWeight: fontWeightOfLabelsOfTextField,
+                    fontSize: fontSizeOfLablesOfTextField,
                   ),
                 ),
-            SizedBox(
+            labelText == '' 
+            ? SizedBox()
+            : SizedBox(
               width: appConfig.getWidth()*3
             ),
             Expanded(
               child: Container(
                 width: appConfig.getWidth()*10,
                 alignment: Alignment.center,
-                height: 41,
+                height: helperText ? heightTextFormFieldWithError : heightTextFormFieldWithoutError,
                 child: TextFormField(
             keyboardType: textInputType,
             validator: validator,
@@ -60,7 +64,7 @@ Widget buildMyTextFormField(
             obscureText: obscureText,
             style: TextStyle(
               letterSpacing: 0.8,
-              fontSize: fontSizeTextAndFormField, 
+              fontSize: fontSizeOfTextAndFormField, 
               fontWeight: FontWeight.w500,
               color: appConfig.getTheme().primaryColor
             ),
@@ -77,6 +81,7 @@ Widget buildMyTextFormField(
               fillColor: appConfig.getTheme().scaffoldBackgroundColor,
               //labelText: hintText,
               counterText: "",
+              helperText: helperText ? '' : null,
               isDense: true,
               hintText: hintText,
               suffix: suffixWidget,
@@ -90,9 +95,10 @@ Widget buildMyTextFormField(
               labelStyle: textStyleHint(appConfig.getContext()),
               hintStyle: textStyleHint(appConfig.getContext()),
               contentPadding: EdgeInsets.only(
-                top: appConfig.getHeight() * 1.3,
+                top: appConfig.getHeight() * 2,
                 bottom: appConfig.getHeight() * 0,
-                left: 15,
+                left: textPadding,
+                right: textPadding,
               ),
               prefixIcon: icon == null
                   ? null
@@ -103,35 +109,35 @@ Widget buildMyTextFormField(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: appConfig.getTheme().primaryColor,
-                  width: buttonsAndTextFieldsThickness
+                  width: thicknessOfBordersEnabledButtonsAndTextFormField
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
               disabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: appConfig.getTheme().disabledColor,
-                  width: buttonsAndTextFieldsThickness
+                  width: thicknessOfBordersEnabledButtonsAndTextFormField
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: appConfig.getTheme().primaryColor,
-                  width: borderThicknessWhenOnFocus
+                  width: thicknessOfBordersWhenOnFocus
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
               errorBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: appConfig.getTheme().indicatorColor,
-                  width: borderThicknessWhenOnFocus
+                  width: thicknessOfBordersEnabledButtonsAndTextFormField
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: appConfig.getTheme().primaryColor,
-                  width: borderThicknessWhenOnFocus
+                  width: thicknessOfBordersWhenOnFocus
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),

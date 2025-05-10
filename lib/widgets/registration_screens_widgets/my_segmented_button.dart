@@ -60,8 +60,8 @@ class _MySegmentedButtonState<T> extends State<MySegmentedButton<T>> {
             _title,
             style: TextStyle(
               color: _appConfig.getTheme().secondaryHeaderColor,
-              fontWeight: fontWeightLabels,
-              fontSize: fontSizeLables,
+              fontWeight: fontWeightOfLabelsOfTextField,
+              fontSize: fontSizeOfLablesOfTextField,
             ),
           ),
           SizedBox(width: 8),
@@ -95,14 +95,14 @@ class _MySegmentedButtonState<T> extends State<MySegmentedButton<T>> {
           selectedForegroundColor: _appConfig.getTheme().scaffoldBackgroundColor,
           // bordo e forma
           side: BorderSide(
-            width: buttonsAndTextFieldsThickness,
+            width: thicknessOfBordersEnabledButtonsAndTextFormField,
             color: widget.isEnable ? _appConfig.getTheme().primaryColor : _appConfig.getTheme().disabledColor
           ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(toggleSwitchRadiusBorder)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadiusOfSegementedButton)),
           // padding interno
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
           // stile del testo (se vuoi applicarlo in modo uniforme)
-          textStyle: const TextStyle(fontSize: fontSizeTextAndFormField, fontWeight: FontWeight.w300),
+          textStyle: const TextStyle(fontSize: fontSizeOfTextAndFormField, fontWeight: FontWeight.w300),
             ),
           )
         ],

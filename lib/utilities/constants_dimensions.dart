@@ -19,13 +19,23 @@ const double homeScreenProfilePicDimension = 12;
 const double homeScreenProfilePicBorderRadius = 2.5;
 
 //PersonalPage
+const double paddingUnderTheMainUppperBar = 3;
+const double additionalPaddingForTheForm = paddingForCreationEventHorizontal;
+
 const double personaPageProfilePicBorderThickness = 0.1;
 const double personalPageProfilePicDimension = 26;
 const double personalePageProfilePicBorderRadius = 5;
-const double buttonsAndTextFieldsThickness = 0.1;
-const double borderThicknessWhenOnFocus = 0.4;
-const double toggleSwitchRadiusBorder = 20;
-const double fontSizeTextAndFormField = 16;
-const FontWeight fontWeightLabels = FontWeight.w500;
-const double fontSizeLables = 16;
-const double paddingForPersonalPageLables = paddingForCreationEventHorizontal;
+
+//My Widgets
+const double thicknessOfBordersEnabledButtonsAndTextFormField = 0.1;
+const double thicknessOfBordersWhenOnFocus = 0.4;
+const double borderRadiusOfSegementedButton = 20;
+const double fontSizeOfTextAndFormField = 16;
+const FontWeight fontWeightOfLabelsOfTextField = FontWeight.w500;
+const double fontSizeOfLablesOfTextField = 16;
+const double heightTextFormFieldWithoutError = 40;
+const double heightTextFormFieldWithError = 60;
+
+//Dimensions about the general visualisation
+const double horizontalPadding = 5;
+const double verticalPadding = 8;

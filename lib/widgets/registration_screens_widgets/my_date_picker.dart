@@ -26,16 +26,16 @@ class MyDatePicker extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontSize: fontSizeLables,
+              fontSize: fontSizeOfLablesOfTextField,
               color: appConfig.getTheme().primaryColor,
-              fontWeight: fontWeightLabels,
+              fontWeight: fontWeightOfLabelsOfTextField,
             ),
           ),
           SizedBox(width: 8),
           Text(
             formatDateFromDateTime(birthday),
             style: TextStyle(
-              fontSize: fontSizeTextAndFormField,
+              fontSize: fontSizeOfTextAndFormField,
               color: appConfig.getTheme().primaryColor,
             ),
           ),
@@ -55,7 +55,7 @@ class MyDatePicker extends StatelessWidget {
               child: Icon(
                 Icons.mode_edit_rounded,
                 // Icona simile a quella mostrata
-                size: fontSizeTextAndFormField,
+                size: fontSizeOfTextAndFormField,
                 color:
                     appConfig.getTheme().scaffoldBackgroundColor,
               ),

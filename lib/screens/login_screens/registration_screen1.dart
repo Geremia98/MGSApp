@@ -4,11 +4,12 @@ import 'package:mgs_app2/screens/login_screens/optional_registration_screen1.dar
 import 'package:mgs_app2/screens/login_screens/registration_controller.dart';
 import 'package:mgs_app2/screens/login_screens/registration_screen2.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-import 'package:mgs_app2/utilities/utils.dart';
 import 'package:mgs_app2/widgets/back_button_app_bar.dart';
 import 'package:mgs_app2/widgets/font.dart';
-
-import '../../widgets/text_field.dart';
+import 'package:mgs_app2/widgets/personal_page_widgets/my_squared_icon_button.dart';
+import 'package:mgs_app2/widgets/personal_page_widgets/text_form_field_for_personal_screen.dart';
+import 'package:mgs_app2/widgets/registration_screens_widgets/my_date_picker.dart';
+import 'package:mgs_app2/widgets/registration_screens_widgets/my_segmented_button.dart';
 
 class RegistrationScreen1 extends StatefulWidget {
   final RegistrationController controller;
@@ -51,6 +52,8 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
         _isDisabled = true;
       });
     }
+    print('Sono entrato nel calcolo');
+    print('Valore del parametro _isDisabled: ' + _isDisabled.toString());
   }
 
   bool isEternoGiovane() {
@@ -126,7 +129,7 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                             '(Le tue informazioni sensibili andranno vendute al miglior offerente)',
                             textAlign: TextAlign.start,
                             style: TextStyle(
-                              fontSize: appConfig.getWidth()*4,
+                              fontSize: appConfig.getWidth() * 4,
                               fontWeight: FontWeight.w500,
                               color: appConfig.getTheme().secondaryHeaderColor,
                             ),
@@ -135,154 +138,53 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                       ],
                     ),
                     SizedBox(
-                      height: 50,
+                      height: 40,
                     ),
-                    buildTextField(
+                    buildMyTextFormField(
                       appConfig,
                       initialValue: controller.name,
-                      hintText: "Nome",
+                      hintText: 'Nome',
                       onChanged: (value) {
                         controller.setName(value);
                         calculateWetherEnablingTheButton();
                       },
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    buildTextField(
+                    buildMyTextFormField(
                       appConfig,
-                      hintText: "Cognome",
                       initialValue: controller.surname,
+                      hintText: 'Cognome',
                       onChanged: (value) {
                         controller.setSurname(value);
                         calculateWetherEnablingTheButton();
                       },
                     ),
-                    SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Text(
-                          'Sesso:  ',
-                          style: TextStyle(
-                            fontSize: fontSizeBig,
-                            color: appConfig.getTheme().secondaryHeaderColor,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        SegmentedButton<UserGender>(
-                          segments: const <ButtonSegment<UserGender>>[
-                            ButtonSegment(
-                                value: UserGender.male, 
-                                label: Text('Maschio'),
-
-                            ),
-                            ButtonSegment(
-                                value: UserGender.female,
-                                label: Text('Femmina'))
-                          ],
-                          selected: _selected,
-                          onSelectionChanged: updateSexSelection,
-                          showSelectedIcon: false,
-                          style: ButtonStyle(
-                            side: MaterialStateProperty.all(
-                                BorderSide(color: ThemeData().hoverColor)),
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.selected)) {
-                                  return appConfig.getTheme().primaryColor;
-                                }
-                                return Colors.grey.withOpacity(0.2);
-                              },
-                            ),
-                            foregroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.selected)) {
-                                  return appConfig
-                                      .getTheme()
-                                      .scaffoldBackgroundColor; // Color when selected
-                                }
-                                return appConfig
-                                    .getTheme()
-                                    .secondaryHeaderColor; // Default text color
-                              },
-                            ),
-                            textStyle:
-                                MaterialStateProperty.resolveWith<TextStyle>(
-                                    (Set<MaterialState> states) {
-                              return TextStyle(
-                                fontSize: fontSizeBig,
-                                fontWeight: FontWeight.w600,
-                                color: appConfig
-                                    .getTheme()
-                                    .scaffoldBackgroundColor,
-                              );
-                            }),
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Text(
-                          'Nato il:  ',
-                          style: TextStyle(
-                            fontSize: fontSizeBig,
-                            color: appConfig.getTheme().secondaryHeaderColor,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          formatDateFromDateTime(controller.birthDate),
-                          style: TextStyle(
-                            fontSize: fontSizeBig,
-                            color: appConfig.getTheme().secondaryHeaderColor,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(width: 18),
-                        GestureDetector(
-                          onTap: () async {
-                            final DateTime? dateNascita = await showDatePicker(
-                                context: context,
-                                firstDate: DateTime(1960),
-                                lastDate: DateTime(2014));
-                            if (dateNascita != null) {
-                              setState(() {
-                                controller.setBirthday(dateNascita);
-                                calculateWetherEnablingTheButton();
-                              });
-                            }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(
-                                    appConfig.getWidth() *
-                                        5), // Bordi arrotondati
-                                border: Border.all(
-                                  width: 1,
-                                  color: Colors.grey.withOpacity(0.3),
-                                )),
-                            child: Icon(
-                              Icons.mode_edit_rounded,
-                              // Icona simile a quella mostrata
-                              size: 16,
-                              color: appConfig
-                                  .getTheme()
-                                  .secondaryHeaderColor, // Dimensione dell'icona
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
+                    SizedBox(height: 10),
+                    MySegmentedButton(
+                        leftString: 'Maschio',
+                        rightString: 'Femmina',
+                        selected: _selected,
+                        onValueChange: updateSexSelection,
+                        title: 'Sesso: ',
+                        leftValue: UserGender.male,
+                        rightValue: UserGender.female,
+                        isEnable: true),
+                    MyDatePicker(
+                      title: 'Nato il: ',
+                      birthday: controller.birthDate,
+                      isEnable: true,
+                      onPressed: () async {
+                        final DateTime? dateNascita = await showDatePicker(
+                          context: context,
+                          firstDate: DateTime(1960),
+                          lastDate: DateTime(2014),
+                        );
+                        if (dateNascita != null) {
+                          setState(() {
+                            controller.setBirthday(dateNascita);
+                            calculateWetherEnablingTheButton();
+                          });
+                        }
+                      },
                     ),
                     Row(
                       children: [
@@ -295,41 +197,17 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                           ),
                         ),
                         Container(
-                          constraints: BoxConstraints(maxWidth: 30),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 1),
-                            child: TextFormField(
-                              controller: textFieldValue,
-                              textAlign: TextAlign.center,
-                              style: textStyleTextField(appConfig.getContext())
-                                  .copyWith(
-                                color:
-                                    appConfig.getTheme().secondaryHeaderColor,
-                                fontWeight: FontWeight.w600,
-                                fontSize: fontSizeBig,
-                              ),
-                              decoration: InputDecoration(
-                                hintText: 'XX',
-                                hintStyle: TextStyle(
-                                  color: appConfig.getTheme().primaryColor,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: fontSizeBig,
-                                ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                ),
-                              ),
-                              cursorColor: appConfig.getTheme().primaryColor,
-                              onChanged: (value) {
-                                _feelAge = value.isNotEmpty
-                                    ? int.parse(textFieldValue.text)
-                                    : 0;
-                                calculateWetherEnablingTheButton();
-                              },
-                            ),
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          child: buildMyTextFormField(
+                            appConfig,
+                            hintText: 'XX',
+                            textPadding: 10,
+                            maxLength: 11,
+                            onChanged: (value) {
+                              _feelAge =
+                                  value!.isNotEmpty ? int.parse(value) : 0;
+                              calculateWetherEnablingTheButton();
+                            },
                           ),
                         ),
                         Text(
@@ -346,46 +224,31 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                 ),
               ),
               Positioned(
-                bottom: 0,
-                right: 0,
-                child: FilledButton(
-                  onPressed: _isDisabled
-                      ? null
-                      : () {
-                          isEternoGiovane()
-                              ? Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          OptionalRegistrationScreen1(
-                                            controller: controller,
-                                          )),
-                                )
-                              : Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => RegistrationScreen2(
-                                            controller: controller,
-                                          )),
-                                );
-                        },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: appConfig.getTheme().primaryColor,
-                    disabledBackgroundColor: appConfig.getTheme().disabledColor,
-                    padding: const EdgeInsets.symmetric(vertical: 13),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25),
-                    child: Icon(
-                      Icons.arrow_forward_rounded,
-                      color: appConfig.getTheme().scaffoldBackgroundColor,
-                    ),
-                  ),
-                ),
-              ),
+                  bottom: 0,
+                  right: 0,
+                  child: MySquaredIconButton(
+                      activeColor: appConfig.getTheme().primaryColor,
+                      disabledColor: appConfig.getTheme().disabledColor,
+                      icon: Icons.arrow_forward_rounded,
+                      isEnable: !_isDisabled,
+                      onTap: () {
+                        isEternoGiovane()
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        OptionalRegistrationScreen1(
+                                          controller: controller,
+                                        )),
+                              )
+                            : Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RegistrationScreen2(
+                                          controller: controller,
+                                        )),
+                              );
+                      })),
             ],
           ),
         ),

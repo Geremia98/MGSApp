@@ -75,15 +75,15 @@ class PersonalScreenState extends State<PersonalScreen> {
       body: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.symmetric(
-          horizontal: appConfig.getWidth() * 5,
-          vertical: appConfig.getHeight() * 8,
+          horizontal: appConfig.getWidth() * horizontalPadding,
+          vertical: appConfig.getHeight() * verticalPadding,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(bottom: appConfig.getHeight() * 3),
+              padding: EdgeInsets.only(bottom: appConfig.getHeight() * paddingUnderTheMainUppperBar),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,7 +155,7 @@ class PersonalScreenState extends State<PersonalScreen> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: appConfig.getWidth() * paddingForPersonalPageLables,
+                horizontal: appConfig.getWidth() * additionalPaddingForTheForm,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -165,7 +165,6 @@ class PersonalScreenState extends State<PersonalScreen> {
                     textCapitalization: TextCapitalization.sentences,
                     hintText: 'Inserisci il nome',
                     labelText: 'Nome: ',
-                    maxLength: 30,
                     initialValue: controller.name,
                     enabled: _isModifyOptionEnable,
                     onChanged: (value) {
@@ -177,7 +176,6 @@ class PersonalScreenState extends State<PersonalScreen> {
                     textCapitalization: TextCapitalization.sentences,
                     hintText: 'Inserisci il cognome',
                     labelText: 'Cognome: ',
-                    maxLength: 30,
                     initialValue: controller.surname,
                     enabled: _isModifyOptionEnable,
                     onChanged: (value) {
@@ -189,7 +187,6 @@ class PersonalScreenState extends State<PersonalScreen> {
                     textCapitalization: TextCapitalization.sentences,
                     hintText: 'Inserisci il numero di telefono',
                     labelText: 'Cellulare: ',
-                    maxLength: 30,
                     initialValue: '3881113429',
                     enabled: _isModifyOptionEnable,
                   ),
@@ -275,7 +272,6 @@ class PersonalScreenState extends State<PersonalScreen> {
                           textCapitalization: TextCapitalization.sentences,
                           hintText: '',
                           labelText: 'Codice del Boss: ',
-                          maxLength: 30,
                           initialValue: controller.bossCode,
                           enabled: _isModifyOptionEnable,
                         )

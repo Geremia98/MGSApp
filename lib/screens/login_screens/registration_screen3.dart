@@ -3,9 +3,10 @@ import 'package:mgs_app2/screens/login_screens/registration_controller.dart';
 import 'package:mgs_app2/screens/login_screens/registration_scren4.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/widgets/back_button_app_bar.dart';
-import 'package:mgs_app2/widgets/selector.dart';
-import 'package:mgs_app2/widgets/text_field.dart';
-import 'dart:ui' as ui;
+import 'package:mgs_app2/widgets/personal_page_widgets/my_squared_icon_button.dart';
+import 'package:mgs_app2/widgets/personal_page_widgets/selector_for_personal_screen.dart';
+import 'package:mgs_app2/widgets/personal_page_widgets/text_form_field_for_personal_screen.dart';
+import 'package:mgs_app2/widgets/registration_screens_widgets/my_segmented_button.dart';
 
 import '../../utilities/constants_strings.dart';
 import '../../widgets/font.dart';
@@ -25,41 +26,48 @@ class RegistrationScreen3 extends StatefulWidget {
 class _RegistrationScreen3State extends State<RegistrationScreen3> {
   late RegistrationController controller;
   late bool _isDisabled;
-  late Set<bool> _selected;
+  late Set<bool> _selectedBoss;
 
   TextEditingController textFieldValue = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _isDisabled = false;
+    _isDisabled = true;
     controller = widget.controller;
 
-    _selected = {controller.bossCode.isNotEmpty};
+    _selectedBoss = {true};
   }
 
   void isNextStepAvailable() {
     if (controller.country.isNotEmpty &&
-        controller.ispettoria.isNotEmpty &&
-        controller.group.isNotEmpty &&
-        (_selected.first == false || controller.bossCode.isNotEmpty)) {
+            controller.ispettoria.isNotEmpty &&
+            controller.group.isNotEmpty &&
+            _selectedBoss.first == false
+        ? true
+        : controller.bossCode.isNotEmpty) {
       setState(() {
         _isDisabled = false;
+      });
+    } else {
+      setState(() {
+        _isDisabled = true;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-
     final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
       body: SafeArea(
         child: Container(
           height: appConfig.getHeight() * 100,
-          padding: EdgeInsets.only(right: appConfig.getWidth()*8, left: appConfig.getWidth()*8, top: appConfig.getHeight()*0.7),
+          padding: EdgeInsets.only(
+              right: appConfig.getWidth() * 8,
+              left: appConfig.getWidth() * 8,
+              top: appConfig.getHeight() * 0.7),
           child: Stack(
             children: [
               SingleChildScrollView(
@@ -69,23 +77,24 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     BackButtonAppBar(
-                      iconData: Icons.arrow_back_rounded, 
+                      iconData: Icons.arrow_back_rounded,
                       appConfig: appConfig,
                       onTap: () {
                         Navigator.pop(context);
-                      }, 
+                      },
                     ),
                     Center(
                       child: CircleAvatar(
-                          radius: width * 0.18,
+                          radius: appConfig.getWidth() * 24,
                           backgroundColor:
                               const Color.fromARGB(255, 255, 221, 109),
                           child: Image.asset(
                             'assets/images/sammy-registration1.png',
+                            height: 190,
                           )),
                     ),
-                    SizedBox(
-                      height: 20,
+                    const SizedBox(
+                      height: 30,
                     ),
                     Center(
                       child: Text(
@@ -99,7 +108,7 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Center(
@@ -107,234 +116,93 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                         '(No, non quello sanguigno)',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: appConfig.getWidth()*3.5,
+                          fontSize: appConfig.getWidth() * 3.5,
                           fontWeight: FontWeight.w500,
                           color: appConfig.getTheme().secondaryHeaderColor,
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
+                    const SizedBox(
+                      height: 30,
                     ),
-                    SelectorStyle(
+                    SelectorForPersonalScreen(
+                      isEnable: true,
                       constantDropDownCountryList,
                       controller.country,
                       onValueChange: (String value) =>
                           controller.setCountry(value),
-                      title: 'Paese:',
+                      title: 'Paese: ',
                     ),
-                    SizedBox(height: 20),
-                    SelectorStyle(
+                    SelectorForPersonalScreen(
+                      isEnable: true,
                       constantDropDownIspettoriaList,
                       controller.ispettoria,
                       onValueChange: (String value) =>
-                          controller.setIspettoria(value),
-                      title: 'Ispettoria:',
+                          {controller.setIspettoria(value)},
+                      title: 'Ispettoria: ',
                     ),
-                    SizedBox(height: 20),
-                    SelectorStyle(
+                    SelectorForPersonalScreen(
+                      isEnable: true,
                       constantDropDownGroupList,
                       controller.group,
                       onValueChange: (String value) =>
                           controller.setGroup(value),
-                      title: 'Gruppo:',
+                      title: 'Gruppo: ',
                     ),
-                    SizedBox(height: 40),
-                    Row(
-                      children: [
-                        Text(
-                          'Sei il boss?  ',
-                          style: TextStyle(
-                            fontSize: fontSizeBig,
-                            color: appConfig.getTheme().secondaryHeaderColor,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        SegmentedButton<bool>(
-                          segments: const <ButtonSegment<bool>>[
-                            ButtonSegment(value: true, label: Text('Sì')),
-                            ButtonSegment(value: false, label: Text('No'))
-                          ],
-                          selected: _selected,
-                          onSelectionChanged: (value) {
-                            setState(() {
-                              _selected = value;
-                            });
-                          },
-                          showSelectedIcon: false,
-                          style: ButtonStyle(
-                            side: MaterialStateProperty.all(BorderSide(
-                                color: ThemeData().hoverColor)),
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.selected)) {
-                                  return appConfig.getTheme().primaryColor;
-                                }
-                                return Colors.grey.withOpacity(0.2);
-                              },
-                            ),
-                            foregroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.selected)) {
-                                  return appConfig
-                                      .getTheme()
-                                      .scaffoldBackgroundColor; // Color when selected
-                                }
-                                return appConfig
-                                    .getTheme()
-                                    .secondaryHeaderColor; // Default text color
-                              },
-                            ),
-                            textStyle:
-                                MaterialStateProperty.resolveWith<TextStyle>(
-                                    (Set<MaterialState> states) {
-                              return TextStyle(
-                                fontSize: fontSizeBig,
-                                fontWeight: FontWeight.w600,
-                                color: appConfig
-                                    .getTheme()
-                                    .scaffoldBackgroundColor,
-                              );
-                            }),
-                          ),
-                        )
-                      ],
+                    MySegmentedButton(
+                      isEnable: true,
+                      leftString: 'Si',
+                      rightString: 'No',
+                      leftValue: true,
+                      rightValue: false,
+                      selected: _selectedBoss,
+                      onValueChange: (value) {
+                        setState(() {
+                          _selectedBoss = value;
+                          isNextStepAvailable();
+                        });
+                      },
+                      title: 'Boss? ',
                     ),
-                    _selected.first == true
-                        ? Column(
-                            children: [
-                              SizedBox(height: 10),
-                              Container(
-                                width: appConfig.getWidth()*40,
-                                child: buildTextField(
-                                  appConfig,
-                                  hintText: 'Codice Boss',
-                                  onChanged: (value) => {
-                                    setState(() {
-                                      controller.setBossCode(value);
-                                    }),
-                                  },
-                                ),
-                              ),
-                              SizedBox(
-                                height: 100,
-                              ),
-                            ],
+                    controller.bossCode.isNotEmpty ||
+                            _selectedBoss.first == true
+                        ? buildMyTextFormField(
+                            obscureText: true,
+                            appConfig,
+                            onChanged: (value) {
+                              controller.setBossCode(value);
+                              isNextStepAvailable();
+                            },
+                            textCapitalization: TextCapitalization.sentences,
+                            hintText: 'XXXXXX',
+                            labelText: 'Codice del Boss: ',
+                            initialValue: controller.bossCode,
+                            enabled: true,
                           )
-                        : SizedBox(height: 0),
+                        : const SizedBox(),
                   ],
                 ),
               ),
               Positioned(
-                bottom: 0,
-                right: 0,
-                child: FilledButton(
-                  onPressed: _isDisabled
-                      ? null
-                      : () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RegistrationScreen4(
+                  bottom: 0,
+                  right: 0,
+                  child: MySquaredIconButton(
+                    activeColor: appConfig.getTheme().primaryColor,
+                    disabledColor: appConfig.getTheme().disabledColor,
+                    icon: Icons.arrow_forward_rounded,
+                    isEnable: !_isDisabled,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => RegistrationScreen4(
                                 controller: controller,
-                              ),
-                            ),
-                          ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: appConfig.getTheme().primaryColor,
-                    disabledBackgroundColor: Colors.grey.withOpacity(0.2),
-                    padding: const EdgeInsets.symmetric(vertical: 13),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                              )),
                     ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25),
-                    child: Icon(
-                      Icons.arrow_forward_rounded,
-                      color: appConfig.getTheme().scaffoldBackgroundColor,
-                    ),
-                  ),
-                ),
-              ),
+                  ))
             ],
           ),
         ),
       ),
     );
   }
-}
-
-class CustomRowRegistration3 extends StatelessWidget {
-  const CustomRowRegistration3({
-    super.key,
-    required this.height,
-    required this.width,
-    required this.lista,
-    required this.titolo,
-    required this.hint,
-  });
-
-  final double height;
-  final double width;
-  final List<String> lista;
-  final String titolo;
-  final String hint;
-
-  @override
-  Widget build(BuildContext context) {
-    String country;
-
-    return Padding(
-        padding: EdgeInsets.symmetric(vertical: height * 0.013),
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(bottom: height * 0.003),
-              child: Text(
-                titolo,
-                style: TextStyle(fontSize: width * 0.05),
-              ),
-            ),
-            DropdownMenu(
-              width: width * 0.65,
-              onSelected: (value) {
-                if (value != null) {
-                  country = value;
-                }
-              },
-              inputDecorationTheme: InputDecorationTheme(
-                  isCollapsed: true,
-                  constraints:
-                      BoxConstraints.tight(Size(width * 0.8, height * 0.05)),
-                  contentPadding: EdgeInsets.only(left: width * 0.05)),
-              hintText: hint,
-              enableSearch: true,
-              dropdownMenuEntries: lista.map((location) {
-                return DropdownMenuEntry(value: location, label: location);
-              }).toList(),
-            ),
-          ],
-        ));
-  }
-}
-
-Widget backdropFilterExample(BuildContext context, Widget child) {
-  return Stack(
-    fit: StackFit.expand,
-    children: <Widget>[
-      child,
-      BackdropFilter(
-        filter: ui.ImageFilter.blur(
-          sigmaX: 8.0,
-          sigmaY: 8.0,
-        ),
-        child: Container(
-          color: Colors.transparent,
-        ),
-      )
-    ],
-  );
 }

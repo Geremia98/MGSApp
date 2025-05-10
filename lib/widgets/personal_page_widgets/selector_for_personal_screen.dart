@@ -124,8 +124,8 @@ class _SelectorForPersonalScreenState<T> extends State<SelectorForPersonalScreen
                     textAlign: TextAlign.left,
                     style: TextStyle(
                     color: _appConfig.getTheme().secondaryHeaderColor,
-                      fontWeight: fontWeightLabels,
-                      fontSize: fontSizeLables,
+                      fontWeight: fontWeightOfLabelsOfTextField,
+                      fontSize: fontSizeOfLablesOfTextField,
                     ),
                   ),
               SizedBox(
@@ -133,9 +133,9 @@ class _SelectorForPersonalScreenState<T> extends State<SelectorForPersonalScreen
               ),
               Expanded(
                 child: Container(
-                  width: _appConfig.getWidth()*10,
+                  width: _appConfig.getWidth()*100,
                   alignment: Alignment.center,
-                  height: _appConfig.getHeight()*4.4,
+                  height: heightTextFormFieldWithoutError,
 
                   child: DropdownButtonFormField<T>(
                     key: _dropdownButtonKey,
@@ -166,35 +166,35 @@ class _SelectorForPersonalScreenState<T> extends State<SelectorForPersonalScreen
                       enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: _appConfig.getTheme().primaryColor,
-                  width: buttonsAndTextFieldsThickness
+                  width: thicknessOfBordersEnabledButtonsAndTextFormField
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
                       disabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: _appConfig.getTheme().disabledColor,
-                  width: buttonsAndTextFieldsThickness
+                  width: thicknessOfBordersEnabledButtonsAndTextFormField
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
                       focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: _appConfig.getTheme().primaryColor,
-                  width: borderThicknessWhenOnFocus
+                  width: thicknessOfBordersWhenOnFocus
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
                       errorBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: _appConfig.getTheme().indicatorColor,
-                  width: buttonsAndTextFieldsThickness
+                  width: thicknessOfBordersEnabledButtonsAndTextFormField
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
                       focusedErrorBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: _appConfig.getTheme().indicatorColor,
-                  width: buttonsAndTextFieldsThickness
+                  width: thicknessOfBordersEnabledButtonsAndTextFormField
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -205,11 +205,11 @@ class _SelectorForPersonalScreenState<T> extends State<SelectorForPersonalScreen
                       style: _currentValue == null
                           ? const TextStyle(
                               color: Colors.grey,
-                              fontSize: fontSizeTextAndFormField,
+                              fontSize: fontSizeOfTextAndFormField,
                             )
                           : TextStyle(
                               color: _appConfig.getTheme().primaryColor,
-                              fontSize: fontSizeTextAndFormField,
+                              fontSize: fontSizeOfTextAndFormField,
                             ),
                     ),
                     //itemHeight: sections.isNotEmpty ? _appConfig.getHeight() * 2 * sections.length : _appConfig.getHeight() * 2,
@@ -266,7 +266,7 @@ class _SelectorForPersonalScreenState<T> extends State<SelectorForPersonalScreen
                 color: isEnabled
                     ? _appConfig.getTheme().primaryColor
                     : _appConfig.getTheme().primaryColor,
-                fontSize: fontSizeTextAndFormField,
+                fontSize: fontSizeOfTextAndFormField,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -286,7 +286,7 @@ class _SelectorForPersonalScreenState<T> extends State<SelectorForPersonalScreen
             color: isEnabled
                     ? _appConfig.getTheme().primaryColor
                     : _appConfig.getTheme().primaryColor,
-            fontSize: fontSizeTextAndFormField,
+            fontSize: fontSizeOfTextAndFormField,
             fontWeight: FontWeight.w500,
           ),
         ),

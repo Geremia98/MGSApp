@@ -4,6 +4,7 @@ import 'package:mgs_app2/screens/login_screens/registration_screen3.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/widgets/back_button_app_bar.dart';
 import 'package:mgs_app2/widgets/image_upload.dart';
+import 'package:mgs_app2/widgets/personal_page_widgets/my_squared_icon_button.dart';
 
 import '../../widgets/font.dart';
 
@@ -20,22 +21,23 @@ class RegistrationScreen2 extends StatefulWidget {
 }
 
 class _RegistrationScreen2State extends State<RegistrationScreen2> {
-
   late RegistrationController controller;
-  String _fotoProfilo = '';
   bool _isDisabled = false;
 
   TextEditingController textFieldValue = TextEditingController();
-
 
   @override
   void initState() {
     super.initState();
     controller = widget.controller;
+
+    controller.profilePic.toString().isNotEmpty
+        ? _isDisabled = true
+        : _isDisabled = false;
   }
 
   void calculateWetherEnablingTheButton() {
-    _fotoProfilo.isNotEmpty
+    controller.profilePic.toString().isNotEmpty
         ? setState(() {
             _isDisabled = false;
           })
@@ -46,14 +48,15 @@ class _RegistrationScreen2State extends State<RegistrationScreen2> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-
     final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.only(right: appConfig.getWidth()*8, left: appConfig.getWidth()*8, top: appConfig.getHeight()*0.7),
+          padding: EdgeInsets.only(
+              right: appConfig.getWidth() * 8,
+              left: appConfig.getWidth() * 8,
+              top: appConfig.getHeight() * 0.7),
           child: Stack(
             children: [
               Column(
@@ -61,16 +64,18 @@ class _RegistrationScreen2State extends State<RegistrationScreen2> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   BackButtonAppBar(
-                      iconData: Icons.arrow_back_rounded, 
-                      appConfig: appConfig,
-                      onTap: () {
-                        Navigator.pop(context);
-                      }, 
-                    ),
-                    SizedBox(height: appConfig.getHeight()*4,),
+                    iconData: Icons.arrow_back_rounded,
+                    appConfig: appConfig,
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  SizedBox(
+                    height: appConfig.getHeight() * 4,
+                  ),
                   Center(
                     child: CircleAvatar(
-                        radius: width * 0.25,
+                        radius: appConfig.getWidth() * 25,
                         backgroundColor:
                             const Color.fromARGB(255, 255, 221, 109),
                         child: Padding(
@@ -101,7 +106,7 @@ class _RegistrationScreen2State extends State<RegistrationScreen2> {
                       '(Sarà la tua foto profilo)',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: appConfig.getWidth()*4,
+                        fontSize: appConfig.getWidth() * 4,
                         fontWeight: FontWeight.w500,
                         color: appConfig.getTheme().secondaryHeaderColor,
                       ),
@@ -110,47 +115,34 @@ class _RegistrationScreen2State extends State<RegistrationScreen2> {
                   SizedBox(height: 50),
                   Center(
                     child: ImageUploadCard(
-                      width: width * 0.5,
-                      height: width * 0.5,
-                      imageType: ImageType.profilePicture,
-                      initialImage: controller.profilePic,
-                      onImagePicked: (value) => controller.setProfilePicture(value),
-                    ),
+                        width: appConfig.getWidth() * 50,
+                        height: appConfig.getWidth() * 50,
+                        imageType: ImageType.profilePicture,
+                        initialImage: controller.profilePic,
+                        onImagePicked: (value) {
+                          controller.setProfilePicture(value);
+                          calculateWetherEnablingTheButton();
+                        }),
                   ),
                   //buildAddNewImageButton(context, width * 0.5, width * 0.5, width * 0.5),
                 ],
               ),
               Positioned(
-                bottom: 0,
-                right: 0,
-                child: FilledButton(
-                  onPressed: _isDisabled
-                      ? null
-                      : () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    RegistrationScreen3(
-                                      controller: controller,
-                                    )),
-                          ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: appConfig.getTheme().primaryColor,
-                    disabledBackgroundColor: Colors.grey.withOpacity(0.2),
-                    padding: const EdgeInsets.symmetric(vertical: 13),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                  bottom: 0,
+                  right: 0,
+                  child: MySquaredIconButton(
+                    activeColor: appConfig.getTheme().primaryColor,
+                    disabledColor: appConfig.getTheme().disabledColor,
+                    icon: Icons.arrow_forward_rounded,
+                    isEnable: !_isDisabled,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => RegistrationScreen3(
+                                controller: controller,
+                              )),
                     ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25),
-                    child: Icon(
-                      Icons.arrow_forward_rounded,
-                      color: appConfig.getTheme().scaffoldBackgroundColor,
-                    ),
-                  ),
-                ),
-              ),
+                  )),
             ],
           ),
         ),

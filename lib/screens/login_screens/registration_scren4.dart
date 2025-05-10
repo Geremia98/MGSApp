@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/login_screens/registration_controller.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/widgets/back_button_app_bar.dart';
+import 'package:mgs_app2/widgets/personal_page_widgets/text_form_field_for_personal_screen.dart';
 
 import '../../widgets/font.dart';
 import '../../widgets/text_field.dart';
@@ -102,33 +103,29 @@ class _RegistrationScreen4State extends State<RegistrationScreen4> {
                     key: formKey,
                     child: Column(
                       children: [
-                        buildTextField(
-                          appConfig,
-                          hintText: "Email",
-                          initialValue: controller.email,
-                          validator: (value) => controller.setEmail(value),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        buildTextField(
-                          appConfig,
-                          hintText: "Password",
-                          initialValue: controller.password,
-                          obscureText: true,
-                          validator: (value) => controller.setPassword(value),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        buildTextField(
-                          appConfig,
-                          hintText: "Conferma password",
-                          initialValue: controller.confirmPassword,
-                          obscureText: true,
-                          validator: (value) =>
-                              controller.setConfirmPassword(value),
-                        ),
+                        buildMyTextFormField(
+                            appConfig,
+                            validator: (value) => controller.setEmail(value),
+                            initialValue: controller.email,
+                            hintText: 'Email',
+                            helperText: true
+                          ),
+                          buildMyTextFormField(
+                      appConfig,
+                      initialValue: controller.password,
+                      hintText: 'Password',
+                      obscureText: true,
+                      helperText: true,
+                      validator: (value) => controller.setPassword(value),
+                    ),
+                    buildMyTextFormField(
+                      appConfig,
+                      initialValue: controller.confirmPassword,
+                      hintText: 'Conferma password',
+                      obscureText: true,
+                      validator: (value) => controller.setConfirmPassword(value),
+                      helperText: true
+                    ),
                       ],
                     ),
                   ),
