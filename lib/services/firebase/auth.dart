@@ -147,22 +147,31 @@ class FirebaseAuthService {
   }
 
   Future<dynamic> sendPasswordResetEmail(String email) async {
-    if (email.isEmpty) {
-      return null;
-    }
-    if (_auth.currentUser == null) {
-      return null;
-    }
-
-    try {
-      await _auth.sendPasswordResetEmail(email: email);
-      return true;
-    } catch (error) {
-      if (kDebugMode) {
-        print('Error while reset email: $error');
+      if (email.isEmpty) {
+        return null;
       }
-      return error;
-    }
+
+      if (_auth.currentUser != null) {
+        return null;
+      }
+
+      try {
+        await _auth.sendPasswordResetEmail(email: email);
+        return true;
+      } on FirebaseAuthException catch (e) {
+        if (kDebugMode) {
+          print('FirebaseAuthException: ${e.code} - ${e.message}');
+        }
+        return e; // oppure: throw e; se vuoi propagarlo
+      } catch (e) {
+        if (kDebugMode) {
+          print('Unknown error: $e');
+        }
+        return FirebaseAuthException(
+          code: 'unknown',
+          message: 'An unknown error occurred.',
+        );
+      }
   }
 
   Future resetPassword(String newPass) async {
@@ -186,16 +195,16 @@ class FirebaseAuthService {
     return message;
   }
 
-  Future resetEmail(String newEmail) async {
+  Future<String?> resetEmail(String newEmail) async {
 
     if (!isUserLogged()) {
-      return;
+      return null;
     }
     final String message = 'Ti abbiamo mandato un link di conferma sulla email $newEmail';
     final User? user = getCurrentUser();
 
     if (user == null) {
-      return;
+      return null;
     }
 
     final FirebaseExceptionsTranslator exceptionMessage = FirebaseExceptionsTranslator();

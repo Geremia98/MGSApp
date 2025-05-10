@@ -32,7 +32,7 @@ class SnackBarStyle {
         right: _appConfig.getWidth() * 10,
         bottom: bottomPadding ?? this.bottomPadding,
       ),
-      backgroundColor: getDarkTheme().cardColor.withOpacity(0.9),
+      backgroundColor: getDarkTheme().highlightColor.withOpacity(0.9),
       content: Text(text,
           textAlign: TextAlign.center,
           overflow: TextOverflow.fade,

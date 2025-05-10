@@ -1,9 +1,11 @@
+import 'package:mgs_app2/screens/login_screens/forgot_password_screen.dart';
 import 'package:mgs_app2/screens/login_screens/registration_controller.dart';
 import 'package:mgs_app2/screens/login_screens/registration_screen1.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/widgets/font.dart';
 import 'package:mgs_app2/widgets/text_field.dart';
+import 'package:mgs_app2/widgets/title.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -115,6 +117,25 @@ class _LoginScreenState extends State<LoginScreen> {
                                   controller.setPassword(value),
                             ),
                           ],
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                          onTap: () => {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ForgotPasswordScreen(),
+                              ),
+                            )
+                          },
+                          child: Text(
+                            'Password dimenticata?',
+                            style: textStyleSubtitle(context).copyWith(
+                                color: appConfig.getTheme().primaryColor,
+                            fontWeight: FontWeight.w600),
+                          ),
                         ),
                       ),
                       SizedBox(height: 20),
