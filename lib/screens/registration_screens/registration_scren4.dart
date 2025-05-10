@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mgs_app2/screens/login_screens/registration_controller.dart';
+import 'package:mgs_app2/screens/registration_screens/registration_controller.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/widgets/back_button_app_bar.dart';
+import 'package:mgs_app2/widgets/personal_page_widgets/my_big_async_button.dart';
 import 'package:mgs_app2/widgets/personal_page_widgets/text_form_field_for_personal_screen.dart';
 
 import '../../widgets/font.dart';
-import '../../widgets/text_field.dart';
 
 class RegistrationScreen4 extends StatefulWidget {
   final RegistrationController controller;
@@ -37,7 +37,6 @@ class _RegistrationScreen4State extends State<RegistrationScreen4> {
 
   @override
   Widget build(BuildContext context) {
-
     final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
@@ -45,7 +44,10 @@ class _RegistrationScreen4State extends State<RegistrationScreen4> {
       body: SafeArea(
         child: Container(
           height: appConfig.getHeight() * 100,
-          padding: EdgeInsets.only(right: appConfig.getWidth()*8, left: appConfig.getWidth()*8, top: appConfig.getHeight()*0.7),
+          padding: EdgeInsets.only(
+              right: appConfig.getWidth() * 8,
+              left: appConfig.getWidth() * 8,
+              top: appConfig.getHeight() * 0.7),
           child: Stack(
             children: [
               Column(
@@ -53,13 +55,15 @@ class _RegistrationScreen4State extends State<RegistrationScreen4> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   BackButtonAppBar(
-                      iconData: Icons.arrow_back_rounded, 
-                      appConfig: appConfig,
-                      onTap: () {
-                        Navigator.pop(context);
-                      }, 
-                    ),
-                    SizedBox(height: appConfig.getHeight()*3,),
+                    iconData: Icons.arrow_back_rounded,
+                    appConfig: appConfig,
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  SizedBox(
+                    height: appConfig.getHeight() * 3,
+                  ),
                   Center(
                     child: CircleAvatar(
                         radius: appConfig.getWidth() * 25,
@@ -90,7 +94,7 @@ class _RegistrationScreen4State extends State<RegistrationScreen4> {
                     child: Text(
                       '(Yep, le tue credenziali)',
                       style: TextStyle(
-                        fontSize: appConfig.getWidth()*4,
+                        fontSize: appConfig.getWidth() * 4,
                         fontWeight: FontWeight.w500,
                         color: appConfig.getTheme().secondaryHeaderColor,
                       ),
@@ -103,29 +107,26 @@ class _RegistrationScreen4State extends State<RegistrationScreen4> {
                     key: formKey,
                     child: Column(
                       children: [
-                        buildMyTextFormField(
-                            appConfig,
+                        buildMyTextFormField(appConfig,
                             validator: (value) => controller.setEmail(value),
                             initialValue: controller.email,
                             hintText: 'Email',
-                            helperText: true
-                          ),
-                          buildMyTextFormField(
-                      appConfig,
-                      initialValue: controller.password,
-                      hintText: 'Password',
-                      obscureText: true,
-                      helperText: true,
-                      validator: (value) => controller.setPassword(value),
-                    ),
-                    buildMyTextFormField(
-                      appConfig,
-                      initialValue: controller.confirmPassword,
-                      hintText: 'Conferma password',
-                      obscureText: true,
-                      validator: (value) => controller.setConfirmPassword(value),
-                      helperText: true
-                    ),
+                            helperText: true),
+                        buildMyTextFormField(
+                          appConfig,
+                          initialValue: controller.password,
+                          hintText: 'Password',
+                          obscureText: true,
+                          helperText: true,
+                          validator: (value) => controller.setPassword(value),
+                        ),
+                        buildMyTextFormField(appConfig,
+                            initialValue: controller.confirmPassword,
+                            hintText: 'Conferma password',
+                            obscureText: true,
+                            validator: (value) =>
+                                controller.setConfirmPassword(value),
+                            helperText: true),
                       ],
                     ),
                   ),
@@ -135,47 +136,13 @@ class _RegistrationScreen4State extends State<RegistrationScreen4> {
                 bottom: 0,
                 left: 0,
                 child: SizedBox(
-                  width: appConfig.getWidth() * 83,
-                  child: FilledButton(
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(
-                        appConfig.getTheme().primaryColor,
-                      ),
-                      shape: MaterialStatePropertyAll(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                    ),
-                    onPressed: _isLoading
-                        ? null
-                        : () =>
-                            controller.register(formKey, context, scaffoldKey),
-                    child: _isLoading
-                        ? Center(
-                            child: Container(
-                              margin: EdgeInsets.all(appConfig.getHeight() * 1),
-                              child: CircularProgressIndicator(
-                                color:
-                                    appConfig.getTheme().secondaryHeaderColor,
-                              ),
-                            ),
-                          )
-                        : Container(
-                          padding: EdgeInsets.all(appConfig.getWidth()*2),
-                          child: Text(
-                            'Registrati',
-                            style: TextStyle(
-                              fontSize: fontSizeButton,
-                              fontWeight: FontWeight.w700,
-                              color: appConfig
-                                  .getTheme()
-                                  .scaffoldBackgroundColor,
-                            ),
-                          ),
-                        ),
-                  ),
-                ),
+                    width: appConfig.getWidth() * 83,
+                    child: MyBigAsyncButton(
+                        appConfig: appConfig,
+                        buttonText: 'Registrati',
+                        onPressedAsync: () async {
+                          await controller.register(formKey, context, scaffoldKey);
+                        })),
               ),
             ],
           ),

@@ -8,10 +8,6 @@ ThemeData getLightTheme() => _lightTheme;
 
 final ThemeData _lightTheme = ThemeData(
 
-  extensions: const <ThemeExtension<dynamic>>[
-      CustomColors.light,
-    ],
-
   fontFamily: 'Montserrat',
   iconTheme: const IconThemeData(
     color: Color.fromARGB(255, 0, 35, 99),
@@ -67,10 +63,6 @@ final ThemeData _lightTheme = ThemeData(
 
 
 final ThemeData _darkTheme = ThemeData(
-
-  extensions: const <ThemeExtension<dynamic>>[
-      CustomColors.dark,
-    ],
 
   fontFamily: 'Montserrat',
   iconTheme: const IconThemeData(

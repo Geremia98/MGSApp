@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mgs_app2/screens/login_screens/optional_registration_screen2.dart';
-import 'package:mgs_app2/screens/login_screens/registration_controller.dart';
-import 'package:mgs_app2/screens/login_screens/registration_screen2.dart';
+import 'package:mgs_app2/screens/registration_screens/registration_controller.dart';
+import 'package:mgs_app2/screens/registration_screens/registration_screen2.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-
 import '../../widgets/font.dart';
 
-class OptionalRegistrationScreen1 extends StatelessWidget {
-
+class OptionalRegistrationScreen2 extends StatelessWidget {
   final RegistrationController controller;
 
-  const OptionalRegistrationScreen1(
-    {
+  const OptionalRegistrationScreen2({
     required this.controller,
     super.key,
   });
@@ -45,11 +41,11 @@ class OptionalRegistrationScreen1 extends StatelessWidget {
                   Column(
                     children: [
                       SizedBox(
-                        height: appConfig.getHeight() * 4,
+                        height: appConfig.getHeight() * 2.5,
                       ),
                       Center(
                         child: Text(
-                          '${controller.name},\ndevi superarla questa\ncosa dell\'età, su...',
+                          'In questi casi gravi, l\'unica cosa da fare è affidarsi alla Parola di Dio...',
                           textAlign: TextAlign.right,
                           style: TextStyle(
                             fontSize: appConfig.getWidth()*7,
@@ -65,7 +61,7 @@ class OptionalRegistrationScreen1 extends StatelessWidget {
                       Column(
                         children: [
                           Text(
-                            'Che poi potrebbe andare peggio.\nPensa a chi è pelato...',
+                            '\'\'Io non guardo ciò che guarda l\'uomo.\nL\'uomo guarda l\'apparenza,\nDio guarda il cuore,,',
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               fontSize: appConfig.getWidth()*4,
@@ -74,43 +70,19 @@ class OptionalRegistrationScreen1 extends StatelessWidget {
                                   appConfig.getTheme().secondaryHeaderColor,
                             ),
                           ),
-                          SizedBox(height: 30),
-                          FilledButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        OptionalRegistrationScreen2(
-                                          controller: controller,
-                                        )),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  appConfig.getTheme().secondaryHeaderColor,
-                              disabledBackgroundColor:
-                                  Colors.grey.withOpacity(0.2),
-                              padding: const EdgeInsets.symmetric(vertical: 13),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  left: appConfig.getWidth() * 5, right: appConfig.getWidth() * 5),
-                              child: Text(
-                                'In realtà lo sono...',
-                                style: TextStyle(
-                                  fontSize: fontSizeBig,
-                                  fontWeight: FontWeight.w700,
-                                  color: appConfig
-                                      .getTheme()
-                                      .scaffoldBackgroundColor,
-                                ),
-                              ),
-                            ),
-                          ),
+                          SizedBox(height: 10),
+                  SizedBox(
+                    width: appConfig.getWidth() * 100,
+                    child: Text(
+                      '1 Sam 16,7',
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        fontSize: appConfig.getWidth()*3.5,
+                        fontWeight: FontWeight.bold,
+                        color: appConfig.getTheme().secondaryHeaderColor,
+                      ),
+                    ),
+                  ),
                         ],
                       ),
                     ],
@@ -145,7 +117,7 @@ class OptionalRegistrationScreen1 extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Text('Hai ragione',
+                          Text('Consoliamoci così',
                               style: TextStyle(
                                 fontSize: fontSizeBig,
                                 color: appConfig

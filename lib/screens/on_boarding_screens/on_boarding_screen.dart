@@ -1,8 +1,8 @@
-import 'package:mgs_app2/screens/login_screens/registration_screen1.dart';
+import 'package:mgs_app2/screens/registration_screens/registration_screen1.dart';
 import 'package:mgs_app2/utilities/on_boarding_contents.dart';
 import 'package:flutter/material.dart';
 
-import '../login_screens/registration_controller.dart';
+import '../registration_screens/registration_controller.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({Key? key}) : super(key: key);

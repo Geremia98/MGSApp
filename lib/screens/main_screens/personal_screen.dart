@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/models/user_model.dart';
-import 'package:mgs_app2/screens/login_screens/registration_controller.dart';
+import 'package:mgs_app2/screens/registration_screens/registration_controller.dart';
+import 'package:mgs_app2/screens/registration_screens/registration_scren4.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/utilities/constants_strings.dart';
 import 'package:mgs_app2/utilities/my_colors.dart';
 import 'package:mgs_app2/widgets/buttons.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/my_profile_pic.dart';
+import 'package:mgs_app2/widgets/personal_page_widgets/my_big_async_button.dart';
 import 'package:mgs_app2/widgets/personal_page_widgets/my_squared_icon_button.dart';
 import 'package:mgs_app2/widgets/personal_page_widgets/selector_for_personal_screen.dart';
 import 'package:mgs_app2/widgets/personal_page_widgets/text_form_field_for_personal_screen.dart';
@@ -276,7 +278,12 @@ class PersonalScreenState extends State<PersonalScreen> {
                           initialValue: controller.bossCode,
                           enabled: _isModifyOptionEnable,
                         )
-                      : const SizedBox()
+                      : const SizedBox(),
+                      MyBigAsyncButton(
+                        appConfig: appConfig, 
+                        onPressedAsync: () async {},
+                        buttonText: 'Cambia la password',
+                      )
                 ],
               ),
             ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mgs_app2/screens/login_screens/registration_controller.dart';
-import 'package:mgs_app2/screens/login_screens/registration_screen3.dart';
+import 'package:mgs_app2/screens/registration_screens/registration_controller.dart';
+import 'package:mgs_app2/screens/registration_screens/registration_screen3.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/widgets/back_button_app_bar.dart';
 import 'package:mgs_app2/widgets/image_upload.dart';
