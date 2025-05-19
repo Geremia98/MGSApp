@@ -76,6 +76,7 @@ class ButtonText extends StatelessWidget {
   final bool isLoading;
   final bool isEnabled;
   final double fixedWidth;
+  final Color? color;
 
   const ButtonText({
     required this.text,
@@ -83,6 +84,7 @@ class ButtonText extends StatelessWidget {
     this.isLoading = false,
     this.isEnabled = true,
     this.fixedWidth = -1,
+    this.color,
     super.key,
   });
 
@@ -99,7 +101,7 @@ class ButtonText extends StatelessWidget {
           horizontal: fixedWidth == -1 ? appConfig.getWidth() * 15 : 0,
         ),
         decoration: isEnabled
-            ? buttonTextDecoration(context)
+            ? buttonTextDecoration(context).copyWith(color: color ?? buttonTextDecoration(context).color )
             : buttonTextDisabledDecoration(context),
         child: FittedBox(
           fit: BoxFit.scaleDown,

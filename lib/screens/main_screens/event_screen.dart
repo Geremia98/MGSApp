@@ -1,6 +1,13 @@
 import 'package:intl/intl.dart';
+import 'package:mgs_app2/models/user_model.dart';
+import 'package:mgs_app2/screens/main_screens/credit_card_screen.dart';
+import 'package:mgs_app2/services/functions/firebase_function_caller.dart';
+import 'package:mgs_app2/services/functions/function_response.dart';
+import 'package:mgs_app2/services/functions/response_type.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:flutter/material.dart';
+import 'package:mgs_app2/widgets/button.dart';
+import 'package:mgs_app2/widgets/snackbar.dart';
 
 import '../../models/event_model.dart';
 
@@ -14,6 +21,11 @@ class EventScreen extends StatefulWidget {
 }
 
 class _EventScreenState extends State<EventScreen> {
+
+  bool isLoading = false;
+
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -148,8 +160,7 @@ class _EventScreenState extends State<EventScreen> {
                                             height: height,
                                             icon: Icons.calendar_month_rounded,
                                             title: 'Data fine',
-                                            subTitle: DateFormat(
-                                                        'dd-MM-yyyy')
+                                            subTitle: DateFormat('dd-MM-yyyy')
                                                     .format(widget.event.end!) +
                                                 '\n' +
                                                 DateFormat('hh:mm')
@@ -171,27 +182,15 @@ class _EventScreenState extends State<EventScreen> {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: height * 0.005),
-                              child: Center(
-                                child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: ThemeData().hoverColor,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 50, vertical: 16),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'Ci sono!',
-                                    style: TextStyle(
-                                        color: ThemeData().hoverColor,
-                                        fontSize: width * 0.05,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
+                              padding: const EdgeInsets.only(
+                                top: 20,
+                              ),
+                              child: ButtonText(
+                                text: widget.event.participants.any((userUid) => userUid == UserModel.uid) ? 'Abbandona' : 'Partecipa',
+                                onTap: widget.event.participants.any((userUid) => userUid == UserModel.uid) ? leaveEvent : joinEvent,
+                                isEnabled:  widget.event.participants.any((userUid) => userUid == UserModel.uid) ? true : isEventAvailable(),
+                                isLoading: isLoading,
+                                color: Colors.red.shade700,
                               ),
                             ),
                           ],
@@ -205,6 +204,111 @@ class _EventScreenState extends State<EventScreen> {
       ),
     );
   }
+
+  bool isEventAvailable() {
+    if (widget.event.targetGender == EventTargetGender.male && UserModel.gender == UserGender.female) {
+      return false;
+    }
+
+    if (widget.event.targetGender == EventTargetGender.female && UserModel.gender == UserGender.male) {
+      return false;
+    }
+
+    //TODO also include target age
+
+    return true;
+  }
+
+  Future<void> leaveEvent() async {
+    //TODO aggiungere una schermata "are you sure"
+
+    final FirebaseFunctionCaller caller = FirebaseFunctionCaller();
+    final SnackBarStyle snackBarStyle = SnackBarStyle(context, scaffoldKey);
+
+
+
+      setState(() {
+        isLoading = true;
+      });
+
+      FunctionResponse response = await caller.leaveEvent(widget.event.id);
+
+      setState(() {
+        isLoading = false;
+      });
+
+      if (response.getType() == ResponseType.error) {
+        snackBarStyle.showSnackBar('Impossibile abbandonare l\'evento. Riprova più tardi.');
+        return;
+      }
+
+      print("Evento abbandonato");
+      snackBarStyle.showSnackBar('Evento lasciato correttamente');
+
+
+  }
+
+  Future<void> joinEvent() async{
+
+
+    final FirebaseFunctionCaller caller = FirebaseFunctionCaller();
+    final SnackBarStyle snackBarStyle = SnackBarStyle(context, scaffoldKey);
+    
+
+    if (widget.event.price == 0) {
+
+      setState(() {
+        isLoading = true;
+      });
+
+      FunctionResponse response = await caller.joinEvent(widget.event.id);
+
+      setState(() {
+        isLoading = false;
+      });
+
+      if (response.getType() == ResponseType.error) {
+        snackBarStyle.showSnackBar('Impossibile partecipare. Riprova più tardi.');
+        return;
+      }
+
+      snackBarStyle.showSnackBar('Evento aggiunto correttamente');
+
+
+      return;
+    }
+
+    String? paymentMethodId = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreditCardScreen(),
+      ),
+    );
+
+    if (paymentMethodId == null || paymentMethodId.isEmpty) {
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    FunctionResponse response = await caller.joinEvent(widget.event.id, paymentMethodId: paymentMethodId ?? '');
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (response.getType() == ResponseType.error) {
+      snackBarStyle.showSnackBar('Impossibile partecipare. Riprova più tardi.');
+      return;
+    }
+
+    snackBarStyle.showSnackBar('Evento aggiunto correttamente');
+
+
+  }
+
 }
 
 class EventDetailBox extends StatelessWidget {

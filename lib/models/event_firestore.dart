@@ -30,7 +30,10 @@ class EventFirestore {
       for (QueryDocumentSnapshot doc in snap.docs) {
 
         ImageModel? image = await storageService.getEventBannerImage(doc.id);
-        events.add(EventModel.fromFirestore(doc.id, doc.data() as Map<String, dynamic>, image));
+        List<String> participants = await retrieveParticipantsUid(doc.id);
+
+
+        events.add(EventModel.fromFirestore(doc.id, doc.data() as Map<String, dynamic>, image, participants));
 
       }
 
@@ -39,6 +42,20 @@ class EventFirestore {
     } catch (error) {
       if (kDebugMode) {
         print('error while fetching events: $error');
+      }
+      return [];
+    }
+  }
+
+  Future<List<String>> retrieveParticipantsUid(String eventId) async {
+    try {
+      final participantsRef = eventsCR.doc(eventId).collection('participants');
+      final snapshot = await participantsRef.get();
+
+      return snapshot.docs.map((doc) => doc.id).toList();
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error while retrieving participants UID: $error');
       }
       return [];
     }
@@ -54,8 +71,10 @@ class EventFirestore {
 
       for (QueryDocumentSnapshot doc in snap.docs) {
 
+        List<String> participants = await retrieveParticipantsUid(doc.id);
         ImageModel? image = await storageService.getEventBannerImage(doc.id);
-        events.add(EventModel.fromFirestore(doc.id, doc.data() as Map<String, dynamic>, image));
+
+        events.add(EventModel.fromFirestore(doc.id, doc.data() as Map<String, dynamic>, image, participants));
 
       }
 

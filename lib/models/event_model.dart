@@ -28,6 +28,8 @@ class EventModel {
   final String targetIspettoria;
   final String targetGruppo;
 
+  final List<String> participants;
+
   EventModel({
     this.creatorUid = '',
     this.id = '',
@@ -44,6 +46,7 @@ class EventModel {
     this.targetIspettoria = '',
     this.targetGruppo = '',
     this.targetGender = EventTargetGender.both,
+    this.participants = const [],
   });
 
   Map<String, dynamic> toPayload() {
@@ -67,7 +70,7 @@ class EventModel {
   }
 
   factory EventModel.fromFirestore(
-      String id, Map<String, dynamic> data, ImageModel? banner) {
+      String id, Map<String, dynamic> data, ImageModel? banner, List<String> participants) {
 
     final Map<String, dynamic> target = data[firestoreEventTarget] ?? {};
 
@@ -113,6 +116,7 @@ class EventModel {
       targetIspettoria: target.containsKey(firestoreUsersIspettoriaField)
           ? target[firestoreUsersIspettoriaField]
           : '',
+      participants: participants,
     );
   }
 }

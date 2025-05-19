@@ -227,7 +227,7 @@ class PersonalScreenState extends State<PersonalScreen> {
                       }
                     },
                   ),
-                  SelectorForPersonalScreen(
+                  controller.country.isEmpty ? SizedBox() : SelectorForPersonalScreen(
                     isEnable: _isModifyOptionEnable,
                     constantDropDownCountryList,
                     controller.country,
@@ -235,7 +235,7 @@ class PersonalScreenState extends State<PersonalScreen> {
                         controller.setCountry(value),
                     title: 'Paese: ',
                   ),
-                  SelectorForPersonalScreen(
+                  controller.ispettoria.isEmpty ? SizedBox() : SelectorForPersonalScreen(
                     isEnable: _isModifyOptionEnable,
                     constantDropDownIspettoriaList,
                     controller.ispettoria,
@@ -243,7 +243,7 @@ class PersonalScreenState extends State<PersonalScreen> {
                         {controller.setIspettoria(value)},
                     title: 'Ispettoria: ',
                   ),
-                  SelectorForPersonalScreen(
+                  controller.group.isEmpty ? SizedBox() : SelectorForPersonalScreen(
                     isEnable: _isModifyOptionEnable,
                     constantDropDownGroupList,
                     controller.group,

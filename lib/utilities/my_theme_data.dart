@@ -57,7 +57,10 @@ final ThemeData _lightTheme = ThemeData(
 
   segmentedButtonTheme: SegmentedButtonThemeData(
     style: ButtonStyle()
-  )
+  ),
+  extensions: <ThemeExtension<dynamic>>[
+    CustomColors.light,
+  ],
 );
 
 
@@ -104,6 +107,9 @@ final ThemeData _darkTheme = ThemeData(
   /*coloreDescriptionTestDay*/dividerColor:  const Color.fromARGB(255, 40, 59, 93),
   /*coloreDisabledButtonDay*/disabledColor: const Color.fromARGB(255, 121, 129, 144),
   /*coloreErroreDay*/indicatorColor:  const Color.fromARGB(255, 227, 46, 33),
+  extensions: <ThemeExtension<dynamic>>[
+    CustomColors.dark,
+  ],
 
 );
 
