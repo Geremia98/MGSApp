@@ -190,7 +190,7 @@ class _EventScreenState extends State<EventScreen> {
                                 onTap: widget.event.participants.any((userUid) => userUid == UserModel.uid) ? leaveEvent : joinEvent,
                                 isEnabled:  widget.event.participants.any((userUid) => userUid == UserModel.uid) ? true : isEventAvailable(),
                                 isLoading: isLoading,
-                                color: Colors.red.shade700,
+                                color: widget.event.participants.any((userUid) => userUid == UserModel.uid) ? Colors.red.shade700 : null,
                               ),
                             ),
                           ],
