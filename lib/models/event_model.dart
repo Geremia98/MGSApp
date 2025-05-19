@@ -102,7 +102,7 @@ class EventModel {
           ? EventTargetGender.values.firstWhere((value) => value.name == target[firestoreEventTargetSexField])
           : EventTargetGender.both,
       targetAge: target.containsKey(firestoreEventTargetAgeField)
-          ? int.tryParse(target[firestoreEventTargetAgeField] ?? '')
+          ? int.tryParse(target[firestoreEventTargetAgeField].toString() ?? '')
           : null,
       targetCountry: target.containsKey(firestoreEventTargetCountryField)
           ? target[firestoreEventTargetCountryField]
