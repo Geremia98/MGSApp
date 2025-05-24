@@ -38,6 +38,9 @@ class UserFirestore {
         firestoreUsersCountryField: UserModel.country,
         firestoreUsersBossCodeField: UserModel.bossCode,
         firestoreUsersMyEventsListField : UserModel.myEventsList,
+        UserModel.bossCode.isNotEmpty ? firestoreBankCurrencyField: UserModel.bankCurrency : null,
+        UserModel.bossCode.isNotEmpty ? firestoreBakHolderNameField: UserModel.holderName : null,
+        UserModel.bossCode.isNotEmpty ? firestoreBankIbanField: UserModel.iban : null,
       });
 
       return true;

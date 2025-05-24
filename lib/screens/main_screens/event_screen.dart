@@ -23,8 +23,16 @@ class EventScreen extends StatefulWidget {
 class _EventScreenState extends State<EventScreen> {
 
   bool isLoading = false;
+  bool isEventJoined = false;
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    isEventJoined = widget.event.participants.any((userUid) => userUid == UserModel.uid);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -263,16 +271,22 @@ class _EventScreenState extends State<EventScreen> {
 
       FunctionResponse response = await caller.joinEvent(widget.event.id);
 
-      setState(() {
-        isLoading = false;
-      });
-
       if (response.getType() == ResponseType.error) {
         snackBarStyle.showSnackBar('Impossibile partecipare. Riprova più tardi.');
+
+        setState(() {
+          isLoading = false;
+        });
+
         return;
       }
 
       snackBarStyle.showSnackBar('Evento aggiunto correttamente');
+
+      setState(() {
+        isLoading = false;
+        isEventJoined = false;
+      });
 
 
       return;
@@ -295,14 +309,19 @@ class _EventScreenState extends State<EventScreen> {
 
     FunctionResponse response = await caller.joinEvent(widget.event.id, paymentMethodId: paymentMethodId ?? '');
 
-    setState(() {
-      isLoading = false;
-    });
 
     if (response.getType() == ResponseType.error) {
       snackBarStyle.showSnackBar('Impossibile partecipare. Riprova più tardi.');
+      setState(() {
+        isLoading = false;
+      });
       return;
     }
+
+    setState(() {
+      isLoading = false;
+      isEventJoined = true;
+    });
 
     snackBarStyle.showSnackBar('Evento aggiunto correttamente');
 

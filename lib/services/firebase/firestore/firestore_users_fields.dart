@@ -9,3 +9,8 @@ const String firestoreUsersIspettoriaField = 'ispettoria';
 const String firestoreUsersBossCodeField = 'bossCode';
 const String firestoreUsersProfilePictureHQField = 'profilePictureDownloadURL';
 const String firestoreUsersMyEventsListField = 'myEventsList';
+
+const String firestoreBakHolderNameField = 'bankHolderName';
+const String firestoreBankCurrencyField = 'bankCurrency';
+const String firestoreBankIbanField = 'bankIban';
+

@@ -22,16 +22,30 @@ class RegistrationController {
   String group = 'Sesto';
   String bossCode = '';
 
+  String bankHolder = '';
+  String currency = 'EUR';
+  String IBAN = '';
+
   String email = '';
   String password = '';
   String confirmPassword = '';
 
+
+
   void setName(String? name) {
     this.name = name ?? '';
+
+    if (bankHolder.isEmpty) {
+      bankHolder = '$name $surname';
+    }
   }
 
   void setSurname(String? surname) {
     this.surname = surname ?? '';
+
+    if (bankHolder.isEmpty) {
+      bankHolder = '$name $surname';
+    }
   }
 
   void setGender(UserGender gender) {
@@ -60,6 +74,18 @@ class RegistrationController {
 
   void setCountry(String? country) {
     this.country = country ?? '';
+  }
+
+  void setBankHolder(String? holder) {
+    this.bankHolder = holder ?? '';
+  }
+
+  void setCurrency(String? currency) {
+    this.currency = currency ?? '';
+  }
+
+  void setIBAN(String? iban) {
+    this.IBAN = iban ?? '';
   }
 
   String? setEmail(String? email) {
@@ -150,7 +176,9 @@ class RegistrationController {
     UserModel.ispettoria = ispettoria;
     UserModel.country = country;
     UserModel.bossCode = bossCode;
-    
+    UserModel.bankCurrency = currency;
+    UserModel.iban = IBAN;
+    UserModel.holderName = bankHolder;
     
 
     bool firestoreResult = await userFirestore.registerUser();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mgs_app2/screens/registration_screens/bank_data_registration_screen.dart';
 import 'package:mgs_app2/screens/registration_screens/registration_controller.dart';
 import 'package:mgs_app2/screens/registration_screens/registration_scren4.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
@@ -191,13 +192,29 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                     disabledColor: appConfig.getTheme().disabledColor,
                     icon: Icons.arrow_forward_rounded,
                     isEnable: !_isDisabled,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => RegistrationScreen4(
-                                controller: controller,
-                              )),
-                    ),
+                    onTap: () {
+
+                      if (_selectedBoss.first == true) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  BankDataRegistrationScreen(
+                                    controller: controller,
+                                  )),
+                        );
+                        return;
+                      }
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                RegistrationScreen4(
+                                  controller: controller,
+                                )),
+                      );
+                    }
                   ))
             ],
           ),

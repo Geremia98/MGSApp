@@ -23,6 +23,10 @@ class UserModel {
   static String bossCode = '';
   static List<EventModel> myEventsList = [];
 
+  static String iban = '';
+  static String holderName = '';
+  static String bankCurrency = '';
+
   UserModel.fromFirestore(User user, Map<String, dynamic> data) {
     uid = user.uid;
     email = user.email ?? '';
@@ -57,5 +61,14 @@ class UserModel {
     myEventsList = data.containsKey(firestoreUsersMyEventsListField)
         ? (data[firestoreUsersMyEventsListField] as List).whereType<EventModel>().toList()
         : [];
+    bankCurrency = data.containsKey(firestoreBankCurrencyField)
+        ? data[firestoreBankCurrencyField] as String
+        : '';
+    holderName = data.containsKey(firestoreBakHolderNameField)
+        ? data[firestoreBakHolderNameField] as String
+        : '';
+    iban = data.containsKey(firestoreBankIbanField)
+        ? data[firestoreBankIbanField] as String
+        : '';
   }
 }
