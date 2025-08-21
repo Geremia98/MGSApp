@@ -45,7 +45,8 @@ class MyConsigliatiCard extends StatelessWidget {
                 width: width * bigRecommendedEventsCardBorderThickness),
           ),
           child: Stack(children: [
-            ClipRRect(
+            Positioned.fill(
+              child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
                 child: event.image == null || event.image!.downloadUrl == null
                     ? Image.asset(
@@ -55,7 +56,9 @@ class MyConsigliatiCard extends StatelessWidget {
                     : Image.network(
                         event.image!.downloadUrl!,
                         fit: BoxFit.cover,
-                      )),
+                      ),
+              ),
+            ),
             Positioned(
                 left: width * 0.025,
                 bottom: width * 0.025,
