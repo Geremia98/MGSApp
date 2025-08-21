@@ -5,6 +5,7 @@ import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import '../utilities/app_config.dart';
 import 'font.dart';
 
+//test git
 Widget buildTitle(
   BuildContext context, {
   String title = '',

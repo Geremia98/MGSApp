@@ -56,7 +56,6 @@ class _TitleStageState extends State<EventTitleStage> {
             appConfig,
             textCapitalization: TextCapitalization.sentences,
             hintText: 'Titolo',
-            maxLength: 30,
             onChanged: onTitleChange,
             initialValue: controller.getTitle(),
           ),
