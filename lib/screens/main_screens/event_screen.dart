@@ -11,6 +11,7 @@ import 'package:mgs_app2/widgets/snackbar.dart';
 
 import '../../models/event_model.dart';
 
+//Test branch creation
 class EventScreen extends StatefulWidget {
   final EventModel event;
 
