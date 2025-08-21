@@ -1,3 +1,9 @@
+# Personal project-specific ignored directories
+linux/
+macos/
+web/
+windows/
+
 # Miscellaneous
 *.class
 *.log
