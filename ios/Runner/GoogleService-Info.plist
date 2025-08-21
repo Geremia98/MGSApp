@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1021357601300-io4rc8qm6ejkrgu5gkf6dpe1nj70h3r3.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1021357601300-io4rc8qm6ejkrgu5gkf6dpe1nj70h3r3</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1021357601300-8thlpkolp652gm6kdlobuavb6ii2rfc4.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDfT8i193u9gKkDpo9Gm-71crxftxy5suw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1021357601300</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.mgsApp2</string>
+	<key>PROJECT_ID</key>
+	<string>supermercatofirebase</string>
+	<key>STORAGE_BUCKET</key>
+	<string>supermercatofirebase.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1021357601300:ios:4eb5b35af188c766bbad01</string>
+	<key>DATABASE_URL</key>
+	<string>https://supermercatofirebase.firebaseio.com</string>
+</dict>
+</plist>

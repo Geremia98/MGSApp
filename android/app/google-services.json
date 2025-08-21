@@ -1,0 +1,163 @@
+{
+  "project_info": {
+    "project_number": "1021357601300",
+    "firebase_url": "https://supermercatofirebase.firebaseio.com",
+    "project_id": "supermercatofirebase",
+    "storage_bucket": "supermercatofirebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021357601300:android:4895c283225ab257bbad01",
+        "android_client_info": {
+          "package_name": "com.alberto.flutterapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1021357601300-8thlpkolp652gm6kdlobuavb6ii2rfc4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alberto.flutterapp",
+            "certificate_hash": "2333a00b2e4a25e5ee50212a402554222735a4f8"
+          }
+        },
+        {
+          "client_id": "1021357601300-gbffksdrvtf2qddk680d0ovdmmdb974e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCl1xe6kgdPF4YVWS8Eau9xsF9adTaLQ68"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "100374993274002575944",
+              "client_type": 3
+            },
+            {
+              "client_id": "1021357601300-0vgqf6ibd7mj0sbfqmtln5u4ln7i0u3k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.alberto.biiboxNuovaVersione"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021357601300:android:0fadb690778bafa0bbad01",
+        "android_client_info": {
+          "package_name": "com.core.attivasemplice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1021357601300-gbffksdrvtf2qddk680d0ovdmmdb974e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCl1xe6kgdPF4YVWS8Eau9xsF9adTaLQ68"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "100374993274002575944",
+              "client_type": 3
+            },
+            {
+              "client_id": "1021357601300-0vgqf6ibd7mj0sbfqmtln5u4ln7i0u3k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.alberto.biiboxNuovaVersione"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021357601300:android:48528cbb821edec1bbad01",
+        "android_client_info": {
+          "package_name": "com.example.mgs_app2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1021357601300-gbffksdrvtf2qddk680d0ovdmmdb974e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCl1xe6kgdPF4YVWS8Eau9xsF9adTaLQ68"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "100374993274002575944",
+              "client_type": 3
+            },
+            {
+              "client_id": "1021357601300-0vgqf6ibd7mj0sbfqmtln5u4ln7i0u3k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.alberto.biiboxNuovaVersione"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021357601300:android:f3c79012c87f6c21bbad01",
+        "android_client_info": {
+          "package_name": "com.tedoldi.events"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1021357601300-gbffksdrvtf2qddk680d0ovdmmdb974e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCl1xe6kgdPF4YVWS8Eau9xsF9adTaLQ68"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "100374993274002575944",
+              "client_type": 3
+            },
+            {
+              "client_id": "1021357601300-0vgqf6ibd7mj0sbfqmtln5u4ln7i0u3k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.alberto.biiboxNuovaVersione"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

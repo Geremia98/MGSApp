@@ -1,14 +1,3 @@
-# Personal project-specific ignored directories
-android/
-ios/
-linux/
-macos/
-test/
-web/
-windows/
-
-
-
 # Miscellaneous
 *.class
 *.log
