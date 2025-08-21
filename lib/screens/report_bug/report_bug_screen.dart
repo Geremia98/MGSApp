@@ -1,16 +1,14 @@
 
-import 'package:mgsapp/services/firebase/bug_report_service.dart';
 import 'package:flutter/material.dart';
-import 'package:mgsapp/widgets/back_button_app_bar.dart';
-import 'package:mgsapp/widgets/button.dart';
-import 'package:mgsapp/widgets/text_field.dart';
-import 'package:mgsapp/utilities/my_colors.dart';
+import 'package:mgs_app2/services/firebase/bug_report_service.dart';
+import 'package:mgs_app2/widgets/button.dart';
+import 'package:mgs_app2/widgets/text_field.dart';
 
 class ReportBugScreen extends StatefulWidget {
-  const ReportBugScreen({Key? key}) : super(key: key);
+  const ReportBugScreen({super.key});
 
   @override
-  _ReportBugScreenState createState() => _ReportBugScreenState();
+  State<ReportBugScreen> createState() => _ReportBugScreenState();
 }
 
 class _ReportBugScreenState extends State<ReportBugScreen> {
@@ -25,6 +23,7 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
 
   void _submitReport() async {
     if (_descriptionController.text.trim().isEmpty) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter a description.')),
       );
@@ -39,11 +38,13 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
       final bugReportService = BugReportService();
       await bugReportService.submitBugReport(_descriptionController.text.trim());
 
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Bug report submitted successfully.')),
       );
       Navigator.of(context).pop();
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to submit report: $e')),
       );
@@ -59,16 +60,14 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const BackButtonAppBar(),
+      appBar: AppBar(
+        title: const Text('Report a Bug'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'Report a Bug',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
             const SizedBox(height: 16),
             Text(
               'Please describe the issue you are experiencing. '

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:mgsapp/models/user_model.dart';
-import 'package:mgsapp/screens/registration_screens/registration_controller.dart';
-import 'package:mgsapp/screens/registration_screens/registration_scren4.dart';
-import 'package:mgsapp/utilities/app_config.dart';
-import 'package:mgsapp/utilities/constants_dimensions.dart';
-import 'package:mgsapp/utilities/constants_strings.dart';
-import 'package:mgsapp/utilities/my_colors.dart';
-import 'package:mgsapp/widgets/buttons.dart';
-import 'package:mgsapp/widgets/home_page_widgets/my_profile_pic.dart';
-import 'package:mgsapp/widgets/personal_page_widgets/my_big_async_button.dart';
-import 'package:mgsapp/widgets/personal_page_widgets/my_squared_icon_button.dart';
-import 'package:mgsapp/widgets/personal_page_widgets/selector_for_personal_screen.dart';
-import 'package:mgsapp/widgets/personal_page_widgets/text_form_field_for_personal_screen.dart';
-import 'package:mgsapp/widgets/registration_screens_widgets/my_date_picker.dart';
-import 'package:mgsapp/widgets/registration_screens_widgets/my_segmented_button.dart';
-import 'package:mgsapp/screens/report_bug/report_bug_screen.dart';
+import 'package:mgs_app2/models/user_model.dart';
+import 'package:mgs_app2/screens/registration_screens/registration_controller.dart';
+import 'package:mgs_app2/screens/registration_screens/registration_scren4.dart';
+import 'package:mgs_app2/screens/report_bug/report_bug_screen.dart';
+import 'package:mgs_app2/utilities/app_config.dart';
+import 'package:mgs_app2/utilities/constants_dimensions.dart';
+import 'package:mgs_app2/utilities/constants_strings.dart';
+import 'package:mgs_app2/utilities/my_colors.dart';
+import 'package:mgs_app2/widgets/buttons.dart';
+import 'package:mgs_app2/widgets/home_page_widgets/my_profile_pic.dart';
+import 'package:mgs_app2/widgets/personal_page_widgets/my_big_async_button.dart';
+import 'package:mgs_app2/widgets/personal_page_widgets/my_squared_icon_button.dart';
+import 'package:mgs_app2/widgets/personal_page_widgets/selector_for_personal_screen.dart';
+import 'package:mgs_app2/widgets/personal_page_widgets/text_form_field_for_personal_screen.dart';
+import 'package:mgs_app2/widgets/registration_screens_widgets/my_date_picker.dart';
+import 'package:mgs_app2/widgets/registration_screens_widgets/my_segmented_button.dart';
 
 class PersonalScreen extends StatefulWidget {
   const PersonalScreen({super.key});
