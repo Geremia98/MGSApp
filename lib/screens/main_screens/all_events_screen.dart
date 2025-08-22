@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
+import 'package:mgs_app2/widgets/buttons.dart';
 
 class AllEventsScreen extends StatefulWidget {
   final String titolo;
@@ -15,6 +16,7 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
       body: Stack(children: [
@@ -29,26 +31,10 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
                 children: <Widget>[
                   Row(
                     children: [
-                      GestureDetector(
-                        onTap: () => {
-                          Navigator.pop(context),
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(width * 0.02),
-                          decoration: BoxDecoration(
-                            // Colore di sfondo
-                            borderRadius: BorderRadius.circular(
-                                width * 0.02), // Bordi arrotondati
-                            border: Border.all(
-                              width: width * 0.002, // Larghezza del bordo
-                            ),
-                          ),
-                          child: const Icon(
-                            Icons
-                                .arrow_back_rounded, // Icona simile a quella mostrata
-                            size: 24.0, // Dimensione dell'icona
-                          ),
-                        ),
+                      GoBackButton(
+                        icon: Icons.arrow_back_rounded,
+                        onTap: () => Navigator.pop(context),
+                        appConfig: appConfig,
                       ),
                       const Expanded(
                           child: SizedBox(
