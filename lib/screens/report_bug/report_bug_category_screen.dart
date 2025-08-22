@@ -12,10 +12,10 @@ class ReportBugCategoryScreen extends StatelessWidget {
     final AppConfig appConfig = AppConfig(context);
 
     final List<Map<String, dynamic>> categories = [
-      {'name': 'Payment', 'icon': Icons.payment},
-      {'name': 'Authentication & Credentials', 'icon': Icons.lock_outline},
-      {'name': 'Event management', 'icon': Icons.event_note},
-      {'name': 'Group management', 'icon': Icons.group},
+      {'name': 'Pagamenti', 'icon': Icons.payment},
+      {'name': 'Autenticazione & Credenziali', 'icon': Icons.lock_outline},
+      {'name': 'Gestione Eventi', 'icon': Icons.event_note},
+      {'name': 'Gestione Gruppi', 'icon': Icons.group},
     ];
 
     return Scaffold(
@@ -38,7 +38,7 @@ class ReportBugCategoryScreen extends StatelessWidget {
                   bottom: appConfig.getHeight() * 1,
                 ),
                 child: Text(
-                  'Select a Category',
+                  'Seleziona una categoria',
                   style: TextStyle(
                     fontSize: appConfig.getWidth() * 7,
                     fontWeight: FontWeight.bold,

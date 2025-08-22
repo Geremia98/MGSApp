@@ -85,7 +85,7 @@ class HomePageDrawer extends StatelessWidget {
               height: height,
               width: width,
               icon: Icons.bug_report_rounded,
-              title: 'Report a bug',
+              title: 'Segnala un bug',
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const ReportBugCategoryScreen()),
