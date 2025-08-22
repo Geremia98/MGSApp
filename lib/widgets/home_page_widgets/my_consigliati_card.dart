@@ -56,6 +56,19 @@ class MyConsigliatiCard extends StatelessWidget {
                     : Image.network(
                         event.image!.downloadUrl!,
                         fit: BoxFit.cover,
+                        loadingBuilder: (context, widget, loadingProgress) {
+                          if (loadingProgress == null) return widget;
+                          return ColorFiltered(
+                            colorFilter: const ColorFilter.mode(
+                              Colors.grey,
+                              BlendMode.saturation,
+                            ),
+                            child: Image.asset(
+                              'assets/images/ballo.png',
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        },
                       ),
               ),
             ),
@@ -63,6 +76,7 @@ class MyConsigliatiCard extends StatelessWidget {
                 left: width * 0.025,
                 bottom: width * 0.025,
                 child: Container(
+                  constraints: BoxConstraints(maxWidth: width * 0.5),
                   padding: EdgeInsets.symmetric(
                       horizontal: width * 0.02, vertical: width * 0.01),
                   decoration: BoxDecoration(
@@ -75,6 +89,8 @@ class MyConsigliatiCard extends StatelessWidget {
                       children: [
                         Text(
                           event.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: width * 0.04),

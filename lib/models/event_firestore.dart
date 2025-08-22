@@ -19,13 +19,62 @@ class EventFirestore {
     eventsCR = _referencesService.eventsCR;
   }
 
+  Future<List<EventModel>> retrieveUserJoinedEvents(
+      {
+        bool onlyFuture = false,
+      }) async {
+    List<EventModel> events = [];
+    FirebaseStorageService storageService = FirebaseStorageService();
+
+    try {
+      // Prendo tutti gli eventi (puoi ottimizzare con query più complesse se necessario)
+      QuerySnapshot snap = await eventsCR.orderBy('start', descending: true).get();
+
+      for (QueryDocumentSnapshot doc in snap.docs) {
+        // Controllo se esiste un documento con id == uid nella subcollection participants
+        DocumentSnapshot participantDoc =
+        await eventsCR.doc(doc.id).collection('participants').doc(UserModel.uid).get();
+
+        if (participantDoc.exists) {
+          // Filtro per eventi futuri se richiesto
+          if (onlyFuture) {
+            final data = doc.data() as Map<String, dynamic>;
+            final Timestamp? startDate = data['start']; // o 'eventDate' a seconda del tuo schema
+
+            if (startDate != null && startDate.toDate().isBefore(DateTime.now())) {
+              continue; // evento già passato, lo salto
+            }
+          }
+
+          ImageModel? image = await storageService.getEventBannerImage(doc.id);
+          List<String> participants = await retrieveParticipantsUid(doc.id);
+
+          events.add(EventModel.fromFirestore(
+            doc.id,
+            doc.data() as Map<String, dynamic>,
+            image,
+            participants,
+          ));
+        }
+      }
+
+      return events;
+    } catch (error) {
+      if (kDebugMode) {
+        print('error while fetching user events: $error');
+      }
+      return [];
+    }
+  }
+
+
   Future<List<EventModel>> retrieveEvents() async {
 
     List<EventModel> events = [];
     FirebaseStorageService storageService = FirebaseStorageService();
 
     try {
-      QuerySnapshot snap = await eventsCR.orderBy('creationDate', descending: true).get();
+      QuerySnapshot snap = await eventsCR.orderBy('start', descending: true).get();
 
       for (QueryDocumentSnapshot doc in snap.docs) {
 
@@ -61,7 +110,9 @@ class EventFirestore {
     }
   }
 
-  Future<List<EventModel>> retrievePersonalEvents() async {
+  Future<List<EventModel>> retrievePersonalEvents({
+    bool onlyFuture = false,
+  }) async {
 
     List<EventModel> events = [];
     FirebaseStorageService storageService = FirebaseStorageService();
@@ -71,12 +122,25 @@ class EventFirestore {
 
       for (QueryDocumentSnapshot doc in snap.docs) {
 
+        if (onlyFuture) {
+          final data = doc.data() as Map<String, dynamic>;
+          final Timestamp? startDate = data['start']; // o 'eventDate' a seconda del tuo schema
+
+          if (startDate != null && startDate.toDate().isBefore(DateTime.now())) {
+            continue; // evento già passato, lo salto
+          }
+        }
+
         List<String> participants = await retrieveParticipantsUid(doc.id);
         ImageModel? image = await storageService.getEventBannerImage(doc.id);
 
         events.add(EventModel.fromFirestore(doc.id, doc.data() as Map<String, dynamic>, image, participants));
 
       }
+
+      events.addAll(await retrieveUserJoinedEvents(onlyFuture: onlyFuture));
+
+      events.sort((a, b) => b.start!.compareTo(a.start!));
 
       return events;
 

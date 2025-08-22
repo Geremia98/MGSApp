@@ -6,7 +6,6 @@ import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
 import 'package:mgs_app2/utilities/utils.dart';
 
-
 class MyEventsCard extends StatelessWidget {
   const MyEventsCard({
     super.key,
@@ -53,10 +52,26 @@ class MyEventsCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(width * 0.01)),
                 child: event.image == null || event.image!.downloadUrl == null
-                    ? SizedBox()
+                    ? Image.asset(
+                        'assets/images/party.png',
+                        fit: BoxFit.cover,
+                      )
                     : Image.network(
                         event.image!.downloadUrl!,
                         fit: BoxFit.cover,
+                        loadingBuilder: (context, widget, loadingProgress) {
+                          if (loadingProgress == null) return widget;
+                          return ColorFiltered(
+                            colorFilter: const ColorFilter.mode(
+                              Colors.grey,
+                              BlendMode.saturation,
+                            ),
+                            child: Image.asset(
+                              'assets/images/party.png',
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        },
                       ),
               ),
             ),
@@ -68,6 +83,8 @@ class MyEventsCard extends StatelessWidget {
                     margin: EdgeInsets.only(bottom: height * 0.007),
                     child: Text(
                       event.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: width * 0.04,
@@ -89,6 +106,8 @@ class MyEventsCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           event.location,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: width * 0.035,
                           ),

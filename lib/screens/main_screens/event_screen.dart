@@ -21,17 +21,28 @@ class EventScreen extends StatefulWidget {
 }
 
 class _EventScreenState extends State<EventScreen> {
-
   bool isLoading = false;
   bool isEventJoined = false;
+  double _extraHeight = 0.0;
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  final ScrollController _controller = ScrollController();
 
   @override
   void initState() {
     super.initState();
 
-    isEventJoined = widget.event.participants.any((userUid) => userUid == UserModel.uid);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.jumpTo(-200);
+      _controller.animateTo(
+        0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
+
+    isEventJoined =
+        widget.event.participants.any((userUid) => userUid == UserModel.uid);
   }
 
   @override
@@ -41,13 +52,14 @@ class _EventScreenState extends State<EventScreen> {
     final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
+      key: scaffoldKey,
       body: Stack(
         children: [
           Container(
             height: height * 1.2,
           ),
           Container(
-            height: height * 0.5,
+            height: height * 0.5 + _extraHeight,
             child: widget.event.image == null ||
                     widget.event.image!.downloadUrl == null
                 ? SizedBox()
@@ -82,143 +94,185 @@ class _EventScreenState extends State<EventScreen> {
             ),
           ),
           Positioned(
-              top: height * 0.4,
-              width: width,
-              height: height * 0.6,
-              child: Container(
-                height: height * 0.6,
+            top: height * 0.4,
+            width: width,
+            height: height * 0.6,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(35),
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollNotification) {
+                  if (scrollNotification.metrics.outOfRange &&
+                      scrollNotification.metrics.pixels < 0) {
+                    setState(() {
+                      _extraHeight = (scrollNotification.metrics.pixels.abs())
+                          .clamp(0.0, 200.0);
+                    });
+                  } else if (scrollNotification is ScrollEndNotification) {
+                    // reset gradualmente (puoi animare se vuoi)
+                    setState(() {
+                      _extraHeight = 0.0;
+                    });
+                  }
+                  return true;
+                },
                 child: SingleChildScrollView(
+                  controller: _controller,
+                  physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.vertical,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                        width: width,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(35),
-                              topRight: Radius.circular(35)),
-                          color: Theme.of(context).scaffoldBackgroundColor,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                    width: width,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(35),
+                          topRight: Radius.circular(35)),
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                    ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(vertical: height * 0.02),
+                          child: Text(
+                            widget.event.title,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 35,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding:
-                                  EdgeInsets.symmetric(vertical: height * 0.02),
-                              child: Text(
-                                widget.event.title,
-                                style: const TextStyle(
-                                  fontSize: 35,
-                                  fontWeight: FontWeight.bold,
+                        Text(
+                          widget.event.desc,
+                          textAlign: TextAlign.start,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 8,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: height * 0.05),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: width * 0.05),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Container(
+                                width: width * 0.4,
+                                child: Column(
+                                  children: [
+                                    EventDetailBox(
+                                      width: width,
+                                      height: height,
+                                      icon: Icons.calendar_month_rounded,
+                                      title: 'Data inizio',
+                                      subTitle: DateFormat('dd-MM-yyyy')
+                                              .format(widget.event.start!) +
+                                          '\n' +
+                                          DateFormat('hh:mm')
+                                              .format(widget.event.start!),
+                                    ),
+                                    SizedBox(
+                                      height: height * 0.02,
+                                    ),
+                                    EventDetailBox(
+                                        width: width,
+                                        height: height,
+                                        icon: Icons.location_on_rounded,
+                                        title: 'Luogo',
+                                        subTitle: widget.event.location),
+                                  ],
                                 ),
                               ),
-                            ),
-                            Container(
-                              child: Text(
-                                widget.event.desc,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: appConfig.getTheme().dividerColor,
+                              Container(
+                                width: width * 0.4,
+                                child: Column(
+                                  children: [
+                                    EventDetailBox(
+                                        width: width,
+                                        height: height,
+                                        icon: Icons.calendar_month_rounded,
+                                        title: 'Data fine',
+                                        subTitle: DateFormat('dd-MM-yyyy')
+                                                .format(widget.event.end!) +
+                                            '\n' +
+                                            DateFormat('hh:mm')
+                                                .format(widget.event.end!)),
+                                    SizedBox(
+                                      height: height * 0.02,
+                                    ),
+                                    EventDetailBox(
+                                        width: width,
+                                        height: height,
+                                        icon: Icons.airplane_ticket_rounded,
+                                        title: 'Biglietto',
+                                        subTitle: '€ ' +
+                                            widget.event.price.toString()),
+                                  ],
                                 ),
                               ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: height * 0.05),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: width * 0.05),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: <Widget>[
-                                  Container(
-                                    width: width * 0.4,
-                                    child: Column(
-                                      children: [
-                                        EventDetailBox(
-                                          width: width,
-                                          height: height,
-                                          icon: Icons.calendar_month_rounded,
-                                          title: 'Data inizio',
-                                          subTitle: DateFormat('dd-MM-yyyy')
-                                                  .format(widget.event.start!) +
-                                              '\n' +
-                                              DateFormat('hh:mm')
-                                                  .format(widget.event.start!),
-                                        ),
-                                        SizedBox(
-                                          height: height * 0.02,
-                                        ),
-                                        EventDetailBox(
-                                            width: width,
-                                            height: height,
-                                            icon: Icons.location_on_rounded,
-                                            title: 'Luogo',
-                                            subTitle: widget.event.location),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: width * 0.4,
-                                    child: Column(
-                                      children: [
-                                        EventDetailBox(
-                                            width: width,
-                                            height: height,
-                                            icon: Icons.calendar_month_rounded,
-                                            title: 'Data fine',
-                                            subTitle: DateFormat('dd-MM-yyyy')
-                                                    .format(widget.event.end!) +
-                                                '\n' +
-                                                DateFormat('hh:mm')
-                                                    .format(widget.event.end!)),
-                                        SizedBox(
-                                          height: height * 0.02,
-                                        ),
-                                        EventDetailBox(
-                                            width: width,
-                                            height: height,
-                                            icon: Icons.airplane_ticket_rounded,
-                                            title: 'Biglietto',
-                                            subTitle: '€ ' +
-                                                widget.event.price.toString()),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                top: 20,
-                              ),
-                              child: ButtonText(
-                                text: widget.event.participants.any((userUid) => userUid == UserModel.uid) ? 'Abbandona' : 'Partecipa',
-                                onTap: widget.event.participants.any((userUid) => userUid == UserModel.uid) ? leaveEvent : joinEvent,
-                                isEnabled:  widget.event.participants.any((userUid) => userUid == UserModel.uid) ? true : isEventAvailable(),
-                                isLoading: isLoading,
-                                color: widget.event.participants.any((userUid) => userUid == UserModel.uid) ? Colors.red.shade700 : null,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        widget.event.creatorUid == UserModel.uid || widget.event.start!.isBefore(DateTime.now())
+                            ? SizedBox()
+                            : Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 30,
+                                  bottom: 50,
+                                ),
+                                child: ButtonText(
+                                  text: !isEventAvailable()
+                                      ? 'Non disponibile'
+                                      : widget.event.participants.any(
+                                              (userUid) =>
+                                                  userUid == UserModel.uid)
+                                          ? 'Abbandona'
+                                          : 'Partecipa',
+                                  onTap: widget.event.participants.any(
+                                              (userUid) =>
+                                                  userUid == UserModel.uid)
+                                          ? leaveEvent
+                                          : joinEvent,
+                                  isEnabled: !isEventAvailable() ? false : widget.event.participants.any(
+                                          (userUid) => userUid == UserModel.uid)
+                                      ? true
+                                      : isEventAvailable(),
+                                  isLoading: isLoading,
+                                  color: !isEventAvailable() ? null : widget.event.participants.any(
+                                          (userUid) => userUid == UserModel.uid)
+                                      ? Colors.red.shade700
+                                      : null,
+                                ),
+                              ),
+                      ],
+                    ),
                   ),
                 ),
-              )),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
   bool isEventAvailable() {
-    if (widget.event.targetGender == EventTargetGender.male && UserModel.gender == UserGender.female) {
+    if (widget.event.targetGender == EventTargetGender.male &&
+        UserModel.gender == UserGender.female) {
       return false;
     }
 
-    if (widget.event.targetGender == EventTargetGender.female && UserModel.gender == UserGender.male) {
+    if (widget.event.targetGender == EventTargetGender.female &&
+        UserModel.gender == UserGender.male) {
+      return false;
+    }
+
+    if (widget.event.start!.isBefore(DateTime.now())) {
       return false;
     }
 
@@ -233,38 +287,35 @@ class _EventScreenState extends State<EventScreen> {
     final FirebaseFunctionCaller caller = FirebaseFunctionCaller();
     final SnackBarStyle snackBarStyle = SnackBarStyle(context, scaffoldKey);
 
+    setState(() {
+      isLoading = true;
+    });
 
+    FunctionResponse response = await caller.leaveEvent(widget.event.id);
 
-      setState(() {
-        isLoading = true;
-      });
-
-      FunctionResponse response = await caller.leaveEvent(widget.event.id);
-
+    if (response.getType() == ResponseType.error) {
       setState(() {
         isLoading = false;
       });
+      snackBarStyle.showSnackBar(
+          'Impossibile abbandonare l\'evento. Riprova più tardi.');
+      return;
+    }
 
-      if (response.getType() == ResponseType.error) {
-        snackBarStyle.showSnackBar('Impossibile abbandonare l\'evento. Riprova più tardi.');
-        return;
-      }
+    setState(() {
+      isLoading = false;
+      widget.event.participants.remove(UserModel.uid);
+    });
 
-      print("Evento abbandonato");
-      snackBarStyle.showSnackBar('Evento lasciato correttamente');
-
-
+    print("Evento abbandonato");
+    snackBarStyle.showSnackBar('Evento lasciato correttamente');
   }
 
-  Future<void> joinEvent() async{
-
-
+  Future<void> joinEvent() async {
     final FirebaseFunctionCaller caller = FirebaseFunctionCaller();
     final SnackBarStyle snackBarStyle = SnackBarStyle(context, scaffoldKey);
-    
 
     if (widget.event.price == 0) {
-
       setState(() {
         isLoading = true;
       });
@@ -272,7 +323,8 @@ class _EventScreenState extends State<EventScreen> {
       FunctionResponse response = await caller.joinEvent(widget.event.id);
 
       if (response.getType() == ResponseType.error) {
-        snackBarStyle.showSnackBar('Impossibile partecipare. Riprova più tardi.');
+        snackBarStyle
+            .showSnackBar('Impossibile partecipare. Riprova più tardi.');
 
         setState(() {
           isLoading = false;
@@ -284,10 +336,10 @@ class _EventScreenState extends State<EventScreen> {
       snackBarStyle.showSnackBar('Evento aggiunto correttamente');
 
       setState(() {
+        widget.event.participants.add(UserModel.uid);
         isLoading = false;
         isEventJoined = false;
       });
-
 
       return;
     }
@@ -307,8 +359,8 @@ class _EventScreenState extends State<EventScreen> {
       isLoading = true;
     });
 
-    FunctionResponse response = await caller.joinEvent(widget.event.id, paymentMethodId: paymentMethodId ?? '');
-
+    FunctionResponse response = await caller.joinEvent(widget.event.id,
+        paymentMethodId: paymentMethodId ?? '');
 
     if (response.getType() == ResponseType.error) {
       snackBarStyle.showSnackBar('Impossibile partecipare. Riprova più tardi.');
@@ -324,10 +376,7 @@ class _EventScreenState extends State<EventScreen> {
     });
 
     snackBarStyle.showSnackBar('Evento aggiunto correttamente');
-
-
   }
-
 }
 
 class EventDetailBox extends StatelessWidget {
@@ -350,39 +399,55 @@ class EventDetailBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
 
-    return Container(
-      height: height * 0.09,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.only(right: width * 0.05),
-            child: Icon(
-              icon,
-              size: width * 0.1,
-              color: appConfig.getTheme().focusColor,
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: width * 0.035,
-                ),
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.6, end: 1.0),
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      builder: (context, value, child) {
+        return Transform.scale(
+          scale: value,
+          child: child,
+        );
+      },
+      child: Container(
+        width: width * 0.4,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.only(right: width * 0.05),
+              child: Icon(
+                icon,
+                size: width * 0.1,
+                color: appConfig.getTheme().focusColor,
               ),
-              Text(
-                subTitle,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: width * 0.035,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: width * 0.035,
+                  ),
                 ),
-              )
-            ],
-          )
-        ],
+                SizedBox(
+                  width: width * 0.25,
+                  child: Text(
+                    subTitle,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: width * 0.035,
+                    ),
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

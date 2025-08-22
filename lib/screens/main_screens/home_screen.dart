@@ -63,19 +63,18 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SortOfAppBar(
-                   iconData: Icons.grid_view_rounded,
+                    iconData: Icons.grid_view_rounded,
                     appConfig: appConfig,
                     globalKey: _globalKey,
                     profileImage: 'assets/images/male.jpg'),
-                EventiDelMeseReminder(
-                    appConfig: appConfig,
-                    width: width,
-                    coloreReminder: appConfig.getTheme().highlightColor),
+                EventiDelMeseReminder(),
                 MyPersonalHomeRow(
-                    appConfig: appConfig,
-                    width: width,
-                    height: height,
-                    titolo: 'Consigliati'),
+                  appConfig: appConfig,
+                  width: width,
+                  height: height,
+                  titolo: 'Consigliati',
+                  futureEvents: eventFirestore.retrieveEvents(),
+                ),
                 SizedBox(
                   height: height * 0.23,
                   child: FutureBuilder(
@@ -103,21 +102,35 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: math.min(snap.data!.length, 3),
                           itemBuilder: (BuildContext context, int index) {
                             EventModel event = snap.data![index];
-                            return MyConsigliatiCard(
-                              appConfig: appConfig,
-                              height: height,
-                              width: width,
-                              event: event,
+                            return TweenAnimationBuilder<double>(
+                              tween: Tween(begin: 0.7, end: 1.0),
+                              duration:
+                                  Duration(milliseconds: 300 + index * 100),
+                              curve: Curves.easeOutBack,
+                              builder: (context, value, child) {
+                                return Transform.scale(
+                                  scale: value,
+                                  child: child,
+                                );
+                              },
+                              child: MyConsigliatiCard(
+                                appConfig: appConfig,
+                                height: height,
+                                width: width,
+                                event: event,
+                              ),
                             );
                           },
                         );
                       }),
                 ),
                 MyPersonalHomeRow(
-                    appConfig: appConfig,
-                    width: width,
-                    height: height,
-                    titolo: 'I miei eventi'),
+                  appConfig: appConfig,
+                  width: width,
+                  height: height,
+                  futureEvents: eventFirestore.retrievePersonalEvents(),
+                  titolo: 'I miei eventi',
+                ),
                 FutureBuilder(
                     future: retrievePersonalEvents,
                     builder: (BuildContext context,
@@ -144,11 +157,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: math.min(snap.data!.length, 3),
                           itemBuilder: (BuildContext context, int index) {
                             EventModel event = snap.data![index];
-                            return MyEventsCard(
-                              appConfig: appConfig,
-                              height: height,
-                              width: width,
-                              event: event,
+                            return TweenAnimationBuilder<double>(
+                              tween: Tween(begin: 0.7, end: 1.0),
+                              duration:
+                                  Duration(milliseconds: 300 + index * 100),
+                              curve: Curves.easeOutBack,
+                              builder: (context, value, child) {
+                                return Transform.scale(
+                                  scale: value,
+                                  child: child,
+                                );
+                              },
+                              child: MyEventsCard(
+                                appConfig: appConfig,
+                                height: height,
+                                width: width,
+                                event: event,
+                              ),
                             );
                           },
                         ),
