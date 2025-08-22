@@ -34,15 +34,18 @@ Widget buildTextField(
     mainAxisSize: MainAxisSize.max,
     children: [
       if (labelText.isNotEmpty)
-        SizedBox(
-          width: appConfig.getWidth() * 79,
-          child: Text(
-            labelText,
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              color: appConfig.getTheme().secondaryHeaderColor,
-              fontWeight: FontWeight.w500,
-              fontSize: appConfig.getHeight() * 1.8,
+        Align(
+          alignment: Alignment.centerLeft,
+          child: SizedBox(
+            width: appConfig.getWidth() * 79,
+            child: Text(
+              labelText,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                color: appConfig.getTheme().secondaryHeaderColor,
+                fontWeight: FontWeight.w500,
+                fontSize: appConfig.getHeight() * 1.8,
+              ),
             ),
           ),
         )
@@ -148,3 +151,27 @@ TextStyle textStyleTextField(BuildContext context) => TextStyle(
   fontWeight: FontWeight.w500,
   fontSize: fontSizeMedium,
 );
+
+
+class PrimaryTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String labelText;
+  final int maxLines;
+
+  const PrimaryTextField({
+    required this.controller,
+    required this.labelText,
+    this.maxLines = 1,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return buildTextField(
+      AppConfig(context),
+      controller: controller,
+      labelText: labelText,
+      maxLines: maxLines,
+    );
+  }
+}
