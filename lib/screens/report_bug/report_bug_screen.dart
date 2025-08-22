@@ -1,3 +1,4 @@
+
 import 'package:mgs_app2/screens/main_screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -7,7 +8,9 @@ import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/widgets/buttons.dart';
 
 class ReportBugScreen extends StatefulWidget {
-  const ReportBugScreen({super.key});
+  final String category;
+
+  const ReportBugScreen({super.key, required this.category});
 
   @override
   State<ReportBugScreen> createState() => _ReportBugScreenState();
@@ -37,7 +40,7 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
     });
 
     final String recipientEmail = 'support@example.com'; // <-- IMPORTANT: Change this to your support email
-    final String subject = 'Bug Report';
+    final String subject = 'Bug Report - ${widget.category}';
     final String body = _descriptionController.text.trim();
 
     final Uri emailLaunchUri = Uri(

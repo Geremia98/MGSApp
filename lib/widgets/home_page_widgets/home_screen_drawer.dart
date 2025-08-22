@@ -3,7 +3,7 @@ import 'package:mgs_app2/main.dart';
 import 'package:mgs_app2/models/event_model.dart';
 import 'package:mgs_app2/screens/add_event/add_event_screen.dart';
 import 'package:mgs_app2/screens/main_screens/faq_screen.dart';
-import 'package:mgs_app2/screens/report_bug/report_bug_screen.dart';
+import 'package:mgs_app2/screens/report_bug/report_bug_category_screen.dart';
 import 'package:mgs_app2/screens/main_screens/personal_screen.dart';
 import 'package:mgs_app2/services/firebase/auth.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
@@ -88,7 +88,7 @@ class HomePageDrawer extends StatelessWidget {
               title: 'Report a bug',
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ReportBugScreen()),
+                MaterialPageRoute(builder: (context) => const ReportBugCategoryScreen()),
               ),
             ),
             ItemForMenu(
