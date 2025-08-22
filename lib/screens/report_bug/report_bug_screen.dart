@@ -1,4 +1,5 @@
 
+import 'package:mgs_app2/screens/main_screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/services/firebase/bug_report_service.dart';
 import 'package:mgs_app2/widgets/button.dart';
@@ -42,7 +43,14 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Bug report submitted successfully.')),
       );
-      Navigator.of(context).pop();
+      // Add a short delay to let the user see the message
+      await Future.delayed(const Duration(seconds: 3));
+      if (!mounted) return;
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        (Route<dynamic> route) => false,
+      );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
