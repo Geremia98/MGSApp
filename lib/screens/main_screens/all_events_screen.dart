@@ -516,8 +516,9 @@ class _FilterButtonState extends State<FilterButton> {
             // Colore di sfondo
             borderRadius:
                 BorderRadius.circular(widget.width * 0.02), // Bordi arrotondati
-            border: Border.all(
+                        border: Border.all(
               // Colore del bordo
+              color: Theme.of(context).cardColor,
               width: widget.width * 0.0015, // Larghezza del bordo
             ),
           ),
