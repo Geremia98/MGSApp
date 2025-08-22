@@ -1,6 +1,6 @@
 import 'package:mgs_app2/screens/main_screens/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:mgs_app2/services/firebase/bug_report_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:mgs_app2/widgets/button.dart';
 import 'package:mgs_app2/widgets/text_field.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
@@ -36,16 +36,27 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
       _isSubmitting = true;
     });
 
+    final String recipientEmail = 'support@example.com'; // <-- IMPORTANT: Change this to your support email
+    final String subject = 'Bug Report';
+    final String body = _descriptionController.text.trim();
+
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: recipientEmail,
+      query: 'subject=${Uri.encodeComponent(subject)}&body=${Uri.encodeComponent(body)}',
+    );
+
     try {
-      final bugReportService = BugReportService();
-      await bugReportService.submitBugReport(_descriptionController.text.trim());
+      if (await canLaunchUrl(emailLaunchUri)) {
+        await launchUrl(emailLaunchUri);
+      } else {
+        throw 'Could not launch email client';
+      }
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Bug report submitted successfully.')),
+        const SnackBar(content: Text('Opening email client...')),
       );
-      // Add a short delay to let the user see the message
-      await Future.delayed(const Duration(seconds: 2));
       if (!mounted) return;
       Navigator.pushAndRemoveUntil(
         context,
@@ -55,7 +66,7 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to submit report: $e')),
+        SnackBar(content: Text('Failed to open email client: $e')),
       );
     } finally {
       if (mounted) {
