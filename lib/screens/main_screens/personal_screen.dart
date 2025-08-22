@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/models/user_model.dart';
 import 'package:mgs_app2/screens/registration_screens/registration_controller.dart';
-import 'package:mgs_app2/screens/registration_screens/registration_scren4.dart';
 import 'package:mgs_app2/screens/report_bug/report_bug_screen.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
@@ -285,16 +284,6 @@ class PersonalScreenState extends State<PersonalScreen> {
                         onPressedAsync: () async {},
                         buttonText: 'Cambia la password',
                       ),
-                      MyBigAsyncButton(
-                        appConfig: appConfig,
-                        onPressedAsync: () async {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const ReportBugScreen()),
-                          );
-                        },
-                        buttonText: 'Segnala un problema',
-                      )
                 ],
               ),
             ),
