@@ -34,15 +34,18 @@ Widget buildTextField(
     mainAxisSize: MainAxisSize.max,
     children: [
       if (labelText.isNotEmpty)
-        SizedBox(
-          width: appConfig.getWidth() * 79,
-          child: Text(
-            labelText,
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              color: appConfig.getTheme().secondaryHeaderColor,
-              fontWeight: FontWeight.w500,
-              fontSize: appConfig.getHeight() * 1.8,
+        Align(
+          alignment: Alignment.centerLeft,
+          child: SizedBox(
+            width: appConfig.getWidth() * 79,
+            child: Text(
+              labelText,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                color: appConfig.getTheme().secondaryHeaderColor,
+                fontWeight: FontWeight.w500,
+                fontSize: appConfig.getHeight() * 1.8,
+              ),
             ),
           ),
         )

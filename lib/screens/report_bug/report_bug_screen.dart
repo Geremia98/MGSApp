@@ -1,9 +1,10 @@
-
 import 'package:mgs_app2/screens/main_screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/services/firebase/bug_report_service.dart';
 import 'package:mgs_app2/widgets/button.dart';
 import 'package:mgs_app2/widgets/text_field.dart';
+import 'package:mgs_app2/utilities/app_config.dart';
+import 'package:mgs_app2/widgets/buttons.dart';
 
 class ReportBugScreen extends StatefulWidget {
   const ReportBugScreen({super.key});
@@ -44,7 +45,7 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
         const SnackBar(content: Text('Bug report submitted successfully.')),
       );
       // Add a short delay to let the user see the message
-      await Future.delayed(const Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 2));
       if (!mounted) return;
       Navigator.pushAndRemoveUntil(
         context,
@@ -67,33 +68,56 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final AppConfig appConfig = AppConfig(context);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Report a Bug'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(height: 16),
-            Text(
-              'Please describe the issue you are experiencing. '
-              'Our team will review it as soon as possible.',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 24),
-            PrimaryTextField(
-              controller: _descriptionController,
-              labelText: 'Bug Description',
-              maxLines: 5,
-            ),
-            const SizedBox(height: 24),
-            PrimaryButton(
-              onPressed: _isSubmitting ? null : _submitReport,
-              label: _isSubmitting ? 'Submitting...' : 'Submit Report',
-            ),
-          ],
+      body: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: appConfig.getWidth() * 5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              GoBackButton(
+                  icon: Icons.arrow_back_rounded,
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  appConfig: appConfig),
+              Container(
+                padding: EdgeInsets.only(
+                  top: appConfig.getHeight() * 3.5,
+                  bottom: appConfig.getHeight() * 1,
+                ),
+                child: Text(
+                  'Report a Bug',
+                  style: TextStyle(
+                    fontSize: appConfig.getWidth() * 7,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Please describe the issue you are experiencing. '
+                'Our team will review it as soon as possible.',
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.left,
+              ),
+              const SizedBox(height: 24),
+              PrimaryTextField(
+                controller: _descriptionController,
+                labelText: 'Bug Description',
+                maxLines: 5,
+              ),
+              const SizedBox(height: 24),
+              Center(
+                child: PrimaryButton(
+                  onPressed: _isSubmitting ? null : _submitReport,
+                  label: _isSubmitting ? 'Submitting...' : 'Submit Report',
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
