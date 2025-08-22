@@ -505,6 +505,7 @@ class _FilterButtonState extends State<FilterButton> {
 
   @override
   Widget build(BuildContext context) {
+    final AppConfig appConfig = AppConfig(context);
     return GestureDetector(
       onTap: () => {_onButtonPressed()},
       child: Container(
@@ -516,10 +517,9 @@ class _FilterButtonState extends State<FilterButton> {
             // Colore di sfondo
             borderRadius:
                 BorderRadius.circular(widget.width * 0.02), // Bordi arrotondati
-                        border: Border.all(
-              // Colore del bordo
-              color: Theme.of(context).cardColor,
-              width: widget.width * 0.0015, // Larghezza del bordo
+            border: getCustomBorder(
+                  appConfig: appConfig,
+                  width: widget.width * 0.0015,
             ),
           ),
           child: _isSelected
