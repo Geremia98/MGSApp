@@ -283,7 +283,7 @@ class PersonalScreenState extends State<PersonalScreen> {
                         appConfig: appConfig, 
                         onPressedAsync: () async {},
                         buttonText: 'Cambia la password',
-                      ),
+                      )
                 ],
               ),
             ),
