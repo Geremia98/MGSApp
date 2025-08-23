@@ -17,7 +17,7 @@ class EventModel {
   final String desc;
   final String location;
   final double price;
-  final ImageModel? image;
+  ImageModel? image;
   final DateTime? start;
   final DateTime? end;
   final DateTime? creationDate;

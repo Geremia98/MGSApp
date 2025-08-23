@@ -84,11 +84,13 @@ class _EventScreenState extends State<EventScreen> {
                       BorderRadius.circular(width * 0.02), // Bordi arrotondati
                   border: Border.all(
                     width: width * 0.002, // Larghezza del bordo
+                    color: appConfig.getTheme().secondaryHeaderColor,
                   ),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.arrow_back_rounded, // Icona simile a quella mostrata
                   size: 24.0, // Dimensione dell'icona
+                  color: appConfig.getTheme().secondaryHeaderColor,
                 ),
               ),
             ),

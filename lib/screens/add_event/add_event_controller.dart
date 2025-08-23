@@ -5,6 +5,8 @@ import 'package:mgs_app2/models/event_firestore.dart';
 import 'package:mgs_app2/models/event_model.dart';
 import 'package:mgs_app2/models/image_model.dart';
 import 'package:mgs_app2/models/user_model.dart';
+import 'package:mgs_app2/services/firebase/auth.dart';
+import 'package:mgs_app2/services/firebase/firebase_storage.dart';
 
 enum AddEventStage {
   title,
@@ -129,7 +131,12 @@ class AddEventController {
 
     String result = await eventFirestore.addEvent(eventModel);
 
+    FirebaseStorageService storageService = FirebaseStorageService();
+
+
     if (result.isNotEmpty) {
+      eventModel.image = await storageService.getEventBannerImage(result);
+
       Navigator.of(context).pop(eventModel);
       return;
     }
