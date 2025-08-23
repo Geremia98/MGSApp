@@ -94,6 +94,7 @@ Widget buildTextField(
             errorStyle: showError
                 ? textStyleFormError(appConfig.getContext())
                 : const TextStyle(height: 0, color: Colors.transparent),
+            errorMaxLines: 3,
             labelStyle: textStyleHint(appConfig.getContext()),
             hintStyle: textStyleHint(appConfig.getContext()),
             contentPadding: EdgeInsets.only(
