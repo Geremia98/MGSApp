@@ -190,29 +190,33 @@ class _TitleStageState extends State<EventEndStage> {
   }
 
   void onDateChange(DateTime? date) {
-
-    if (date == null ||  date.isBefore(DateTime.now().subtract(Duration(days: 1)))) {
-
-      controller.setEndDate(null);
-      controller.setCurrentStageValid(false);
-      return;
-  }
-  controller.setEndDate(date);
-  controller.setCurrentStageValid(controller.getEndTime() != null);
-
+    controller.setEndDate(date);
+    _validateEndDateTime();
   }
 
   void onTimeChange(TimeOfDay? time) {
+    controller.setEndTIme(time);
+    _validateEndDateTime();
+  }
 
-    if (time == null) {
+  void _validateEndDateTime() {
+    final DateTime? startDate = controller.getStartDate();
+    final TimeOfDay? startTime = controller.getStartTime();
+    final DateTime? endDate = controller.getEndDate();
+    final TimeOfDay? endTime = controller.getEndTime();
 
-      controller.setEndTIme(null);
+    if (startDate == null || startTime == null || endDate == null || endTime == null) {
       controller.setCurrentStageValid(false);
       return;
     }
-    controller.setEndTIme(time);
-    controller.setCurrentStageValid(controller.getEndDate() != null);
 
+    final DateTime startDateTime = DateTime(startDate.year, startDate.month, startDate.day, startTime.hour, startTime.minute);
+    final DateTime endDateTime = DateTime(endDate.year, endDate.month, endDate.day, endTime.hour, endTime.minute);
+
+    if (endDateTime.isAfter(startDateTime)) {
+      controller.setCurrentStageValid(true);
+    } else {
+      controller.setCurrentStageValid(false);
+    }
   }
-
 }
