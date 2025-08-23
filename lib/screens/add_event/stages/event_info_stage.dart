@@ -35,58 +35,62 @@ class _TitleStageState extends State<EventInfoStage> {
 
     controller.setCurrentStageValid(controller.getLocation().isNotEmpty);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        buildTitle(
-          context,
-          title: 'Luogo e prezzo',
-          subtitle: 'Inserisci la città in cui si svolgerà l\'evento e il prezzo',
-        ),
-        SizedBox(
-          height: appConfig.getHeight() * 5,
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: appConfig.getWidth() * paddingForCreationEventHorizontal,
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          buildTitle(
+            context,
+            title: 'Luogo e prezzo',
+            subtitle: 'Inserisci la città in cui si svolgerà l\'evento e il prezzo',
           ),
-          child: buildTextField(
-            appConfig,
-            textCapitalization: TextCapitalization.sentences,
-            hintText: 'Luogo',
-            maxLength: 30,
-            onChanged: onLocationChange,
-            initialValue: controller.getLocation(),
+          SizedBox(
+            height: appConfig.getHeight() * 5,
           ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: appConfig.getWidth() * paddingForCreationEventHorizontal,
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: appConfig.getWidth() * paddingForCreationEventHorizontal,
+            ),
+            child: buildTextField(
+              appConfig,
+              textCapitalization: TextCapitalization.sentences,
+              hintText: 'Luogo',
+              minLines: 1,
+              maxLines: 15,
+              maxLength: 1500,
+              onChanged: onLocationChange,
+              initialValue: controller.getLocation(),
+            ),
           ),
-          child: Row(
-            children: [
-              
-              Container(
-                width: appConfig.getWidth()*30,
-                child: buildTextField(
-                  appConfig,
-                  textCapitalization: TextCapitalization.sentences,
-                  textInputType: const TextInputType.numberWithOptions(decimal: false),
-                  hintText: 'Prezzo',
-                  maxLength: 30,
-                  onChanged: onPriceChange,
-                  initialValue: controller.getPrice().toString(),
+          const SizedBox(
+            height: 20,
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: appConfig.getWidth() * paddingForCreationEventHorizontal,
+            ),
+            child: Row(
+              children: [
+                
+                Container(
+                  width: appConfig.getWidth()*30,
+                  child: buildTextField(
+                    appConfig,
+                    textCapitalization: TextCapitalization.sentences,
+                    textInputType: const TextInputType.numberWithOptions(decimal: false),
+                    hintText: 'Prezzo',
+                    maxLength: 30,
+                    onChanged: onPriceChange,
+                    initialValue: controller.getPrice().toString(),
+                  ),
                 ),
-              ),
-              SizedBox(width: appConfig.getWidth()*2,),
-              const Text('€'),
-            ],
+                SizedBox(width: appConfig.getWidth()*2,),
+                const Text('€'),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

@@ -11,6 +11,7 @@ import '../models/user_model.dart';
 import 'firebase/firestore_references.dart';
 
 class ImagePickerService {
+  bool _isPicking = false;
   //TODO fix this function
   Future<ImageModel?> storeImage(ImageModel? image) async {
     if (image == null) return null;
@@ -43,34 +44,49 @@ class ImagePickerService {
 
   Future<XFile?> getImageFromUser(
       {ImageSource source = ImageSource.gallery}) async {
+    if (_isPicking) return null;
+
     final ImagePicker imagePicker = ImagePicker();
     try {
+      _isPicking = true;
       final XFile? image = await imagePicker.pickImage(
         source: source,
       );
       return image;
     } catch (e) {
       return null;
+    } finally {
+      _isPicking = false;
     }
   }
 
   Future<XFile?> getMediaFromUser() async {
+    if (_isPicking) return null;
+
     final ImagePicker imagePicker = ImagePicker();
     try {
+      _isPicking = true;
       final XFile? media = await imagePicker.pickMedia();
       return media;
     } catch (e) {
       return null;
+    } finally {
+      _isPicking = false;
     }
   }
 
   Future<List<XFile?>?> getMultipleImagesFromUser() async {
+    if (_isPicking) return null;
+
     final ImagePicker imagePicker = ImagePicker();
     try {
+      _isPicking = true;
       final List<XFile?> media = await imagePicker.pickMultipleMedia();
       return media;
     } catch (e) {
       return null;
+    } finally {
+      _isPicking = false;
     }
   }
 
