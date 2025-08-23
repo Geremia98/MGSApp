@@ -43,7 +43,8 @@ class AddEventController {
   String? targetIspettoria;
   String? targetGroup;
 
-  int? targetAge;
+  int? minTargetAge;
+  int? maxTargetAge;
   EventTargetGender? targetGender;
 
   bool isLoading = false;
@@ -120,7 +121,8 @@ class AddEventController {
       targetCountry: targetCountry ?? '',
       targetIspettoria: targetIspettoria ?? '',
       targetGruppo: targetGroup ?? '',
-      targetAge: targetAge,
+      minTargetAge: minTargetAge,
+      maxTargetAge: maxTargetAge,
       targetGender: targetGender,
       image: bannerImage,
     );
@@ -175,7 +177,7 @@ class AddEventController {
         }
       case AddEventStage.targetPerson:
         {
-          return targetAge != null;
+          return minTargetAge != null && maxTargetAge != null;
         }
     }
   }
@@ -254,8 +256,12 @@ class AddEventController {
     targetGroup = group;
   }
 
-  void setAge(String age) {
-    targetAge = int.tryParse(age);
+  void setMinAge(int? age) {
+    minTargetAge = age;
+  }
+
+  void setMaxAge(int? age) {
+    maxTargetAge = age;
   }
 
   void setGender(EventTargetGender? gender) {
@@ -286,7 +292,10 @@ class AddEventController {
 
   String? getGroup() => targetGroup;
 
-  int? getAge() => targetAge;
+  int? getMinAge() => minTargetAge;
+
+  int? getMaxAge() => maxTargetAge;
 
   EventTargetGender? getGender() => targetGender;
 }
+

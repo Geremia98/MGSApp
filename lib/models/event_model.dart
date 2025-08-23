@@ -23,7 +23,8 @@ class EventModel {
   final DateTime? creationDate;
 
   final String targetCountry;
-  final int? targetAge;
+  final int? minTargetAge;
+  final int? maxTargetAge;
   final EventTargetGender? targetGender;
   final String targetIspettoria;
   final String targetGruppo;
@@ -42,7 +43,8 @@ class EventModel {
     required this.start,
     required this.end,
     this.targetCountry = '',
-    this.targetAge,
+    this.minTargetAge,
+    this.maxTargetAge,
     this.targetIspettoria = '',
     this.targetGruppo = '',
     this.targetGender = EventTargetGender.both,
@@ -60,7 +62,8 @@ class EventModel {
       firestoreEventCreatorUid: creatorUid,
       firestoreEventCreationDate: DateTime.now(),
       firestoreEventTarget: {
-        firestoreEventTargetAgeField: targetAge,
+        firestoreEventMinTargetAgeField: minTargetAge,
+        firestoreEventMaxTargetAgeField: maxTargetAge,
         firestoreEventTargetCountryField: targetCountry,
         firestoreEventTargetGruppoField: targetGruppo,
         firestoreEventTargetIspettoriaField: targetIspettoria,
@@ -104,8 +107,11 @@ class EventModel {
       targetGender: target.containsKey(firestoreEventTargetSexField)
           ? EventTargetGender.values.firstWhere((value) => value.name == target[firestoreEventTargetSexField])
           : EventTargetGender.both,
-      targetAge: target.containsKey(firestoreEventTargetAgeField)
-          ? int.tryParse(target[firestoreEventTargetAgeField].toString() ?? '')
+      minTargetAge: target.containsKey(firestoreEventMinTargetAgeField)
+          ? int.tryParse(target[firestoreEventMinTargetAgeField].toString() ?? '')
+          : null,
+      maxTargetAge: target.containsKey(firestoreEventMaxTargetAgeField)
+          ? int.tryParse(target[firestoreEventMaxTargetAgeField].toString() ?? '')
           : null,
       targetCountry: target.containsKey(firestoreEventTargetCountryField)
           ? target[firestoreEventTargetCountryField]
