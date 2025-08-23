@@ -58,7 +58,7 @@ Widget buildTextField(
         height: labelText.isNotEmpty ? 10 : 0,
       ),
       SizedBox(
-        height: maxLines == 1 ? appConfig.getHeight() * 8 : appConfig.getHeight() * 15,
+        //height: maxLines == 1 ? showError ? appConfig.getHeight() * 8 : appConfig.getHeight() * 5 : appConfig.getHeight() * 15,
         child: TextFormField(
           keyboardType: textInputType,
           validator: validator,
