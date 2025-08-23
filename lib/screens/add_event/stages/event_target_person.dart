@@ -93,6 +93,9 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
                           if (age < 14) {
                             return 'Minimo 14 anni';
                           }
+                          if (age > 199) {
+                            return 'Non può essere maggiore di 199';
+                          }
                           return null;
                         },
                         inputFormatters: [
@@ -123,6 +126,9 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
                           final minAge = int.tryParse(_minAgeController.text);
                           if (minAge != null && age < minAge) {
                             return 'Non può essere minore dell\'età minima';
+                          }
+                          if (age > 199) {
+                            return 'Non può essere maggiore di 199';
                           }
                           return null;
                         },
