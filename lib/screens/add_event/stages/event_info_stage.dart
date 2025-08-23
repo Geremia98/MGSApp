@@ -84,7 +84,7 @@ class _TitleStageState extends State<EventInfoStage> {
                     onChanged: onPriceChange,
                     initialValue: controller.getPrice().toString(),
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d*[,.]?\d{0,2}')),
                     ],
                   ),
                 ),
@@ -116,7 +116,7 @@ class _TitleStageState extends State<EventInfoStage> {
       return;
     }
 
-    controller.setPrice(price);
+    controller.setPrice(price.replaceAll(',', '.'));
     controller.setCurrentStageValid(true);
   }
 
