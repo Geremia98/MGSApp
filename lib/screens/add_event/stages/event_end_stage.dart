@@ -46,13 +46,14 @@ class EventEndStage extends StatefulWidget {
 
 class _TitleStageState extends State<EventEndStage> {
   late AddEventController controller;
+  String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
 
     controller = widget.controller;
-    controller.setCurrentStageValid(controller.getEndDate() != null && controller.getEndTime() != null);
+    _validateEndDateTime();
   }
 
   @override
@@ -185,6 +186,19 @@ class _TitleStageState extends State<EventEndStage> {
             ],
           ),
         ),
+        if (_errorMessage != null)
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: appConfig.getWidth() * paddingForCreationEventHorizontal,
+            ),
+            child: Text(
+              _errorMessage!,
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: fontSizeMedium,
+              ),
+            ),
+          ),
       ],
     );
   }
@@ -206,6 +220,7 @@ class _TitleStageState extends State<EventEndStage> {
     final TimeOfDay? endTime = controller.getEndTime();
 
     if (startDate == null || startTime == null || endDate == null || endTime == null) {
+      _errorMessage = 'Seleziona sia la data che l\'ora di inizio e fine evento.';
       controller.setCurrentStageValid(false);
       return;
     }
@@ -214,8 +229,10 @@ class _TitleStageState extends State<EventEndStage> {
     final DateTime endDateTime = DateTime(endDate.year, endDate.month, endDate.day, endTime.hour, endTime.minute);
 
     if (endDateTime.isAfter(startDateTime)) {
+      _errorMessage = null;
       controller.setCurrentStageValid(true);
     } else {
+      _errorMessage = 'La data e l\'ora di fine evento devono essere successive alla data e ora di inizio.';
       controller.setCurrentStageValid(false);
     }
   }
