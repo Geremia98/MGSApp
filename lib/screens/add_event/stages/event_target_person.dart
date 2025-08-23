@@ -83,18 +83,9 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
                         hintText: 'Età minima',
                         onChanged: (_) => _validateAges(),
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Inserisci un\'età';
-                          }
-                          final age = int.tryParse(value);
-                          if (age == null) {
-                            return 'Solo numeri';
-                          }
-                          if (age < 14) {
-                            return 'Minimo 14 anni';
-                          }
-                          if (age > 199) {
-                            return 'Non può essere maggiore di 199';
+                          final validationError = _parseAndValidateAge(value);
+                          if (validationError != null) {
+                            return validationError;
                           }
                           return null;
                         },
@@ -116,19 +107,14 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
                         hintText: 'Età massima',
                         onChanged: (_) => _validateAges(),
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Inserisci un\'età';
+                          final validationError = _parseAndValidateAge(value);
+                          if (validationError != null) {
+                            return validationError;
                           }
-                          final age = int.tryParse(value);
-                          if (age == null) {
-                            return 'Solo numeri';
-                          }
+                          final age = int.tryParse(value!);
                           final minAge = int.tryParse(_minAgeController.text);
-                          if (minAge != null && age < minAge) {
+                          if (minAge != null && age! < minAge) {
                             return 'Non può essere minore dell\'età minima';
-                          }
-                          if (age > 199) {
-                            return 'Non può essere maggiore di 199';
                           }
                           return null;
                         },
@@ -145,6 +131,23 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
         ],
       ),
     );
+  }
+
+  String? _parseAndValidateAge(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Inserisci un\'età';
+    }
+    final age = int.tryParse(value);
+    if (age == null) {
+      return 'Solo numeri';
+    }
+    if (age < 14) {
+      return 'Minimo 14 anni';
+    }
+    if (age > 199) {
+      return 'Non può essere maggiore di 199';
+    }
+    return null;
   }
 
   void _validateAges() {
