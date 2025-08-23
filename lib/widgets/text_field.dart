@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mgs_app2/widgets/font.dart';
 
 import '../utilities/app_config.dart';
@@ -26,6 +27,7 @@ Widget buildTextField(
   bool showError = true,
   bool enabled = true,
   int maxLength = 100,
+  List<TextInputFormatter>? inputFormatters,
 }) {
   labelColor ??= Colors.grey;
   iconColor ??= Colors.grey;
@@ -75,6 +77,7 @@ Widget buildTextField(
           maxLines: maxLines,
           minLines: minLines,
           maxLength: maxLength,
+          inputFormatters: inputFormatters,
           textCapitalization: textCapitalization,
           cursorColor: appConfig.getTheme().primaryColor,
           decoration: InputDecoration(

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:mgs_app2/screens/add_event/add_event_controller.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 
@@ -77,11 +78,14 @@ class _TitleStageState extends State<EventInfoStage> {
                   child: buildTextField(
                     appConfig,
                     textCapitalization: TextCapitalization.sentences,
-                    textInputType: const TextInputType.numberWithOptions(decimal: false),
+                    textInputType: const TextInputType.numberWithOptions(decimal: true),
                     hintText: 'Prezzo',
                     maxLength: 30,
                     onChanged: onPriceChange,
                     initialValue: controller.getPrice().toString(),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+                    ],
                   ),
                 ),
                 SizedBox(width: appConfig.getWidth()*2,),
