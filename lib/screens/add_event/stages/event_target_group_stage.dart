@@ -18,13 +18,15 @@ class EventTargetGroupStage extends StatefulWidget {
 
 class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
   late AddEventController controller;
+  bool isCountryBroadcast = false;
+  bool isIspettoriaBroadcast = false;
 
   @override
   void initState() {
     controller = widget.controller;
-    controller.setCurrentStageValid(controller.getCountry() != null &&
-        controller.getIspettoria() != null &&
-        controller.getGroup() != null);
+    isCountryBroadcast = controller.isCountryBroadcast;
+    isIspettoriaBroadcast = controller.isIspettoriaBroadcast;
+    controller.setCurrentStageValid(_isStateValid());
     super.initState();
   }
 
@@ -56,12 +58,46 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
                 onValueChange: onCountryChange,
                 title: 'Paese:',
               ),
+              CheckboxListTile(
+                title: const Text('Invia a tutto il paese'),
+                value: isCountryBroadcast,
+                onChanged: (value) {
+                  setState(() {
+                    isCountryBroadcast = value!;
+                    if (isCountryBroadcast) {
+                      isIspettoriaBroadcast = false;
+                      controller.setIspettoria(null);
+                      controller.setGroup(null);
+                    }
+                    controller.setCountryBroadcast(isCountryBroadcast);
+                    controller.setIspettoriaBroadcast(isIspettoriaBroadcast);
+                    controller.setCurrentStageValid(_isStateValid());
+                  });
+                },
+              ),
               SizedBox(height: 20),
               SelectorStyle(
                 constantDropDownIspettoriaList,
                 controller.getIspettoria(),
                 onValueChange: onIspettoriaChange,
                 title: 'Ispettoria:',
+                isEnable: !isCountryBroadcast,
+              ),
+              CheckboxListTile(
+                title: const Text('Invia a tutta l\'ispettoria'),
+                value: isIspettoriaBroadcast,
+                onChanged: (value) {
+                  setState(() {
+                    isIspettoriaBroadcast = value!;
+                    if (isIspettoriaBroadcast) {
+                      isCountryBroadcast = false;
+                      controller.setGroup(null);
+                    }
+                    controller.setIspettoriaBroadcast(isIspettoriaBroadcast);
+                    controller.setCountryBroadcast(isCountryBroadcast);
+                    controller.setCurrentStageValid(_isStateValid());
+                  });
+                },
               ),
               SizedBox(height: 20),
               SelectorStyle(
@@ -69,6 +105,7 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
                 controller.getGroup(),
                 onValueChange: onGroupChange,
                 title: 'Gruppo:',
+                isEnable: !isCountryBroadcast && !isIspettoriaBroadcast,
               ),
             ],
           ),
@@ -80,33 +117,39 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
   void onCountryChange(String? country) {
     if (country == null || country.isEmpty) {
       controller.setCountry(null);
-      controller.setCurrentStageValid(false);
-      return;
+    } else {
+      controller.setCountry(country);
     }
-
-    controller.setCountry(country);
-    controller.setCurrentStageValid(controller.getIspettoria() != null && controller.getGroup() != null);
+    controller.setCurrentStageValid(_isStateValid());
   }
 
   void onIspettoriaChange(String? ispettoria) {
     if (ispettoria == null || ispettoria.isEmpty) {
       controller.setIspettoria(null);
-      controller.setCurrentStageValid(false);
-      return;
+    } else {
+      controller.setIspettoria(ispettoria);
     }
-
-    controller.setIspettoria(ispettoria);
-    controller.setCurrentStageValid(controller.getCountry() != null && controller.getGroup() != null);
+    controller.setCurrentStageValid(_isStateValid());
   }
 
   void onGroupChange(String? group) {
     if (group == null || group.isEmpty) {
       controller.setGroup(null);
-      controller.setCurrentStageValid(false);
-      return;
+    } else {
+      controller.setGroup(group);
     }
+    controller.setCurrentStageValid(_isStateValid());
+  }
 
-    controller.setGroup(group);
-    controller.setCurrentStageValid(controller.getIspettoria() != null && controller.getCountry() != null);
+  bool _isStateValid() {
+    if (isCountryBroadcast) {
+      return controller.getCountry() != null;
+    } else if (isIspettoriaBroadcast) {
+      return controller.getCountry() != null && controller.getIspettoria() != null;
+    } else {
+      return controller.getCountry() != null &&
+          controller.getIspettoria() != null &&
+          controller.getGroup() != null;
+    }
   }
 }

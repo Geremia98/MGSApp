@@ -43,6 +43,9 @@ class AddEventController {
   String? targetIspettoria;
   String? targetGroup;
 
+  bool isCountryBroadcast = false;
+  bool isIspettoriaBroadcast = false;
+
   int? minTargetAge;
   int? maxTargetAge;
   EventTargetGender? targetGender;
@@ -171,9 +174,15 @@ class AddEventController {
         }
       case AddEventStage.targetGroup:
         {
-          return targetCountry != null &&
-              targetGroup != null &&
-              targetIspettoria != null;
+          if (isCountryBroadcast) {
+            return targetCountry != null;
+          } else if (isIspettoriaBroadcast) {
+            return targetCountry != null && targetIspettoria != null;
+          } else {
+            return targetCountry != null &&
+                targetIspettoria != null &&
+                targetGroup != null;
+          }
         }
       case AddEventStage.targetPerson:
         {
@@ -254,6 +263,14 @@ class AddEventController {
 
   void setGroup(String? group) {
     targetGroup = group;
+  }
+
+  void setCountryBroadcast(bool value) {
+    isCountryBroadcast = value;
+  }
+
+  void setIspettoriaBroadcast(bool value) {
+    isIspettoriaBroadcast = value;
   }
 
   void setMinAge(int? age) {
