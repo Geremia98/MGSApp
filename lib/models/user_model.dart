@@ -30,10 +30,6 @@ class UserModel {
   UserModel.fromFirestore(User user, Map<String, dynamic> data) {
     uid = user.uid;
     email = user.email ?? '';
-    profilePic = data.containsKey(firestoreUsersProfilePictureHQField)
-        ? ImageModel(
-            downloadUrl: data[firestoreUsersProfilePictureHQField] as String)
-        : null;
     bossCode = data.containsKey(firestoreUsersBossCodeField)
         ? data[firestoreUsersBossCodeField] as String
         : '';

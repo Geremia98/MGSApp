@@ -113,7 +113,6 @@ class PersonalScreenState extends State<PersonalScreen> {
                   ),
                   MyProfilePicture(
                     appConfig: appConfig,
-                    profileImage: 'assets/images/male.jpg',
                     borderRadius: personalePageProfilePicBorderRadius,
                     borderThickness: personaPageProfilePicBorderThickness,
                     dimension: personalPageProfilePicDimension,

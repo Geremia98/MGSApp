@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:mgs_app2/models/event_firestore.dart';
 import 'package:mgs_app2/models/event_model.dart';
 import 'package:flutter/material.dart';
+import 'package:mgs_app2/models/user_model.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/eventi_mese_reminder.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/home_screen_drawer.dart';
@@ -27,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final EventFirestore eventFirestore = EventFirestore();
   late Future<List<EventModel>> retrieveEvents;
   late Future<List<EventModel>> retrievePersonalEvents;
+
+  List<EventModel> personalEvents = [];
 
   @override
   void initState() {
@@ -63,19 +66,17 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SortOfAppBar(
-                   iconData: Icons.grid_view_rounded,
+                    iconData: Icons.grid_view_rounded,
                     appConfig: appConfig,
-                    globalKey: _globalKey,
-                    profileImage: 'assets/images/male.jpg'),
-                EventiDelMeseReminder(
-                    appConfig: appConfig,
-                    width: width,
-                    coloreReminder: appConfig.getTheme().highlightColor),
+                    globalKey: _globalKey,),
+                EventiDelMeseReminder(),
                 MyPersonalHomeRow(
-                    appConfig: appConfig,
-                    width: width,
-                    height: height,
-                    titolo: 'Consigliati'),
+                  appConfig: appConfig,
+                  width: width,
+                  height: height,
+                  titolo: 'Consigliati',
+                  futureEvents: eventFirestore.retrieveEvents(),
+                ),
                 SizedBox(
                   height: height * 0.23,
                   child: FutureBuilder(
@@ -103,26 +104,43 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: math.min(snap.data!.length, 3),
                           itemBuilder: (BuildContext context, int index) {
                             EventModel event = snap.data![index];
-                            return MyConsigliatiCard(
-                              appConfig: appConfig,
-                              height: height,
-                              width: width,
-                              event: event,
+                            return TweenAnimationBuilder<double>(
+                              tween: Tween(begin: 0.7, end: 1.0),
+                              duration:
+                                  Duration(milliseconds: 300 + index * 100),
+                              curve: Curves.easeOutBack,
+                              builder: (context, value, child) {
+                                return Transform.scale(
+                                  scale: value,
+                                  child: child,
+                                );
+                              },
+                              child: MyConsigliatiCard(
+                                appConfig: appConfig,
+                                height: height,
+                                width: width,
+                                event: event,
+                                onPop: needsRefreshEvents,
+
+                              ),
                             );
                           },
                         );
                       }),
                 ),
                 MyPersonalHomeRow(
-                    appConfig: appConfig,
-                    width: width,
-                    height: height,
-                    titolo: 'I miei eventi'),
+                  appConfig: appConfig,
+                  width: width,
+                  height: height,
+                  futureEvents: eventFirestore.retrievePersonalEvents(),
+                  titolo: 'I miei eventi',
+                ),
                 FutureBuilder(
-                    future: retrievePersonalEvents,
+                    future: eventFirestore.retrievePersonalEvents(),
                     builder: (BuildContext context,
                         AsyncSnapshot<List<EventModel>> snap) {
-                      if (snap.connectionState != ConnectionState.done) {
+                      print("retrigger");
+                      if (snap.connectionState != ConnectionState.done && personalEvents.isEmpty) {
                         return Center(
                           child: CupertinoActivityIndicator(
                             color: appConfig.getTheme().secondaryHeaderColor,
@@ -130,12 +148,55 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       }
 
+                      print("retrigger 2");
+
+
+                      if (snap.connectionState != ConnectionState.done) {
+                        return SizedBox(
+                          height: height * 0.4,
+                          child: ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            itemCount: math.min(personalEvents.length, 3),
+                            itemBuilder: (BuildContext context, int index) {
+                              EventModel event = personalEvents[index];
+                              return TweenAnimationBuilder<double>(
+                                tween: Tween(begin: 0.7, end: 1.0),
+                                duration:
+                                Duration(milliseconds: 300 + index * 100),
+                                curve: Curves.easeOutBack,
+                                builder: (context, value, child) {
+                                  return Transform.scale(
+                                    scale: value,
+                                    child: child,
+                                  );
+                                },
+                                child: MyEventsCard(
+                                  appConfig: appConfig,
+                                  height: height,
+                                  width: width,
+                                  event: event,
+                                  onPop: needsRefreshEvents,
+
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      }
+
+                      print("retrigger 3");
+
                       if (snap.data == null || snap.data!.isEmpty) {
-                        //TODO mettere una scritta 'nessun evento'
+                        personalEvents = [];
                         return SizedBox(
                           child: Text('Nessun evento'),
                         );
                       }
+
+                      print("retrigger 4");
+
+
+                      personalEvents = snap.data!;
 
                       return SizedBox(
                         height: height * 0.4,
@@ -144,11 +205,24 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: math.min(snap.data!.length, 3),
                           itemBuilder: (BuildContext context, int index) {
                             EventModel event = snap.data![index];
-                            return MyEventsCard(
-                              appConfig: appConfig,
-                              height: height,
-                              width: width,
-                              event: event,
+                            return TweenAnimationBuilder<double>(
+                              tween: Tween(begin: 0.7, end: 1.0),
+                              duration:
+                                  Duration(milliseconds: 300 + index * 100),
+                              curve: Curves.easeOutBack,
+                              builder: (context, value, child) {
+                                return Transform.scale(
+                                  scale: value,
+                                  child: child,
+                                );
+                              },
+                              child: MyEventsCard(
+                                appConfig: appConfig,
+                                height: height,
+                                width: width,
+                                event: event,
+                                onPop: needsRefreshEvents,
+                              ),
                             );
                           },
                         ),
@@ -160,6 +234,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  void needsRefreshEvents(bool value) {
+    if (value) {
+      setState(() {
+
+      });
+    }
   }
 
   void onEventCreation(EventModel? event) {
@@ -178,23 +260,4 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  List<Widget> buildEventsWidget(List<EventModel> events, AppConfig appConfig) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-
-    List<Widget> widgets = [];
-
-    for (EventModel event in events) {
-      widgets.add(
-        MyConsigliatiCard(
-          appConfig: appConfig,
-          height: height,
-          width: width,
-          event: event,
-        ),
-      );
-    }
-
-    return widgets;
-  }
 }

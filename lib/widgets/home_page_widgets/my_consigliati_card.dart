@@ -13,25 +13,34 @@ class MyConsigliatiCard extends StatelessWidget {
     required this.width,
     required this.event,
     required this.appConfig,
+    required this.onPop,
   });
 
   final double height;
   final double width;
   final EventModel event;
   final AppConfig appConfig;
+  final void Function(bool) onPop;
 
   @override
   Widget build(BuildContext context) {
     print(event.image);
     final AppConfig appConfig = AppConfig(context);
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        final result = await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => EventScreen(event: event),
           ),
         );
+
+        if (result is bool && result == true) {
+          onPop(true);
+          return;
+        }
+
+        onPop(false);
       },
       child: Container(
         constraints:
@@ -45,7 +54,8 @@ class MyConsigliatiCard extends StatelessWidget {
                 width: width * bigRecommendedEventsCardBorderThickness),
           ),
           child: Stack(children: [
-            ClipRRect(
+            Positioned.fill(
+              child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
                 child: event.image == null || event.image!.downloadUrl == null
                     ? Image.asset(
@@ -55,11 +65,27 @@ class MyConsigliatiCard extends StatelessWidget {
                     : Image.network(
                         event.image!.downloadUrl!,
                         fit: BoxFit.cover,
-                      )),
+                        loadingBuilder: (context, widget, loadingProgress) {
+                          if (loadingProgress == null) return widget;
+                          return ColorFiltered(
+                            colorFilter: const ColorFilter.mode(
+                              Colors.grey,
+                              BlendMode.saturation,
+                            ),
+                            child: Image.asset(
+                              'assets/images/ballo.png',
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ),
             Positioned(
                 left: width * 0.025,
                 bottom: width * 0.025,
                 child: Container(
+                  constraints: BoxConstraints(maxWidth: width * 0.5),
                   padding: EdgeInsets.symmetric(
                       horizontal: width * 0.02, vertical: width * 0.01),
                   decoration: BoxDecoration(
@@ -72,6 +98,8 @@ class MyConsigliatiCard extends StatelessWidget {
                       children: [
                         Text(
                           event.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: width * 0.04),

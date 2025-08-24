@@ -4,6 +4,8 @@ import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
 
+import '../../models/event_model.dart';
+
 class MyPersonalHomeRow extends StatelessWidget {
   const MyPersonalHomeRow({
     super.key,
@@ -11,8 +13,10 @@ class MyPersonalHomeRow extends StatelessWidget {
     required this.titolo,
     required this.height,
     required this.appConfig,
+    required this.futureEvents,
   });
 
+  final Future<List<EventModel>> futureEvents;
   final double width;
   final double height;
   final String titolo;
@@ -55,6 +59,7 @@ class MyPersonalHomeRow extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => AllEventsScreen(
                               titolo: titolo,
+                          futureEvents: futureEvents,
                             )),
                   ),
                 },
