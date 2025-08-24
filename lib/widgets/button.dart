@@ -1,6 +1,6 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mgs_app2/widgets/text_field.dart';
 
 import '../utilities/app_config.dart';
 import 'font.dart';
@@ -37,7 +37,7 @@ class ButtonIcon extends StatelessWidget {
         ),
         decoration: isEnabled
             ? buttonIconDecoration(context)
-            .copyWith(color: color ?? buttonIconDecoration(context).color)
+                .copyWith(color: color ?? buttonIconDecoration(context).color)
             : buttonTextDisabledDecoration(context),
         child: FittedBox(
           fit: BoxFit.scaleDown,
@@ -53,14 +53,14 @@ class ButtonIcon extends StatelessWidget {
               ),
               isLoading
                   ? const SizedBox(
-                width: 10,
-              )
+                      width: 10,
+                    )
                   : const SizedBox(),
               isLoading
                   ? CupertinoActivityIndicator(
-                color:
-                AppConfig(context).getTheme().scaffoldBackgroundColor,
-              )
+                      color:
+                          AppConfig(context).getTheme().scaffoldBackgroundColor,
+                    )
                   : const SizedBox(),
             ],
           ),
@@ -116,14 +116,14 @@ class ButtonText extends StatelessWidget {
               ),
               isLoading
                   ? SizedBox(
-                width: 10,
-              )
+                      width: 10,
+                    )
                   : SizedBox(),
               isLoading
                   ? CupertinoActivityIndicator(
-                color:
-                AppConfig(context).getTheme().scaffoldBackgroundColor,
-              )
+                      color:
+                          AppConfig(context).getTheme().scaffoldBackgroundColor,
+                    )
                   : SizedBox(),
             ],
           ),
@@ -182,15 +182,15 @@ class ButtonTextAsTextField extends StatelessWidget {
                 ),
                 isLoading
                     ? SizedBox(
-                  width: 10,
-                )
+                        width: 10,
+                      )
                     : SizedBox(),
                 isLoading
                     ? CupertinoActivityIndicator(
-                  color: AppConfig(context)
-                      .getTheme()
-                      .scaffoldBackgroundColor,
-                )
+                        color: AppConfig(context)
+                            .getTheme()
+                            .scaffoldBackgroundColor,
+                      )
                     : SizedBox(),
               ],
             ),
@@ -262,3 +262,43 @@ BoxDecoration buttonAsTextFieldDecoration(BuildContext context, bool hasError) {
             : Colors.grey.withOpacity(0.5)),
   );
 }
+
+class PrimaryButton extends StatelessWidget {
+  final VoidCallback? onPressed;
+  final String label;
+
+  const PrimaryButton({
+    required this.onPressed,
+    required this.label,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ButtonText(
+      onTap: onPressed ?? () {},
+      text: label,
+      isEnabled: onPressed != null,
+    );
+  }
+}
+
+TextStyle textStyleFormError(BuildContext context) => const TextStyle(
+  color: Colors.red,
+  fontWeight: FontWeight.w500,
+  fontSize: fontSizeMedium,
+);
+
+TextStyle textStyleHint(BuildContext context) => const TextStyle(
+  color: Colors.grey,
+  fontSize: fontSizeBig,
+  fontWeight: FontWeight.w500,
+  overflow: TextOverflow.ellipsis,
+);
+
+
+TextStyle textStyleTextField(BuildContext context) => TextStyle(
+  color: AppConfig(context).getTheme().secondaryHeaderColor,
+  fontWeight: FontWeight.w500,
+  fontSize: fontSizeMedium,
+);

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:mgs_app2/models/image_model.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
+import 'package:mgs_app2/widgets/buttons.dart';
 
 import '../../models/event_model.dart';
 import 'event_screen.dart';
@@ -36,7 +37,6 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-
     final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
@@ -48,50 +48,11 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () => {
-                        Navigator.pop(context),
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(width * 0.02),
-                        decoration: BoxDecoration(
-                          // Colore di sfondo
-                          borderRadius: BorderRadius.circular(
-                              width * 0.02), // Bordi arrotondati
-                          border: Border.all(
-                            width: width * 0.002, // Larghezza del bordo
-                            color: appConfig.getTheme().secondaryHeaderColor,
-                          ),
-                        ),
-                        child: Icon(
-                          Icons.arrow_back_rounded,
-                          // Icona simile a quella mostrata
-                          size: 24.0, // Dimensione dell'icona
-                          color: appConfig.getTheme().secondaryHeaderColor,
-                        ),
-                      ),
+                GoBackButton(
+                      icon: Icons.arrow_back_rounded,
+                      onTap: () => Navigator.pop(context),
+                      appConfig: appConfig,
                     ),
-                    /*Container(
-                      width: width * 0.12,
-                      height: width * 0.12,
-                      decoration: BoxDecoration(
-                        image: const DecorationImage(
-                          image: AssetImage('assets/images/male.jpg'),
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(width * 0.5)),
-                        border: Border.all(
-                          color: Colors.white,
-                          width: width * 0.001,
-                        ),
-                      ),
-                    ),*/
-                  ],
-                ),
                 Expanded(
                   child: FutureBuilder(
                     future: futureEvents,
@@ -751,7 +712,7 @@ class _FilterButtonState extends State<FilterButton> {
 
   @override
   Widget build(BuildContext context) {
-
+    final AppConfig appConfig = AppConfig(context);
     return GestureDetector(
       onTap: () => {_onButtonPressed()},
       child: Container(
@@ -763,9 +724,9 @@ class _FilterButtonState extends State<FilterButton> {
             // Colore di sfondo
             borderRadius:
                 BorderRadius.circular(widget.width * 0.02), // Bordi arrotondati
-            border: Border.all(
-              // Colore del bordo
-              width: widget.width * 0.0015, // Larghezza del bordo
+            border: getCustomBorder(
+                  appConfig: appConfig,
+                  width: widget.width * 0.0015,
             ),
           ),
           child: widget.isSelected

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mgs_app2/widgets/font.dart';
 
 import '../utilities/app_config.dart';
@@ -16,6 +17,7 @@ Widget buildTextField(
   Function(String?)? onChanged,
   bool autofocus = false,
   int maxLines = 1,
+  int minLines = 1,
   String initialValue = '',
   Color? labelColor,
   Color? iconColor,
@@ -25,6 +27,7 @@ Widget buildTextField(
   bool showError = true,
   bool enabled = true,
   int maxLength = 100,
+  List<TextInputFormatter>? inputFormatters,
 }) {
   labelColor ??= Colors.grey;
   iconColor ??= Colors.grey;
@@ -34,15 +37,18 @@ Widget buildTextField(
     mainAxisSize: MainAxisSize.max,
     children: [
       if (labelText.isNotEmpty)
-        SizedBox(
-          width: appConfig.getWidth() * 79,
-          child: Text(
-            labelText,
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              color: appConfig.getTheme().secondaryHeaderColor,
-              fontWeight: FontWeight.w500,
-              fontSize: appConfig.getHeight() * 1.8,
+        Align(
+          alignment: Alignment.centerLeft,
+          child: SizedBox(
+            width: appConfig.getWidth() * 79,
+            child: Text(
+              labelText,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                color: appConfig.getTheme().secondaryHeaderColor,
+                fontWeight: FontWeight.w500,
+                fontSize: appConfig.getHeight() * 1.8,
+              ),
             ),
           ),
         )
@@ -69,7 +75,9 @@ Widget buildTextField(
           onChanged: onChanged,
           initialValue: controller != null ? null : initialValue,
           maxLines: maxLines,
+          minLines: minLines,
           maxLength: maxLength,
+          inputFormatters: inputFormatters,
           textCapitalization: textCapitalization,
           cursorColor: appConfig.getTheme().primaryColor,
           decoration: InputDecoration(
@@ -86,6 +94,7 @@ Widget buildTextField(
             errorStyle: showError
                 ? textStyleFormError(appConfig.getContext())
                 : const TextStyle(height: 0, color: Colors.transparent),
+            errorMaxLines: 3,
             labelStyle: textStyleHint(appConfig.getContext()),
             hintStyle: textStyleHint(appConfig.getContext()),
             contentPadding: EdgeInsets.only(
@@ -148,3 +157,27 @@ TextStyle textStyleTextField(BuildContext context) => TextStyle(
   fontWeight: FontWeight.w500,
   fontSize: fontSizeMedium,
 );
+
+
+class PrimaryTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String labelText;
+  final int maxLines;
+
+  const PrimaryTextField({
+    required this.controller,
+    required this.labelText,
+    this.maxLines = 1,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return buildTextField(
+      AppConfig(context),
+      controller: controller,
+      labelText: labelText,
+      maxLines: maxLines,
+    );
+  }
+}

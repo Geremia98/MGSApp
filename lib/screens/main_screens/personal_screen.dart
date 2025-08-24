@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/models/user_model.dart';
 import 'package:mgs_app2/screens/registration_screens/registration_controller.dart';
-import 'package:mgs_app2/screens/registration_screens/registration_scren4.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/utilities/constants_strings.dart';

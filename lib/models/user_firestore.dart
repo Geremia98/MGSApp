@@ -64,17 +64,13 @@ class UserFirestore {
       final DocumentSnapshot snap = await _userCR.doc(user.uid).get();
 
       if (!snap.exists || snap.data() == null) {
-        print("no exists");
         return null;
       }
 
       final Map<String, dynamic> data = snap.data() as Map<String, dynamic>;
 
-      print("fetching");
-
 
       UserModel userModel = UserModel.fromFirestore(user, data);
-
 
       final FirebaseStorageService storageService = FirebaseStorageService();
 

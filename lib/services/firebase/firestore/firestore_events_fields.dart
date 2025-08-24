@@ -9,7 +9,8 @@ const String firestoreEventCreationDate = 'creationDate';
 
 const String firestoreEventTarget = 'target';
 const String firestoreEventTargetCountryField = 'targetCountry';
-const String firestoreEventTargetAgeField = 'targetAge';
+const String firestoreEventMinTargetAgeField = 'minTargetAge';
+const String firestoreEventMaxTargetAgeField = 'maxTargetAge';
 const String firestoreEventTargetSexField = 'targetGender';
 const String firestoreEventTargetIspettoriaField = 'targetIspettoria';
 const String firestoreEventTargetGruppoField = 'targetGruppo';
