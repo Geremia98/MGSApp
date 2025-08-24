@@ -63,8 +63,7 @@ class HomePageDrawer extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const PersonalScreen()),
               ),
             ),
-            //if (UserModel.bossCode.isNotEmpty)
-            if(true)
+            if (UserModel.bossCode.isNotEmpty)
               ItemForMenu(
                   appConfig: appConfig,
                   height: height,

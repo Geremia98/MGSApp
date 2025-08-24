@@ -42,25 +42,27 @@ class _AddEventScreenState extends State<AddEventScreen> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Accesso Negato'),
-            content: const Text('Non sei autorizzato a creare un evento.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                    (Route<dynamic> route) => false,
-                  );
-                },
-                child: const Text('OK'),
-              ),
-            ],
+                barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('Access Denied'),
+        content: const Text('You are not authorized to create an event.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('OK'),
           ),
-        );
-      });
+        ],
+      ),
+    ).then((_) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        (Route<dynamic> route) => false,
+      );
+    });
+  });
     }
 
     controller = AddEventController(
