@@ -13,25 +13,34 @@ class MyConsigliatiCard extends StatelessWidget {
     required this.width,
     required this.event,
     required this.appConfig,
+    required this.onPop,
   });
 
   final double height;
   final double width;
   final EventModel event;
   final AppConfig appConfig;
+  final void Function(bool) onPop;
 
   @override
   Widget build(BuildContext context) {
     print(event.image);
     final AppConfig appConfig = AppConfig(context);
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        final result = await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => EventScreen(event: event),
           ),
         );
+
+        if (result is bool && result == true) {
+          onPop(true);
+          return;
+        }
+
+        onPop(false);
       },
       child: Container(
         constraints:

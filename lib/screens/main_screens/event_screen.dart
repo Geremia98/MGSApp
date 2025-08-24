@@ -22,11 +22,12 @@ class EventScreen extends StatefulWidget {
 
 class _EventScreenState extends State<EventScreen> {
   bool isLoading = false;
-  bool isEventJoined = false;
   double _extraHeight = 0.0;
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final ScrollController _controller = ScrollController();
+
+  bool reloadAncestor = false;
 
   @override
   void initState() {
@@ -41,8 +42,6 @@ class _EventScreenState extends State<EventScreen> {
       );
     });
 
-    isEventJoined =
-        widget.event.participants.any((userUid) => userUid == UserModel.uid);
   }
 
   @override
@@ -117,7 +116,7 @@ class _EventScreenState extends State<EventScreen> {
             left: width * 0.05,
             child: GestureDetector(
               onTap: () => {
-                Navigator.pop(context),
+                Navigator.pop(context, reloadAncestor),
               },
               child: Container(
                 padding: EdgeInsets.all(width * 0.02),
@@ -357,6 +356,7 @@ class _EventScreenState extends State<EventScreen> {
     setState(() {
       isLoading = false;
       widget.event.participants.remove(UserModel.uid);
+      reloadAncestor = true;
     });
 
     print("Evento abbandonato");
@@ -390,7 +390,8 @@ class _EventScreenState extends State<EventScreen> {
       setState(() {
         widget.event.participants.add(UserModel.uid);
         isLoading = false;
-        isEventJoined = false;
+        reloadAncestor = true;
+
       });
 
       return;
@@ -424,7 +425,6 @@ class _EventScreenState extends State<EventScreen> {
 
     setState(() {
       isLoading = false;
-      isEventJoined = true;
     });
 
     snackBarStyle.showSnackBar('Evento aggiunto correttamente');

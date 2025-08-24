@@ -20,6 +20,10 @@ class AllEventsScreen extends StatefulWidget {
 
 class _AllEventsScreenState extends State<AllEventsScreen> {
   late Future<List<EventModel>> futureEvents;
+  List<EventModel> filteredEvents = [];
+  List<EventModel> events = [];
+  String filter = '';
+  bool alreadyLoaded = false;
 
   @override
   void initState() {
@@ -93,7 +97,15 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
                     future: futureEvents,
                     builder: (BuildContext context,
                         AsyncSnapshot<List<EventModel>> snap) {
-                      return buildPage(snap.data);
+                      if (snap.data != null) {
+                        events = snap.data!;
+                      }
+
+                      return buildPage(snap.data == null
+                          ? null
+                          : filter.isEmpty
+                              ? events
+                              : filteredEvents);
                     },
                   ),
                 ),
@@ -103,6 +115,65 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
         ),
       ]),
     );
+  }
+
+  void onFilter(String value) {
+    if (value.isEmpty) {
+      setState(() {
+        filter = '';
+      });
+      return;
+    }
+
+    switch (value) {
+      case 'day':
+        setState(() {
+          filter = 'day';
+          final now = DateTime.now();
+          final today = DateTime(now.year, now.month, now.day);
+
+          filteredEvents = events.where((e) {
+            final start = e.start!;
+            final eventDay = DateTime(start.year, start.month, start.day);
+            return eventDay == today;
+          }).toList();
+        });
+        return;
+
+      case 'week':
+        setState(() {
+          filter = 'week';
+          final now = DateTime.now();
+          // Trova il lunedì della settimana corrente
+          final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+          final endOfWeek = startOfWeek.add(const Duration(days: 7));
+
+          filteredEvents = events.where((e) {
+            final start = e.start!;
+            return start.isAfter(startOfWeek) && start.isBefore(endOfWeek);
+          }).toList();
+        });
+        return;
+
+      case 'month':
+        setState(() {
+          filter = 'month';
+          final now = DateTime.now();
+          final startOfMonth = DateTime(now.year, now.month, 1);
+          final startOfNextMonth = DateTime(now.year, now.month + 1, 1);
+
+          filteredEvents = events.where((e) {
+            final start = e.start!;
+            return start.isAfter(startOfMonth.subtract(const Duration(seconds: 1))) &&
+                start.isBefore(startOfNextMonth);
+          }).toList();
+        });
+        return;
+
+      default:
+        return;
+    }
+
   }
 
   Widget buildPage(List<EventModel>? events) {
@@ -125,6 +196,7 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
                 height: height,
                 width: width,
                 coloreBottonePremuto: ThemeData().highlightColor,
+                sortFilter: onFilter,
               ),
         events == null
             ? SizedBox()
@@ -530,50 +602,122 @@ class MyPersonalRow extends StatelessWidget {
   }
 }
 
-class ButtonRow extends StatelessWidget {
+class ButtonRow extends StatefulWidget {
   const ButtonRow({
     super.key,
     required this.height,
     required this.width,
     required this.coloreBottonePremuto,
+    required this.sortFilter,
   });
 
   final double height;
   final double width;
   final Color coloreBottonePremuto;
+  final void Function(String) sortFilter;
 
   @override
+  State<ButtonRow> createState() => _ButtonRowState();
+}
+
+class _ButtonRowState extends State<ButtonRow> {
+
+  late String selectedFilter;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedFilter = '';
+  }
+  @override
   Widget build(BuildContext context) {
+
+    print(selectedFilter);
+
     return Container(
       padding: EdgeInsets.only(
-          bottom: height * 0.01, left: width * 0.008, right: width * 0.008),
+          bottom: widget.height * 0.01, left: widget.width * 0.008, right: widget.width * 0.008),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FilterButton(
-              coloreBottonePremuto: coloreBottonePremuto,
+              coloreBottonePremuto: widget.coloreBottonePremuto,
               label: 'Preferiti',
-              width: width,
+              width: widget.width,
+              onTap: () {
+                widget.sortFilter('fav');
+                setState(() {
+                  selectedFilter = 'fav';
+                });
+              },
+              onRemove: () {
+                widget.sortFilter('');
+                setState(() {
+                  selectedFilter = '';
+                });
+              },
+              isSelected: selectedFilter == 'fav',
             ),
             SizedBox(width: 8),
             FilterButton(
-              coloreBottonePremuto: coloreBottonePremuto,
+              coloreBottonePremuto: widget.coloreBottonePremuto,
               label: 'Oggi',
-              width: width,
+              width: widget.width,
+              onTap: () {
+                widget.sortFilter('day');
+                setState(() {
+                  print("setted");
+                  selectedFilter = 'day';
+
+                });
+              },
+              onRemove: () {
+                widget.sortFilter('');
+                setState(() {
+                  selectedFilter = '';
+                });
+              },
+              isSelected: selectedFilter == 'day',
             ),
             SizedBox(width: 8), // Spacing between buttons
             FilterButton(
-              coloreBottonePremuto: coloreBottonePremuto,
+              coloreBottonePremuto: widget.coloreBottonePremuto,
               label: 'Questa settimana',
-              width: width,
+              width: widget.width,
+              onTap: () {
+                widget.sortFilter('week');
+                setState(() {
+                  selectedFilter = 'week';
+                });
+              },
+              onRemove: () {
+                widget.sortFilter('');
+                setState(() {
+                  selectedFilter = '';
+                });
+              },
+              isSelected: selectedFilter == 'week',
             ),
             SizedBox(width: 8), // Spacing between button
             FilterButton(
-              coloreBottonePremuto: coloreBottonePremuto,
+              coloreBottonePremuto: widget.coloreBottonePremuto,
               label: 'Questo mese',
-              width: width,
+              width: widget.width,
+              onTap: () {
+                widget.sortFilter('month');
+                setState(() {
+                  selectedFilter = 'month';
+                });
+              },
+              onRemove: () {
+                widget.sortFilter('');
+                setState(() {
+                  selectedFilter = '';
+                });
+              },
+              isSelected: selectedFilter == 'month',
             ),
           ],
         ),
@@ -585,29 +729,35 @@ class ButtonRow extends StatelessWidget {
 class FilterButton extends StatefulWidget {
   const FilterButton(
       {super.key,
+      required this.onTap,
       required this.coloreBottonePremuto,
       required this.label,
+      required this.onRemove,
+        required this.isSelected,
       required this.width});
 
   final Color coloreBottonePremuto;
   final String label;
   final double width;
+  final void Function() onTap;
+  final void Function() onRemove;
+  final bool isSelected;
 
   @override
   State<FilterButton> createState() => _FilterButtonState();
 }
 
 class _FilterButtonState extends State<FilterButton> {
-  bool _isSelected = false;
 
   @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
       onTap: () => {_onButtonPressed()},
       child: Container(
           padding: EdgeInsets.all(widget.width * 0.01),
           decoration: BoxDecoration(
-            color: _isSelected
+            color: widget.isSelected
                 ? widget.coloreBottonePremuto
                 : Theme.of(context).scaffoldBackgroundColor,
             // Colore di sfondo
@@ -618,7 +768,7 @@ class _FilterButtonState extends State<FilterButton> {
               width: widget.width * 0.0015, // Larghezza del bordo
             ),
           ),
-          child: _isSelected
+          child: widget.isSelected
               ? Row(
                   children: [
                     Padding(
@@ -626,19 +776,17 @@ class _FilterButtonState extends State<FilterButton> {
                           horizontal: widget.width * 0.015),
                       child: Text(
                         widget.label,
-                        style: TextStyle(fontSize: widget.width * 0.04),
+                        style: TextStyle(fontSize: widget.width * 0.037),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(right: widget.width * 0.015),
                       child: GestureDetector(
                         onTap: () => {_onButtonPressed()},
-                        child: Text(
-                          'X',
-                          style: TextStyle(
-                            fontSize: widget.width * 0.04,
-                          ),
-                        ),
+                        child: Icon(
+                          Icons.close,
+                          size: 13,
+                        )
                       ),
                     )
                   ],
@@ -657,8 +805,11 @@ class _FilterButtonState extends State<FilterButton> {
   }
 
   _onButtonPressed() {
-    setState(() {
-      _isSelected = !_isSelected;
-    });
+
+    if (!widget.isSelected) {
+      widget.onTap();
+    } else {
+      widget.onRemove();
+    }
   }
 }
