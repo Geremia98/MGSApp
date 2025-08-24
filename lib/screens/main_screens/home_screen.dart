@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:mgs_app2/models/event_firestore.dart';
 import 'package:mgs_app2/models/event_model.dart';
 import 'package:flutter/material.dart';
+import 'package:mgs_app2/models/user_model.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/eventi_mese_reminder.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/home_screen_drawer.dart';
@@ -65,8 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 SortOfAppBar(
                     iconData: Icons.grid_view_rounded,
                     appConfig: appConfig,
-                    globalKey: _globalKey,
-                    profileImage: 'assets/images/male.jpg'),
+                    globalKey: _globalKey,),
                 EventiDelMeseReminder(),
                 MyPersonalHomeRow(
                   appConfig: appConfig,

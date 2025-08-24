@@ -38,6 +38,35 @@ class FirebaseStorageService {
     return null;
   }
 
+  Future<ImageModel?> getUserProfileImage(
+      String userUid,
+      ) async {
+
+    // Get reference to your Firebase Storage bucket
+    final FirebaseStorage storage = FirebaseStorage.instance;
+    Reference reference = storage.ref().child(
+        'users/$userUid/');
+    // List all items with the given prefix
+    try {
+      ListResult result = await reference.listAll();
+
+      print(result.items.length);
+
+      Map<String, String> downloadUrls = {};
+
+      for (Reference item in result.items) {
+
+        return ImageModel(downloadUrl: await item.getDownloadURL());
+      }
+
+      return null;
+    } catch (e) {
+      print('Error fetching banner images: $e');
+    }
+
+    return null;
+  }
+
   String? getExtensionFromMimeType(String? mimeType) {
 
     if (mimeType == null) {

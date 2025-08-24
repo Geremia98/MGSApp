@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mgs_app2/models/image_model.dart';
 import 'package:mgs_app2/screens/main_screens/personal_screen.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
@@ -9,11 +10,9 @@ class SortOfAppBar extends StatelessWidget {
   const SortOfAppBar(
       {super.key,
       required this.iconData,
-      required this.profileImage,
       required this.appConfig,
       required this.globalKey});
 
-  final String profileImage;
   final AppConfig appConfig;
   final IconData iconData;
   final GlobalKey<ScaffoldState> globalKey;
@@ -53,8 +52,7 @@ class SortOfAppBar extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const PersonalScreen()),
               ),
           child: MyProfilePicture(
-            appConfig: appConfig, 
-            profileImage: profileImage,
+            appConfig: appConfig,
             borderThickness: homeScreenProfilePicBorderThickness,
             borderRadius: homeScreenProfilePicBorderRadius,
             dimension: homeScreenProfilePicDimension,

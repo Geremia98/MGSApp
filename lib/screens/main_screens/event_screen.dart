@@ -68,6 +68,50 @@ class _EventScreenState extends State<EventScreen> {
                     fit: BoxFit.cover,
                   ),
           ),
+          widget.event.creatorUid == UserModel.uid ||
+                  widget.event.participants.contains(UserModel.uid)
+              ? Positioned(
+                  left: 0,
+                  right: 0,
+                  top: height * 0.08,
+                  child: Center(
+                    child: TweenAnimationBuilder<double>(
+                      tween: Tween(begin: 0, end: 1.0),
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      builder: (context, value, child) {
+                        return Transform.scale(
+                          scale: value,
+                          child: child,
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: width * 0.02 + 1,
+                          horizontal: 25,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(width * 0.02),
+                          border: Border.all(
+                            width: width * 0.002, // Larghezza del bordo
+                            color: appConfig.getTheme().secondaryHeaderColor,
+                          ),
+                          color: appConfig.getTheme().scaffoldBackgroundColor,
+                        ),
+                        child: Text(
+                          widget.event.creatorUid == UserModel.uid
+                              ? 'Creato da te'
+                              : 'Iscritto',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              : SizedBox(),
           Positioned(
             top: height * 0.08,
             left: width * 0.05,
@@ -220,7 +264,8 @@ class _EventScreenState extends State<EventScreen> {
                             ],
                           ),
                         ),
-                        widget.event.creatorUid == UserModel.uid || widget.event.start!.isBefore(DateTime.now())
+                        widget.event.creatorUid == UserModel.uid ||
+                                widget.event.start!.isBefore(DateTime.now())
                             ? SizedBox()
                             : Padding(
                                 padding: const EdgeInsets.only(
@@ -236,19 +281,24 @@ class _EventScreenState extends State<EventScreen> {
                                           ? 'Abbandona'
                                           : 'Partecipa',
                                   onTap: widget.event.participants.any(
+                                          (userUid) => userUid == UserModel.uid)
+                                      ? leaveEvent
+                                      : joinEvent,
+                                  isEnabled: !isEventAvailable()
+                                      ? false
+                                      : widget.event.participants.any(
                                               (userUid) =>
                                                   userUid == UserModel.uid)
-                                          ? leaveEvent
-                                          : joinEvent,
-                                  isEnabled: !isEventAvailable() ? false : widget.event.participants.any(
-                                          (userUid) => userUid == UserModel.uid)
-                                      ? true
-                                      : isEventAvailable(),
+                                          ? true
+                                          : isEventAvailable(),
                                   isLoading: isLoading,
-                                  color: !isEventAvailable() ? null : widget.event.participants.any(
-                                          (userUid) => userUid == UserModel.uid)
-                                      ? Colors.red.shade700
-                                      : null,
+                                  color: !isEventAvailable()
+                                      ? null
+                                      : widget.event.participants.any(
+                                              (userUid) =>
+                                                  userUid == UserModel.uid)
+                                          ? Colors.red.shade700
+                                          : null,
                                 ),
                               ),
                       ],

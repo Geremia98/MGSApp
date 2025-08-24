@@ -150,10 +150,8 @@ class RegistrationController {
 
     final FirebaseAuthService authService = FirebaseAuthService();
 
-
     print('name: $name, surname: $surname, birth: $birthDate, gender: $gender');
     print('email: $email, password: $password');
-
 
     final dynamic result = await authService.registerWithEmailAndPassword(email, password);
 
@@ -179,10 +177,8 @@ class RegistrationController {
     UserModel.bankCurrency = currency;
     UserModel.iban = IBAN;
     UserModel.holderName = bankHolder;
-    
 
     bool firestoreResult = await userFirestore.registerUser();
-
 
     if (!firestoreResult) {
       _onSignInFail(context, "Errore durante la registrazione", scaffoldKey);
