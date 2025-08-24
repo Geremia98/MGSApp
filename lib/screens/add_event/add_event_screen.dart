@@ -14,6 +14,10 @@ import 'package:mgs_app2/screens/add_event/stages/event_title_stage.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/widgets/back_button_app_bar.dart';
 
+import 'package:mgs_app2/screens/main_screens/home_screen.dart';
+import 'package:mgs_app2/models/user_model.dart';
+import 'package:mgs_app2/widgets/snackbar.dart';
+
 import '../../utilities/app_config.dart';
 
 class AddEventScreen extends StatefulWidget {
@@ -33,6 +37,31 @@ class _AddEventScreenState extends State<AddEventScreen> {
   @override
   void initState() {
     super.initState();
+
+    if (UserModel.bossCode.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Accesso Negato'),
+            content: const Text('Non sei autorizzato a creare un evento.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    (Route<dynamic> route) => false,
+                  );
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      });
+    }
 
     controller = AddEventController(
       pageController: pageController,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/main.dart';
 import 'package:mgs_app2/models/event_model.dart';
+import 'package:mgs_app2/models/user_model.dart';
 import 'package:mgs_app2/screens/add_event/add_event_screen.dart';
 import 'package:mgs_app2/screens/main_screens/faq_screen.dart';
 import 'package:mgs_app2/screens/report_bug/report_bug_category_screen.dart';
@@ -62,24 +63,26 @@ class HomePageDrawer extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const PersonalScreen()),
               ),
             ),
-            ItemForMenu(
-                appConfig: appConfig,
-                height: height,
-                width: width,
-                icon: Icons.add,
-                title: 'Crea evento',
-                onTap: () async {
-                  Object? value = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AddEventScreen(),
-                    ),
-                  );
+            //if (UserModel.bossCode.isNotEmpty)
+            if(true)
+              ItemForMenu(
+                  appConfig: appConfig,
+                  height: height,
+                  width: width,
+                  icon: Icons.add,
+                  title: 'Crea evento',
+                  onTap: () async {
+                    Object? value = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AddEventScreen(),
+                      ),
+                    );
 
-                  if (value is EventModel) {
-                    onEventCreation(value);
-                  }
-                }),
+                    if (value is EventModel) {
+                      onEventCreation(value);
+                    }
+                  }),
             ItemForMenu(
               appConfig: appConfig,
               height: height,
