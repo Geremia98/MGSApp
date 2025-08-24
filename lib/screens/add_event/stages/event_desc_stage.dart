@@ -39,31 +39,35 @@ class _TitleStageState extends State<EventDescStage> {
 
     final AppConfig appConfig = AppConfig(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        buildTitle(
-          context,
-          title: 'Descrizione evento',
-          subtitle: 'Ora inserisci una breve descrizione riguardo a cosa si farà',
-        ),
-        SizedBox(
-          height: appConfig.getHeight() * 5,
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: appConfig.getWidth() * paddingForCreationEventHorizontal,
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          buildTitle(
+            context,
+            title: 'Descrizione evento',
+            subtitle: 'Ora inserisci una breve descrizione riguardo a cosa si farà',
           ),
-          child: buildTextField(
-            appConfig,
-            textCapitalization: TextCapitalization.sentences,
-            hintText: 'Descrizione',
-            maxLines: 10,
-            onChanged: onTitleChange,
-            initialValue: controller.getDesc(),
+          SizedBox(
+            height: appConfig.getHeight() * 5,
           ),
-        ),
-      ],
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: appConfig.getWidth() * paddingForCreationEventHorizontal,
+            ),
+            child: buildTextField(
+              appConfig,
+              textCapitalization: TextCapitalization.sentences,
+              hintText: 'Descrizione',
+              minLines: 3,
+              maxLines: 15,
+              maxLength: 1500,
+              onChanged: onTitleChange,
+              initialValue: controller.getDesc(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

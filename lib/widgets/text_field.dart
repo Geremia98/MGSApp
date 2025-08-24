@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mgs_app2/widgets/font.dart';
 
 import '../utilities/app_config.dart';
@@ -16,6 +17,7 @@ Widget buildTextField(
   Function(String?)? onChanged,
   bool autofocus = false,
   int maxLines = 1,
+  int minLines = 1,
   String initialValue = '',
   Color? labelColor,
   Color? iconColor,
@@ -25,6 +27,7 @@ Widget buildTextField(
   bool showError = true,
   bool enabled = true,
   int maxLength = 100,
+  List<TextInputFormatter>? inputFormatters,
 }) {
   labelColor ??= Colors.grey;
   iconColor ??= Colors.grey;
@@ -72,7 +75,9 @@ Widget buildTextField(
           onChanged: onChanged,
           initialValue: controller != null ? null : initialValue,
           maxLines: maxLines,
+          minLines: minLines,
           maxLength: maxLength,
+          inputFormatters: inputFormatters,
           textCapitalization: textCapitalization,
           cursorColor: appConfig.getTheme().primaryColor,
           decoration: InputDecoration(
@@ -89,6 +94,7 @@ Widget buildTextField(
             errorStyle: showError
                 ? textStyleFormError(appConfig.getContext())
                 : const TextStyle(height: 0, color: Colors.transparent),
+            errorMaxLines: 3,
             labelStyle: textStyleHint(appConfig.getContext()),
             hintStyle: textStyleHint(appConfig.getContext()),
             contentPadding: EdgeInsets.only(

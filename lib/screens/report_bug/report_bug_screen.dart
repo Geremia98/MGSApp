@@ -39,7 +39,7 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
       _isSubmitting = true;
     });
 
-    final String recipientEmail = 'support@example.com'; // <-- IMPORTANT: Change this to your support email
+    final String recipientEmail = 'smerex99@gmail.com'; // <-- IMPORTANT: email secondaria di Mario per debuggare
     final String subject = 'Bug Report - ${widget.category}';
     final String body = _descriptionController.text.trim();
 
@@ -58,7 +58,7 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Opening email client...')),
+        const SnackBar(content: Text('Aprendo il client email...')),
       );
       if (!mounted) return;
       Navigator.pushAndRemoveUntil(
@@ -69,7 +69,7 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to open email client: $e')),
+        SnackBar(content: Text('Impossibile aprire il client email: $e')),
       );
     } finally {
       if (mounted) {
@@ -103,7 +103,7 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
                   bottom: appConfig.getHeight() * 1,
                 ),
                 child: Text(
-                  'Report a Bug',
+                  'Segnala un bug',
                   style: TextStyle(
                     fontSize: appConfig.getWidth() * 7,
                     fontWeight: FontWeight.bold,
@@ -112,22 +112,22 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Please describe the issue you are experiencing. '
-                'Our team will review it as soon as possible.',
+                'Perfavore descrivi il problema che stai riscontrando. '
+                'Il nostro team controllerà appena possibile.',
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.left,
               ),
               const SizedBox(height: 24),
               PrimaryTextField(
                 controller: _descriptionController,
-                labelText: 'Bug Description',
+                labelText: 'Descrizione Bug',
                 maxLines: 5,
               ),
               const SizedBox(height: 24),
               Center(
                 child: PrimaryButton(
                   onPressed: _isSubmitting ? null : _submitReport,
-                  label: _isSubmitting ? 'Submitting...' : 'Submit Report',
+                  label: _isSubmitting ? 'Inviando...' : 'Invia segnalazione',
                 ),
               ),
             ],
