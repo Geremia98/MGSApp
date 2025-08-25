@@ -119,11 +119,15 @@ class _SelectorStyleState<T> extends State<SelectorStyle<T>> {
 
     return Theme(
       data: Theme.of(context).copyWith(
-        canvasColor: _appConfig.getTheme().cardColor,
+        canvasColor: _appConfig.getTheme().cardColor,   // bg del route
+        highlightColor: _appConfig.getTheme().highlightColor,              // niente overlay grigio
+        splashColor: Colors.transparent,
+        hoverColor: Colors.transparent,
+        focusColor: Colors.transparent,
       ),
       child: Column(
         children: <Widget>[
-          _title != null && _title.isNotEmpty
+          _title.isNotEmpty
               ? SizedBox(
                   width: _appConfig.getWidth() * dimensionProgressBar,
                   child: Text(
@@ -138,7 +142,7 @@ class _SelectorStyleState<T> extends State<SelectorStyle<T>> {
                 )
               : SizedBox(),
           SizedBox(
-            height: _title != null && _title.isNotEmpty ? 10 : 0,
+            height: _title.isNotEmpty ? 10 : 0,
           ),
           Container(
             alignment: Alignment.center,
@@ -154,7 +158,7 @@ class _SelectorStyleState<T> extends State<SelectorStyle<T>> {
                 fillColor: _appConfig.getTheme().highlightColor,
                 suffixIcon: widget.hasSuffixIncon
                     ? SizedBox(
-                        width: 5,
+                        width: 40,
                         child: Icon(
                           Icons.keyboard_arrow_down,
                           size: 18,
@@ -249,22 +253,22 @@ class _SelectorStyleState<T> extends State<SelectorStyle<T>> {
         value: key,
         enabled: isEnabled,
         child: Padding(
-          padding: const EdgeInsets.only(left: 0),
-          child: SizedBox(
-            height: _appConfig.getHeight() * 2,
-            child: Center(
-              child: Text(
-                _items[key]!,
-                style: TextStyle(
-                  color: isEnabled
-                      ? _appConfig.getTheme().secondaryHeaderColor
-                      : Colors.grey,
-                  fontSize: _appConfig.getHeight() * 1.7,
-                  fontWeight: FontWeight.w600,
+            padding: const EdgeInsets.only(left: 0),
+            child: SizedBox(
+              height: _appConfig.getHeight() * 2,
+              child: Center(
+                child: Text(
+                  _items[key]!,
+                  style: TextStyle(
+                    color: isEnabled
+                        ? _appConfig.getTheme().secondaryHeaderColor
+                        : Colors.grey,
+                    fontSize: _appConfig.getHeight() * 1.7,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
-          ),
         ),
       );
     }
@@ -273,21 +277,22 @@ class _SelectorStyleState<T> extends State<SelectorStyle<T>> {
       value: key,
       enabled: isEnabled,
       child: Padding(
-        padding: const EdgeInsets.only(left: 0),
-        child: SizedBox(
-          height: _appConfig.getHeight() * 2,
-          child: Text(
-            _items[key]!,
-            style: TextStyle(
-              color: isEnabled
-                  ? _appConfig.getTheme().secondaryHeaderColor
-                  : Colors.grey,
-              fontSize: _appConfig.getHeight() * 1.7,
-              fontWeight: FontWeight.w600,
+          padding: const EdgeInsets.only(left: 0),
+          child: SizedBox(
+            height: _appConfig.getHeight() * 2,
+            child: Text(
+              _items[key]!,
+              style: TextStyle(
+                color: isEnabled
+                    ? _appConfig.getTheme().secondaryHeaderColor
+                    : Colors.grey,
+                fontSize: _appConfig.getHeight() * 1.7,
+                fontWeight: FontWeight.w600,
+                height: 1.2,
+              ),
             ),
           ),
         ),
-      ),
     );
   }
 }
