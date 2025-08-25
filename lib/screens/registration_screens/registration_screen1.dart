@@ -52,8 +52,6 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
         _isDisabled = true;
       });
     }
-    print('Sono entrato nel calcolo');
-    print('Valore del parametro _isDisabled: ' + _isDisabled.toString());
   }
 
   bool isEternoGiovane() {

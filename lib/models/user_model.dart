@@ -57,13 +57,13 @@ class UserModel {
     myEventsList = data.containsKey(firestoreUsersMyEventsListField)
         ? (data[firestoreUsersMyEventsListField] as List).whereType<EventModel>().toList()
         : [];
-    bankCurrency = data.containsKey(firestoreBankCurrencyField)
+    bankCurrency = data.containsKey(firestoreBankCurrencyField) && data[firestoreBankCurrencyField] != null
         ? data[firestoreBankCurrencyField] as String
         : '';
-    holderName = data.containsKey(firestoreBakHolderNameField)
+    holderName = data.containsKey(firestoreBakHolderNameField) && data[firestoreBakHolderNameField] != null
         ? data[firestoreBakHolderNameField] as String
         : '';
-    iban = data.containsKey(firestoreBankIbanField)
+    iban = data.containsKey(firestoreBankIbanField) && data[firestoreBankIbanField] != null
         ? data[firestoreBankIbanField] as String
         : '';
   }

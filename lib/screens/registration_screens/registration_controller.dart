@@ -118,7 +118,6 @@ class RegistrationController {
     password = pass ?? '';
 
     if (password.isEmpty) {
-      print("non valida");
 
       return 'Password is not valid';
     }
@@ -196,7 +195,6 @@ class RegistrationController {
       return;
     }
 
-    print(email);
 
     final FirebaseAuthService authService = FirebaseAuthService();
 

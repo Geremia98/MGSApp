@@ -242,7 +242,6 @@ class _SelectorStyleState<T> extends State<SelectorStyle<T>> {
       final DateTime date = key as DateTime;
       isEnabled = !_disabledItems
           .any((element) => (element as DateTime).isAtSameMomentAs(date));
-      print(isEnabled);
     }
 
     if (centerText) {

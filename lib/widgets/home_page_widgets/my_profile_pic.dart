@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mgs_app2/models/user_model.dart';
+import 'package:mgs_app2/services/firebase/firebase_storage.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
+
+import '../../models/image_model.dart';
 
 class MyProfilePicture extends StatelessWidget {
   const MyProfilePicture({
@@ -18,6 +21,8 @@ class MyProfilePicture extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final FirebaseStorageService storageService = FirebaseStorageService();
+
     return Container(
       width: appConfig.getWidth() * dimension,
       height: appConfig.getWidth() * dimension,
@@ -34,10 +39,30 @@ class MyProfilePicture extends StatelessWidget {
             BorderRadius.circular(appConfig.getWidth() * borderRadius),
         child: UserModel.profilePic == null ||
                 UserModel.profilePic!.downloadUrl == null
-            ? Image.asset(
-                'assets/images/male.jpg',
-                fit: BoxFit.cover,
-              )
+            ? FutureBuilder(
+                future: storageService.getUserProfileImage(UserModel.uid),
+                builder:
+                    (BuildContext context, AsyncSnapshot<ImageModel?> snap) {
+                  if (snap.connectionState != ConnectionState.done || snap.data == null) {
+                    print(UserModel.uid);
+                    return Image.asset(
+                      'assets/images/male.jpg',
+                      fit: BoxFit.cover,
+                    );
+                  }
+
+                  print("set profile pic");
+
+
+                  UserModel.profilePic = snap.data;
+
+                  return Image.network(
+                    UserModel.profilePic!.downloadUrl!,
+                    fit: BoxFit.cover,
+                    cacheHeight: 50,
+                    cacheWidth: 50,
+                  );
+                })
             : Image.network(
                 UserModel.profilePic!.downloadUrl!,
                 fit: BoxFit.cover,

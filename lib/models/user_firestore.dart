@@ -56,7 +56,6 @@ class UserFirestore {
     final User? user = authService.getCurrentUser();
 
     if (user == null) {
-
       return null;
     }
 
