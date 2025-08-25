@@ -88,7 +88,8 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
         bottom: false,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: appConfig.getWidth() * 5),
-          child: Column(
+          child: SingleChildScrollView(
+            child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               GoBackButton(
@@ -121,7 +122,8 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
               PrimaryTextField(
                 controller: _descriptionController,
                 labelText: 'Descrizione Bug',
-                maxLines: 5,
+                maxLines: 100,
+                maxLength: 1500,
               ),
               const SizedBox(height: 24),
               Center(
@@ -132,6 +134,7 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
               ),
             ],
           ),
+),
         ),
       ),
     );
