@@ -65,8 +65,16 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
                 title: 'Paese:',
               ),
               CheckboxListTile(
-                title: const Text('Invia a tutto il paese'),
+                title: Text(
+                  'Invia a tutto il paese',
+                  style: TextStyle(
+                    color: appConfig.getTheme().secondaryHeaderColor,
+                  ),
+                ),
                 value: isCountryBroadcast,
+                side: BorderSide(
+                  color: appConfig.getTheme().secondaryHeaderColor,
+                ),
                 onChanged: (value) {
                   setState(() {
                     isCountryBroadcast = value!;
@@ -92,8 +100,16 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
                 isEnable: !isCountryBroadcast,
               ),
               CheckboxListTile(
-                title: const Text('Invia a tutta l\'ispettoria'),
+                title: Text(
+                  'Invia a tutta l\'ispetttoria',
+                  style: TextStyle(
+                    color: appConfig.getTheme().secondaryHeaderColor,
+                  ),
+                ),
                 value: isIspettoriaBroadcast,
+                side: BorderSide(
+                  color: appConfig.getTheme().secondaryHeaderColor,
+                ),
                 onChanged: (value) {
                   setState(() {
                     isIspettoriaBroadcast = value!;
