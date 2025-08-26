@@ -27,6 +27,7 @@ class BankDataRegistrationScreen extends StatefulWidget {
 class _BankDataRegistrationScreenState
     extends State<BankDataRegistrationScreen> {
   late RegistrationController controller;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -104,37 +105,45 @@ class _BankDataRegistrationScreenState
                     const SizedBox(
                       height: 30,
                     ),
-                    buildMyTextFormField(
-                      appConfig,
-                      initialValue: controller.bankHolder,
-                      hintText: 'Nome intestatario',
-                      onChanged: (value) => controller.setBankHolder(value),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    buildMyTextFormField(
-                      appConfig,
-                      initialValue: controller.IBAN,
-                      hintText: 'IBAN',
-                      onChanged: (value) => controller.setIBAN(value),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    SelectorStyle<String>(
-                      const {
-                        'CHF': 'CHF - Swiss Franc',
-                        'DKK': 'DKK - Danish Krone',
-                        'EUR': 'EUR - Euro',
-                        'GBP': 'GBP - British Pound',
-                        'NOK': 'NOK - Norwegian Krone',
-                        'SEK': 'SEK - Swedish Krona',
-                        'USD': 'USD - US Dollar',
-                      },
-                      controller.currency,
-                      hintText: 'Seleziona la valuta',
-                      onValueChange: controller.setCurrency,
+                    Form(
+                      key: formKey,
+                      child: Column(
+                        children: [
+                          buildMyTextFormField(
+                            appConfig,
+                            initialValue: controller.bankHolder,
+                            hintText: 'Nome intestatario',
+                            onChanged: (value) =>
+                                controller.setBankHolder(value),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          buildMyTextFormField(
+                            appConfig,
+                            initialValue: controller.IBAN,
+                            hintText: 'IBAN',
+                            validator: (value) => controller.setIBAN(value),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          SelectorStyle<String>(
+                            const {
+                              'CHF': 'CHF - Swiss Franc',
+                              'DKK': 'DKK - Danish Krone',
+                              'EUR': 'EUR - Euro',
+                              'GBP': 'GBP - British Pound',
+                              'NOK': 'NOK - Norwegian Krone',
+                              'SEK': 'SEK - Swedish Krona',
+                              'USD': 'USD - US Dollar',
+                            },
+                            controller.currency,
+                            hintText: 'Seleziona la valuta',
+                            onValueChange: controller.setCurrency,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -147,6 +156,10 @@ class _BankDataRegistrationScreenState
                   disabledColor: appConfig.getTheme().disabledColor,
                   icon: Icons.arrow_forward_rounded,
                   onTap: () {
+                    if (!formKey.currentState!.validate()) {
+                      return;
+                    }
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(
