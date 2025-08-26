@@ -24,6 +24,8 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
   final _formKey = GlobalKey<FormState>();
   final _minAgeController = TextEditingController();
   final _maxAgeController = TextEditingController();
+  final _minAgeFocusNode = FocusNode();
+  final _maxAgeFocusNode = FocusNode();
   String? _minAgeError;
   String? _maxAgeError;
 
@@ -33,6 +35,8 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
     controller.setCurrentStageValid(controller.getGender() != null);
     _minAgeController.text = controller.getMinAge()?.toString() ?? '';
     _maxAgeController.text = controller.getMaxAge()?.toString() ?? '';
+    _minAgeFocusNode.addListener(_onMinAgeFocusChange);
+    _maxAgeFocusNode.addListener(_onMaxAgeFocusChange);
     super.initState();
   }
 
@@ -40,7 +44,23 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
   void dispose() {
     _minAgeController.dispose();
     _maxAgeController.dispose();
+    _minAgeFocusNode.removeListener(_onMinAgeFocusChange);
+    _maxAgeFocusNode.removeListener(_onMaxAgeFocusChange);
+    _minAgeFocusNode.dispose();
+    _maxAgeFocusNode.dispose();
     super.dispose();
+  }
+
+  void _onMinAgeFocusChange() {
+    if (!_minAgeFocusNode.hasFocus) {
+      _validateAges();
+    }
+  }
+
+  void _onMaxAgeFocusChange() {
+    if (!_maxAgeFocusNode.hasFocus) {
+      _validateAges();
+    }
   }
 
   @override
@@ -83,10 +103,11 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
                           buildTextField(
                             appConfig,
                             controller: _minAgeController,
+                            focusNode: _minAgeFocusNode,
+                            onChanged: (_) => _validateAges(),
                             textCapitalization: TextCapitalization.characters,
                             textInputType: const TextInputType.numberWithOptions(decimal: false),
                             hintText: 'Età minima',
-                            onChanged: (_) => _validateAges(),
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
                             ],
@@ -114,10 +135,11 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
                           buildTextField(
                             appConfig,
                             controller: _maxAgeController,
+                            focusNode: _maxAgeFocusNode,
+                            onChanged: (_) => _validateAges(),
                             textCapitalization: TextCapitalization.characters,
                             textInputType: const TextInputType.numberWithOptions(decimal: false),
                             hintText: 'Età massima',
-                            onChanged: (_) => _validateAges(),
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
                             ],
@@ -143,9 +165,9 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
     );
   }
 
-  String? _parseAndValidateAge(String? value) {
+  String? _parseAndValidateAge(String? value, {bool hasFocus = false}) {
     if (value == null || value.isEmpty) {
-      return 'Inserisci un\'età';
+      return hasFocus ? null : 'Inserisci un\'età';
     }
     final age = int.tryParse(value);
     if (age == null) {
@@ -162,20 +184,20 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
 
   void _validateAges() {
     setState(() {
-      _minAgeError = _parseAndValidateAge(_minAgeController.text);
-      _maxAgeError = _parseAndValidateAge(_maxAgeController.text);
+      _minAgeError = _parseAndValidateAge(_minAgeController.text, hasFocus: _minAgeFocusNode.hasFocus);
+      _maxAgeError = _parseAndValidateAge(_maxAgeController.text, hasFocus: _maxAgeFocusNode.hasFocus);
 
-      if (_maxAgeError == null) {
-        final maxAge = int.tryParse(_maxAgeController.text);
-        final minAge = int.tryParse(_minAgeController.text);
-        if (minAge != null && maxAge! < minAge) {
-          _maxAgeError = 'Non può essere minore dell\'età minima';
-        }
+      final minAgeText = _minAgeController.text;
+      final maxAgeText = _maxAgeController.text;
+
+      final minAge = int.tryParse(minAgeText);
+      final maxAge = int.tryParse(maxAgeText);
+
+      if (_maxAgeError == null && maxAge != null && minAge != null && maxAge < minAge) {
+        _maxAgeError = 'Non può essere minore dell\'età minima';
       }
 
-      if (_minAgeError == null && _maxAgeError == null) {
-        final minAge = int.tryParse(_minAgeController.text);
-        final maxAge = int.tryParse(_maxAgeController.text);
+      if (_minAgeError == null && _maxAgeError == null && minAgeText.isNotEmpty && maxAgeText.isNotEmpty) {
         controller.setMinAge(minAge);
         controller.setMaxAge(maxAge);
         controller.setCurrentStageValid(true);
