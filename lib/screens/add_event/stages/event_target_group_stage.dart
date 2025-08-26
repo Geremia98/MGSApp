@@ -67,6 +67,7 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
               CheckboxListTile(
                 title: const Text('Invia a tutto il paese'),
                 value: isCountryBroadcast,
+                controlAffinity: ListTileControlAffinity.leading,
                 onChanged: (value) {
                   setState(() {
                     isCountryBroadcast = value!;
@@ -94,6 +95,7 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
               CheckboxListTile(
                 title: const Text('Invia a tutta l\'ispettoria'),
                 value: isIspettoriaBroadcast,
+                controlAffinity: ListTileControlAffinity.leading,
                 onChanged: (value) {
                   setState(() {
                     isIspettoriaBroadcast = value!;
