@@ -18,6 +18,13 @@ class _FakeTranslator implements TranslatorLike {
 
 void main() {
   testWidgets('Render senza auth reale (mostra LoginScreen)', (tester) async {
+    final view = tester.view;
+    view.devicePixelRatio = 1.0;                    
+    view.physicalSize = const Size(1080, 2400);     
+    addTearDown(() {
+      view.resetPhysicalSize();
+      view.resetDevicePixelRatio();
+    });
     await tester.pumpWidget(
       ChangeNotifierProvider(
         create: (_) => BrightnessManager(),
