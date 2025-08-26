@@ -72,6 +72,7 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
                   ),
                 ),
                 value: isCountryBroadcast,
+                controlAffinity: ListTileControlAffinity.leading,
                 side: BorderSide(
                   color: appConfig.getTheme().secondaryHeaderColor,
                 ),
@@ -107,6 +108,7 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
                   ),
                 ),
                 value: isIspettoriaBroadcast,
+                controlAffinity: ListTileControlAffinity.leading,
                 side: BorderSide(
                   color: appConfig.getTheme().secondaryHeaderColor,
                 ),
