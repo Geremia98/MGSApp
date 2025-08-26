@@ -20,12 +20,18 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
   late AddEventController controller;
   bool isCountryBroadcast = false;
   bool isIspettoriaBroadcast = false;
+  String? _selectedCountry;
+  String? _selectedIspettoria;
+  String? _selectedGroup;
 
   @override
   void initState() {
     controller = widget.controller;
     isCountryBroadcast = controller.isCountryBroadcast;
     isIspettoriaBroadcast = controller.isIspettoriaBroadcast;
+    _selectedCountry = controller.getCountry();
+    _selectedIspettoria = controller.getIspettoria();
+    _selectedGroup = controller.getGroup();
     controller.setCurrentStageValid(_isStateValid());
     super.initState();
   }
@@ -54,7 +60,7 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
             children: [
               SelectorStyle(
                 constantDropDownCountryList,
-                controller.getCountry(),
+                _selectedCountry,
                 onValueChange: onCountryChange,
                 title: 'Paese:',
               ),
@@ -66,6 +72,8 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
                     isCountryBroadcast = value!;
                     if (isCountryBroadcast) {
                       isIspettoriaBroadcast = false;
+                      _selectedIspettoria = null;
+                      _selectedGroup = null;
                       controller.setIspettoria(null);
                       controller.setGroup(null);
                     }
@@ -78,7 +86,7 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
               SizedBox(height: 20),
               SelectorStyle(
                 constantDropDownIspettoriaList,
-                controller.getIspettoria(),
+                _selectedIspettoria,
                 onValueChange: onIspettoriaChange,
                 title: 'Ispettoria:',
                 isEnable: !isCountryBroadcast,
@@ -91,6 +99,7 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
                     isIspettoriaBroadcast = value!;
                     if (isIspettoriaBroadcast) {
                       isCountryBroadcast = false;
+                      _selectedGroup = null;
                       controller.setGroup(null);
                     }
                     controller.setIspettoriaBroadcast(isIspettoriaBroadcast);
@@ -102,7 +111,7 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
               SizedBox(height: 20),
               SelectorStyle(
                 constantDropDownGroupList,
-                controller.getGroup(),
+                _selectedGroup,
                 onValueChange: onGroupChange,
                 title: 'Gruppo:',
                 isEnable: !isCountryBroadcast && !isIspettoriaBroadcast,
@@ -115,6 +124,9 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
   }
 
   void onCountryChange(String? country) {
+    setState(() {
+      _selectedCountry = country;
+    });
     if (country == null || country.isEmpty) {
       controller.setCountry(null);
     } else {
@@ -124,6 +136,9 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
   }
 
   void onIspettoriaChange(String? ispettoria) {
+    setState(() {
+      _selectedIspettoria = ispettoria;
+    });
     if (ispettoria == null || ispettoria.isEmpty) {
       controller.setIspettoria(null);
     } else {
@@ -133,6 +148,9 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
   }
 
   void onGroupChange(String? group) {
+    setState(() {
+      _selectedGroup = group;
+    });
     if (group == null || group.isEmpty) {
       controller.setGroup(null);
     } else {
@@ -143,13 +161,13 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
 
   bool _isStateValid() {
     if (isCountryBroadcast) {
-      return controller.getCountry() != null;
+      return _selectedCountry != null;
     } else if (isIspettoriaBroadcast) {
-      return controller.getCountry() != null && controller.getIspettoria() != null;
+      return _selectedCountry != null && _selectedIspettoria != null;
     } else {
-      return controller.getCountry() != null &&
-          controller.getIspettoria() != null &&
-          controller.getGroup() != null;
+      return _selectedCountry != null &&
+          _selectedIspettoria != null &&
+          _selectedGroup != null;
     }
   }
 }
