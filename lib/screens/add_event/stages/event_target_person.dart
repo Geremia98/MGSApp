@@ -197,7 +197,9 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
         _maxAgeError = 'Non può essere minore dell\'età minima';
       }
 
-      if (_minAgeError == null && _maxAgeError == null && minAgeText.isNotEmpty && maxAgeText.isNotEmpty) {
+      final isGenderSelected = controller.getGender() != null;
+
+      if (_minAgeError == null && _maxAgeError == null && minAgeText.isNotEmpty && maxAgeText.isNotEmpty && isGenderSelected) {
         controller.setMinAge(minAge);
         controller.setMaxAge(maxAge);
         controller.setCurrentStageValid(true);
@@ -208,14 +210,8 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
   }
 
   void onGenderTargetChanged(EventTargetGender? gender){
-    if (gender == null) {
-      controller.setGender(null);
-      controller.setCurrentStageValid(false);
-      return;
-    }
-
     controller.setGender(gender);
-    controller.setCurrentStageValid(true);
+    _validateAges();
   }
 }
 
