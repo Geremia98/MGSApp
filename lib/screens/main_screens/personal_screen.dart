@@ -43,7 +43,6 @@ class PersonalScreenState extends State<PersonalScreen> {
     _selectedUserGender = {UserModel.gender};
     _isModifyOptionEnable = false;
     super.initState();
-    print('Init state chiamato');
   }
 
   void updateUserInfo() {

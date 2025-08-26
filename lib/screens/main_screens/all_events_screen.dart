@@ -593,7 +593,6 @@ class _ButtonRowState extends State<ButtonRow> {
   @override
   Widget build(BuildContext context) {
 
-    print(selectedFilter);
 
     return Container(
       padding: EdgeInsets.only(
@@ -629,7 +628,6 @@ class _ButtonRowState extends State<ButtonRow> {
               onTap: () {
                 widget.sortFilter('day');
                 setState(() {
-                  print("setted");
                   selectedFilter = 'day';
 
                 });

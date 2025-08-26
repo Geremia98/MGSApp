@@ -34,18 +34,10 @@ class RegistrationController {
 
   void setName(String? name) {
     this.name = name ?? '';
-
-    if (bankHolder.isEmpty) {
-      bankHolder = '$name $surname';
-    }
   }
 
   void setSurname(String? surname) {
     this.surname = surname ?? '';
-
-    if (bankHolder.isEmpty) {
-      bankHolder = '$name $surname';
-    }
   }
 
   void setGender(UserGender gender) {
@@ -84,19 +76,36 @@ class RegistrationController {
     this.currency = currency ?? '';
   }
 
-  void setIBAN(String? iban) {
-    this.IBAN = iban ?? '';
-  }
 
   String? setEmail(String? email) {
-
     if (email == null || !isEmailStringValid(email)) {
       //TODO change error messages
-      return 'Email is not valid';
+      return 'Email in formato non valido';
     }
 
     this.email = email.trim();
     return null;
+  }
+
+  String? setIBAN(String? iban) {
+    if (iban == null) {
+      return null;
+    }
+
+    final cleaned = iban.replaceAll(' ', '').toUpperCase();
+
+    // Regex generale: 2 lettere, 2 cifre, resto lettere/numeri
+    final regex = RegExp(r'^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$');
+
+    // Lunghezza minima/massima
+    if (cleaned.length < 15 || cleaned.length > 34)
+      return 'IBAN in formato non valido';
+
+    if (regex.hasMatch(cleaned)) {
+      return null;
+    }
+
+    return 'IBAN in formato non valido';
   }
 
   bool isEmailStringValid(String email) {
@@ -109,27 +118,21 @@ class RegistrationController {
       return false;
     }
 
-
     return true;
   }
 
   String? setPassword(String? pass) {
-
     password = pass ?? '';
 
     if (password.isEmpty) {
-      print("non valida");
-
       return 'Password is not valid';
     }
 
     return null;
   }
 
-  String? setConfirmPassword(String? pass){
-
+  String? setConfirmPassword(String? pass) {
     confirmPassword = pass ?? '';
-
 
     if (confirmPassword.isEmpty) {
       return 'Password is not valid';
@@ -137,13 +140,13 @@ class RegistrationController {
 
     if (password != confirmPassword) {
       return 'Password doens\'t match';
-
     }
 
     return null;
   }
 
-  Future<void> register(GlobalKey<FormState> formKey, BuildContext context, GlobalKey<ScaffoldState> scaffoldKey) async {
+  Future<void> register(GlobalKey<FormState> formKey, BuildContext context,
+      GlobalKey<ScaffoldState> scaffoldKey) async {
     if (!formKey.currentState!.validate()) {
       return;
     }
@@ -153,7 +156,8 @@ class RegistrationController {
     print('name: $name, surname: $surname, birth: $birthDate, gender: $gender');
     print('email: $email, password: $password');
 
-    final dynamic result = await authService.registerWithEmailAndPassword(email, password);
+    final dynamic result =
+        await authService.registerWithEmailAndPassword(email, password);
 
     if (result is String) {
       _onSignInFail(context, result, scaffoldKey);
@@ -183,26 +187,21 @@ class RegistrationController {
     if (!firestoreResult) {
       _onSignInFail(context, "Errore durante la registrazione", scaffoldKey);
       return;
-
     }
 
     _navigateToWrapper(context);
-
   }
 
-  Future<void> signIn(GlobalKey<FormState> formKey, BuildContext context, GlobalKey<ScaffoldState> scaffoldKey) async {
-
+  Future<void> signIn(GlobalKey<FormState> formKey, BuildContext context,
+      GlobalKey<ScaffoldState> scaffoldKey) async {
     if (!formKey.currentState!.validate()) {
       return;
     }
 
-    print(email);
-
     final FirebaseAuthService authService = FirebaseAuthService();
 
-
     final dynamic result =
-    await authService.signInWithEmailAndPassword(email, password);
+        await authService.signInWithEmailAndPassword(email, password);
 
     if (result is User) {
       _navigateToWrapper(context);
@@ -217,8 +216,8 @@ class RegistrationController {
     _onSignInFail(context, '', scaffoldKey);
   }
 
-  void _onSignInFail(BuildContext context, String error, GlobalKey<ScaffoldState> scaffoldKey) {
-
+  void _onSignInFail(BuildContext context, String error,
+      GlobalKey<ScaffoldState> scaffoldKey) {
     final SnackBarStyle snackBar = SnackBarStyle(context, scaffoldKey);
 
     snackBar.showSnackBar(error);
@@ -230,5 +229,4 @@ class RegistrationController {
       MaterialPageRoute(builder: (context) => const Wrapper()),
     );
   }
-
 }
