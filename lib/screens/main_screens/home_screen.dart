@@ -92,7 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         }
 
                         if (snap.data == null || snap.data!.isEmpty) {
-                          //TODO mettere una scritta 'nessun evento'
                           return SizedBox(
                             child: Text('Nessun evento'),
                           );

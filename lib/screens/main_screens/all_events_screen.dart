@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mgs_app2/models/event_firestore.dart';
 import 'package:mgs_app2/models/image_model.dart';
+import 'package:mgs_app2/services/local/favorite_service.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
 import 'package:mgs_app2/widgets/buttons.dart';
@@ -33,6 +35,10 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
     futureEvents = widget.futureEvents;
   }
 
+  void onFavouriteChange(String eventId, bool isFavourite) {
+    events.where((e) => e.id == eventId).first.isFavourite = isFavourite;
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -49,13 +55,14 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 GoBackButton(
-                      icon: Icons.arrow_back_rounded,
-                      onTap: () => Navigator.pop(context),
-                      appConfig: appConfig,
-                    ),
+                  icon: Icons.arrow_back_rounded,
+                  onTap: () => Navigator.pop(context),
+                  appConfig: appConfig,
+                ),
                 Expanded(
                   child: FutureBuilder(
-                    future: futureEvents,
+                    future:
+                        futureEvents,
                     builder: (BuildContext context,
                         AsyncSnapshot<List<EventModel>> snap) {
                       if (snap.data != null) {
@@ -87,6 +94,12 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
     }
 
     switch (value) {
+      case 'fav':
+        setState(() {
+          filter = 'fav';
+          filteredEvents = events.where((e) => e.isFavourite == true).toList();
+        });
+        return;
       case 'day':
         setState(() {
           filter = 'day';
@@ -125,7 +138,8 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
 
           filteredEvents = events.where((e) {
             final start = e.start!;
-            return start.isAfter(startOfMonth.subtract(const Duration(seconds: 1))) &&
+            return start.isAfter(
+                    startOfMonth.subtract(const Duration(seconds: 1))) &&
                 start.isBefore(startOfNextMonth);
           }).toList();
         });
@@ -134,7 +148,6 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
       default:
         return;
     }
-
   }
 
   Widget buildPage(List<EventModel>? events) {
@@ -185,11 +198,14 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
                         triggerAnimation: firstTime,
                         height: height,
                         width: width,
+                        eventId: events!.elementAt(index).id,
                         image: events!.elementAt(index).image,
                         titolo: events!.elementAt(index).title,
                         luogo: events!.elementAt(index).location,
+                        isLike: events!.elementAt(index).isFavourite,
                         dataInizio: DateFormat('dd-MM-yyyy hh:mm')
                             .format(events!.elementAt(index).start!),
+                        onFavouriteChange: onFavouriteChange,
                         index: index,
                       ),
                     );
@@ -209,9 +225,12 @@ class MyEventCard extends StatefulWidget {
     required this.image,
     required this.titolo,
     required this.luogo,
+    required this.eventId,
     required this.dataInizio,
     required this.index,
     required this.triggerAnimation,
+    required this.isLike,
+    required this.onFavouriteChange,
   });
 
   final bool triggerAnimation;
@@ -221,7 +240,10 @@ class MyEventCard extends StatefulWidget {
   final String titolo;
   final String luogo;
   final String dataInizio;
+  final String eventId;
   final int index;
+  final bool isLike;
+  final void Function(String, bool) onFavouriteChange;
 
   @override
   State<MyEventCard> createState() => _MyEventCardState();
@@ -422,7 +444,12 @@ class _MyEventCardState extends State<MyEventCard>
                         ),
                         Container(
                           margin: EdgeInsets.only(left: widget.width * 0.001),
-                          child: LikeButton(width: widget.width),
+                          child: LikeButton(
+                            width: widget.width,
+                            eventId: widget.eventId,
+                            isLike: widget.isLike,
+                            onFavouriteChange: widget.onFavouriteChange,
+                          ),
                         )
                       ],
                     ),
@@ -441,33 +468,48 @@ class LikeButton extends StatefulWidget {
   const LikeButton({
     super.key,
     required this.width,
+    required this.eventId,
+    required this.isLike,
+    required this.onFavouriteChange,
   });
 
   final double width;
+  final String eventId;
+  final bool isLike;
+  final void Function(String, bool) onFavouriteChange;
 
   @override
   State<LikeButton> createState() => _LikeButtonState();
 }
 
 class _LikeButtonState extends State<LikeButton> {
-  late bool _isLike;
+  late bool isLike;
 
   @override
   void initState() {
-    _isLike = false;
     super.initState();
+    isLike = widget.isLike;
   }
 
   @override
   Widget build(BuildContext context) {
+    final FavoritesService favoritesService = FavoritesService();
+
     return IconButton(
         onPressed: () {
           setState(() {
-            _isLike = !_isLike;
+            isLike = !isLike;
+
+            widget.onFavouriteChange(widget.eventId, isLike);
+            if (isLike) {
+              favoritesService.addFavorite(widget.eventId);
+              return;
+            }
+            favoritesService.removeFavorite(widget.eventId);
           });
         },
         icon: Icon(
-          _isLike ? Icons.favorite_rounded : Icons.favorite_outline,
+          isLike ? Icons.favorite_rounded : Icons.favorite_outline,
           size: widget.width * 0.06,
         ));
   }
@@ -582,7 +624,6 @@ class ButtonRow extends StatefulWidget {
 }
 
 class _ButtonRowState extends State<ButtonRow> {
-
   late String selectedFilter;
 
   @override
@@ -590,13 +631,14 @@ class _ButtonRowState extends State<ButtonRow> {
     super.initState();
     selectedFilter = '';
   }
+
   @override
   Widget build(BuildContext context) {
-
-
     return Container(
       padding: EdgeInsets.only(
-          bottom: widget.height * 0.01, left: widget.width * 0.008, right: widget.width * 0.008),
+          bottom: widget.height * 0.01,
+          left: widget.width * 0.008,
+          right: widget.width * 0.008),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -629,7 +671,6 @@ class _ButtonRowState extends State<ButtonRow> {
                 widget.sortFilter('day');
                 setState(() {
                   selectedFilter = 'day';
-
                 });
               },
               onRemove: () {
@@ -692,7 +733,7 @@ class FilterButton extends StatefulWidget {
       required this.coloreBottonePremuto,
       required this.label,
       required this.onRemove,
-        required this.isSelected,
+      required this.isSelected,
       required this.width});
 
   final Color coloreBottonePremuto;
@@ -707,7 +748,6 @@ class FilterButton extends StatefulWidget {
 }
 
 class _FilterButtonState extends State<FilterButton> {
-
   @override
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
@@ -723,8 +763,8 @@ class _FilterButtonState extends State<FilterButton> {
             borderRadius:
                 BorderRadius.circular(widget.width * 0.02), // Bordi arrotondati
             border: getCustomBorder(
-                  appConfig: appConfig,
-                  width: widget.width * 0.0015,
+              appConfig: appConfig,
+              width: widget.width * 0.0015,
             ),
           ),
           child: widget.isSelected
@@ -741,12 +781,11 @@ class _FilterButtonState extends State<FilterButton> {
                     Padding(
                       padding: EdgeInsets.only(right: widget.width * 0.015),
                       child: GestureDetector(
-                        onTap: () => {_onButtonPressed()},
-                        child: Icon(
-                          Icons.close,
-                          size: 13,
-                        )
-                      ),
+                          onTap: () => {_onButtonPressed()},
+                          child: Icon(
+                            Icons.close,
+                            size: 13,
+                          )),
                     )
                   ],
                 )
@@ -764,7 +803,6 @@ class _FilterButtonState extends State<FilterButton> {
   }
 
   _onButtonPressed() {
-
     if (!widget.isSelected) {
       widget.onTap();
     } else {
