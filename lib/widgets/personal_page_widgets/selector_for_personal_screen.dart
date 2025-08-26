@@ -250,7 +250,6 @@ class _SelectorForPersonalScreenState<T> extends State<SelectorForPersonalScreen
       final DateTime date = key as DateTime;
       isEnabled = !_disabledItems
           .any((element) => (element as DateTime).isAtSameMomentAs(date));
-      print(isEnabled);
     }
 
     if (centerText) {
