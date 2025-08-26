@@ -18,13 +18,21 @@ class EventTargetGroupStage extends StatefulWidget {
 
 class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
   late AddEventController controller;
+  bool isCountryBroadcast = false;
+  bool isIspettoriaBroadcast = false;
+  String? _selectedCountry;
+  String? _selectedIspettoria;
+  String? _selectedGroup;
 
   @override
   void initState() {
     controller = widget.controller;
-    controller.setCurrentStageValid(controller.getCountry() != null &&
-        controller.getIspettoria() != null &&
-        controller.getGroup() != null);
+    isCountryBroadcast = controller.isCountryBroadcast;
+    isIspettoriaBroadcast = controller.isIspettoriaBroadcast;
+    _selectedCountry = controller.getCountry();
+    _selectedIspettoria = controller.getIspettoria();
+    _selectedGroup = controller.getGroup();
+    controller.setCurrentStageValid(_isStateValid());
     super.initState();
   }
 
@@ -52,23 +60,63 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
             children: [
               SelectorStyle(
                 constantDropDownCountryList,
-                controller.getCountry(),
+                _selectedCountry,
                 onValueChange: onCountryChange,
                 title: 'Paese:',
+              ),
+              CheckboxListTile(
+                title: const Text('Invia a tutto il paese'),
+                value: isCountryBroadcast,
+                controlAffinity: ListTileControlAffinity.leading,
+                onChanged: (value) {
+                  setState(() {
+                    isCountryBroadcast = value!;
+                    if (isCountryBroadcast) {
+                      isIspettoriaBroadcast = false;
+                      _selectedIspettoria = null;
+                      _selectedGroup = null;
+                      controller.setIspettoria(null);
+                      controller.setGroup(null);
+                    }
+                    controller.setCountryBroadcast(isCountryBroadcast);
+                    controller.setIspettoriaBroadcast(isIspettoriaBroadcast);
+                    controller.setCurrentStageValid(_isStateValid());
+                  });
+                },
               ),
               SizedBox(height: 20),
               SelectorStyle(
                 constantDropDownIspettoriaList,
-                controller.getIspettoria(),
+                _selectedIspettoria,
                 onValueChange: onIspettoriaChange,
                 title: 'Ispettoria:',
+                isEnable: !isCountryBroadcast,
+              ),
+              CheckboxListTile(
+                title: const Text('Invia a tutta l\'ispettoria'),
+                value: isIspettoriaBroadcast,
+                controlAffinity: ListTileControlAffinity.leading,
+                onChanged: (value) {
+                  setState(() {
+                    isIspettoriaBroadcast = value!;
+                    if (isIspettoriaBroadcast) {
+                      isCountryBroadcast = false;
+                      _selectedGroup = null;
+                      controller.setGroup(null);
+                    }
+                    controller.setIspettoriaBroadcast(isIspettoriaBroadcast);
+                    controller.setCountryBroadcast(isCountryBroadcast);
+                    controller.setCurrentStageValid(_isStateValid());
+                  });
+                },
               ),
               SizedBox(height: 20),
               SelectorStyle(
                 constantDropDownGroupList,
-                controller.getGroup(),
+                _selectedGroup,
                 onValueChange: onGroupChange,
                 title: 'Gruppo:',
+                isEnable: !isCountryBroadcast && !isIspettoriaBroadcast,
               ),
             ],
           ),
@@ -78,35 +126,50 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
   }
 
   void onCountryChange(String? country) {
+    setState(() {
+      _selectedCountry = country;
+    });
     if (country == null || country.isEmpty) {
       controller.setCountry(null);
-      controller.setCurrentStageValid(false);
-      return;
+    } else {
+      controller.setCountry(country);
     }
-
-    controller.setCountry(country);
-    controller.setCurrentStageValid(controller.getIspettoria() != null && controller.getGroup() != null);
+    controller.setCurrentStageValid(_isStateValid());
   }
 
   void onIspettoriaChange(String? ispettoria) {
+    setState(() {
+      _selectedIspettoria = ispettoria;
+    });
     if (ispettoria == null || ispettoria.isEmpty) {
       controller.setIspettoria(null);
-      controller.setCurrentStageValid(false);
-      return;
+    } else {
+      controller.setIspettoria(ispettoria);
     }
-
-    controller.setIspettoria(ispettoria);
-    controller.setCurrentStageValid(controller.getCountry() != null && controller.getGroup() != null);
+    controller.setCurrentStageValid(_isStateValid());
   }
 
   void onGroupChange(String? group) {
+    setState(() {
+      _selectedGroup = group;
+    });
     if (group == null || group.isEmpty) {
       controller.setGroup(null);
-      controller.setCurrentStageValid(false);
-      return;
+    } else {
+      controller.setGroup(group);
     }
+    controller.setCurrentStageValid(_isStateValid());
+  }
 
-    controller.setGroup(group);
-    controller.setCurrentStageValid(controller.getIspettoria() != null && controller.getCountry() != null);
+  bool _isStateValid() {
+    if (isCountryBroadcast) {
+      return _selectedCountry != null;
+    } else if (isIspettoriaBroadcast) {
+      return _selectedCountry != null && _selectedIspettoria != null;
+    } else {
+      return _selectedCountry != null &&
+          _selectedIspettoria != null &&
+          _selectedGroup != null;
+    }
   }
 }

@@ -81,6 +81,16 @@ class _SelectorStyleState<T> extends State<SelectorStyle<T>> {
     }
   }
 
+  @override
+  void didUpdateWidget(SelectorStyle<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialValue != oldWidget.initialValue) {
+      setState(() {
+        _currentValue = widget.initialValue;
+      });
+    }
+  }
+
   void openDropdown() {
     GestureDetector? detector;
     void searchForGestureDetector(BuildContext? element) {
@@ -179,7 +189,7 @@ class _SelectorStyleState<T> extends State<SelectorStyle<T>> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 disabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.pink),
+                  borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 focusedBorder: OutlineInputBorder(
