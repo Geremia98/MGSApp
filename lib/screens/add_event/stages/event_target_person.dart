@@ -24,6 +24,8 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
   final _formKey = GlobalKey<FormState>();
   final _minAgeController = TextEditingController();
   final _maxAgeController = TextEditingController();
+  String? _minAgeError;
+  String? _maxAgeError;
 
   @override
   void initState() {
@@ -72,54 +74,62 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
                 ),
                 SizedBox(height: 20),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Flexible(
                       flex: 2,
-                      child: buildTextField(
-                        appConfig,
-                        controller: _minAgeController,
-                        textCapitalization: TextCapitalization.characters,
-                        textInputType: const TextInputType.numberWithOptions(decimal: false),
-                        hintText: 'Età minima',
-                        onChanged: (_) => _validateAges(),
-                        validator: (value) {
-                          final validationError = _parseAndValidateAge(value);
-                          if (validationError != null) {
-                            return validationError;
-                          }
-                          return null;
-                        },
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
+                      child: Column(
+                        children: [
+                          buildTextField(
+                            appConfig,
+                            controller: _minAgeController,
+                            textCapitalization: TextCapitalization.characters,
+                            textInputType: const TextInputType.numberWithOptions(decimal: false),
+                            hintText: 'Età minima',
+                            onChanged: (_) => _validateAges(),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                          ),
+                          if (_minAgeError != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                _minAgeError!,
+                                style: TextStyle(color: Colors.red, fontSize: 12),
+                              ),
+                            ),
                         ],
                       ),
                     ),
                     Container(
+                      padding: const EdgeInsets.only(top: 15.0),
                       margin: EdgeInsets.symmetric(horizontal: appConfig.getWidth()*3),
-                      child: const Text('--')),
+                      child: const Text('--')
+                    ),
                     Flexible(
                       flex: 2,
-                      child: buildTextField(
-                        appConfig,
-                        controller: _maxAgeController,
-                        textCapitalization: TextCapitalization.characters,
-                        textInputType: const TextInputType.numberWithOptions(decimal: false),
-                        hintText: 'Età massima',
-                        onChanged: (_) => _validateAges(),
-                        validator: (value) {
-                          final validationError = _parseAndValidateAge(value);
-                          if (validationError != null) {
-                            return validationError;
-                          }
-                          final age = int.tryParse(value!);
-                          final minAge = int.tryParse(_minAgeController.text);
-                          if (minAge != null && age! < minAge) {
-                            return 'Non può essere minore dell\'età minima';
-                          }
-                          return null;
-                        },
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
+                      child: Column(
+                        children: [
+                          buildTextField(
+                            appConfig,
+                            controller: _maxAgeController,
+                            textCapitalization: TextCapitalization.characters,
+                            textInputType: const TextInputType.numberWithOptions(decimal: false),
+                            hintText: 'Età massima',
+                            onChanged: (_) => _validateAges(),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                          ),
+                          if (_maxAgeError != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                _maxAgeError!,
+                                style: TextStyle(color: Colors.red, fontSize: 12),
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -151,15 +161,28 @@ class _EventTargetPersonStageState extends State<EventTargetPersonStage> {
   }
 
   void _validateAges() {
-    if (_formKey.currentState!.validate()) {
-      final minAge = int.tryParse(_minAgeController.text);
-      final maxAge = int.tryParse(_maxAgeController.text);
-      controller.setMinAge(minAge);
-      controller.setMaxAge(maxAge);
-      controller.setCurrentStageValid(true);
-    } else {
-      controller.setCurrentStageValid(false);
-    }
+    setState(() {
+      _minAgeError = _parseAndValidateAge(_minAgeController.text);
+      _maxAgeError = _parseAndValidateAge(_maxAgeController.text);
+
+      if (_maxAgeError == null) {
+        final maxAge = int.tryParse(_maxAgeController.text);
+        final minAge = int.tryParse(_minAgeController.text);
+        if (minAge != null && maxAge! < minAge) {
+          _maxAgeError = 'Non può essere minore dell\'età minima';
+        }
+      }
+
+      if (_minAgeError == null && _maxAgeError == null) {
+        final minAge = int.tryParse(_minAgeController.text);
+        final maxAge = int.tryParse(_maxAgeController.text);
+        controller.setMinAge(minAge);
+        controller.setMaxAge(maxAge);
+        controller.setCurrentStageValid(true);
+      } else {
+        controller.setCurrentStageValid(false);
+      }
+    });
   }
 
   void onGenderTargetChanged(EventTargetGender? gender){
