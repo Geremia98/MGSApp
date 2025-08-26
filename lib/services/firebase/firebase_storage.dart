@@ -21,7 +21,6 @@ class FirebaseStorageService {
     try {
       ListResult result = await reference.listAll();
 
-      print(result.items.length);
 
       Map<String, String> downloadUrls = {};
 
@@ -36,6 +35,25 @@ class FirebaseStorageService {
     }
 
     return null;
+  }
+  Future<ImageModel?> getUserProfileImage(String userUid) async {
+    try {
+      final FirebaseStorage storage = FirebaseStorage.instance;
+      final Reference reference = storage.ref().child('users/');
+      final ListResult result = await reference.listAll();
+
+      for (final item in result.items) {
+        final fullPath = item.name;
+        if (fullPath.startsWith(userUid)) {
+          final url = await item.getDownloadURL();
+          return ImageModel(downloadUrl: url);
+        }
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching profile image: $e');
+      return null;
+    }
   }
 
   Future<ImageModel?> getUserProfileImage(

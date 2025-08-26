@@ -23,7 +23,6 @@ class SortOfAppBar extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () => {
-            debugPrint('bottone menu premuto'),
             globalKey.currentState!.openDrawer()
           },
           child: Container(

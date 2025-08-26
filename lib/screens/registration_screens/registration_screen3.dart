@@ -8,6 +8,7 @@ import 'package:mgs_app2/widgets/personal_page_widgets/my_squared_icon_button.da
 import 'package:mgs_app2/widgets/personal_page_widgets/selector_for_personal_screen.dart';
 import 'package:mgs_app2/widgets/personal_page_widgets/text_form_field_for_personal_screen.dart';
 import 'package:mgs_app2/widgets/registration_screens_widgets/my_segmented_button.dart';
+import 'package:mgs_app2/widgets/selector.dart';
 
 import '../../utilities/constants_strings.dart';
 import '../../widgets/font.dart';
@@ -126,7 +127,7 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                     const SizedBox(
                       height: 30,
                     ),
-                    SelectorForPersonalScreen(
+                    SelectorStyle(
                       isEnable: true,
                       constantDropDownCountryList,
                       controller.country,
@@ -134,7 +135,8 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                           controller.setCountry(value),
                       title: 'Paese: ',
                     ),
-                    SelectorForPersonalScreen(
+                    SizedBox(height: 20),
+                    SelectorStyle(
                       isEnable: true,
                       constantDropDownIspettoriaList,
                       controller.ispettoria,
@@ -142,7 +144,8 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                           {controller.setIspettoria(value)},
                       title: 'Ispettoria: ',
                     ),
-                    SelectorForPersonalScreen(
+                    SizedBox(height: 20),
+                    SelectorStyle(
                       isEnable: true,
                       constantDropDownGroupList,
                       controller.group,
@@ -150,6 +153,7 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                           controller.setGroup(value),
                       title: 'Gruppo: ',
                     ),
+                    SizedBox(height: 20),
                     MySegmentedButton(
                       isEnable: true,
                       leftString: 'Si',
@@ -188,34 +192,31 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                   bottom: 0,
                   right: 0,
                   child: MySquaredIconButton(
-                    activeColor: appConfig.getTheme().primaryColor,
-                    disabledColor: appConfig.getTheme().disabledColor,
-                    icon: Icons.arrow_forward_rounded,
-                    isEnable: !_isDisabled,
-                    onTap: () {
+                      activeColor: appConfig.getTheme().primaryColor,
+                      disabledColor: appConfig.getTheme().disabledColor,
+                      icon: Icons.arrow_forward_rounded,
+                      isEnable: !_isDisabled,
+                      onTap: () {
+                        if (_selectedBoss.first == true) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    BankDataRegistrationScreen(
+                                      controller: controller,
+                                    )),
+                          );
+                          return;
+                        }
 
-                      if (_selectedBoss.first == true) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  BankDataRegistrationScreen(
+                              builder: (context) => RegistrationScreen4(
                                     controller: controller,
                                   )),
                         );
-                        return;
-                      }
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                RegistrationScreen4(
-                                  controller: controller,
-                                )),
-                      );
-                    }
-                  ))
+                      }))
             ],
           ),
         ),
