@@ -1,30 +1,47 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mgs_app2/wrapper.dart';
+import 'package:mgs_app2/screens/login_screens/login_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:mgs_app2/main.dart' show BrightnessManager;
+import 'package:firebase_auth/firebase_auth.dart' as fb;
+import 'package:mgs_app2/theme.dart' show TranslatorLike;
 
-import 'package:mgs_app2/main.dart';
+
+class _FakeTranslator implements TranslatorLike {
+  @override
+  Future<void> load(Locale locale) async {}
+  @override
+  Future<void> changeLanguage(BuildContext context, Locale newLocale) async {}
+}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Render senza auth reale (mostra LoginScreen)', (tester) async {
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) => BrightnessManager(),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en', 'US'),
+            Locale('it', 'IT'),
+          ],
+          home: Wrapper(
+            userStreamOverride: Stream<fb.User?>.value(null),
+            userFutureOverride: Future.value(null),
+            translatorOverride: _FakeTranslator(),
+          ),
+        ),
+      ),
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    await tester.pumpAndSettle();
+    expect(find.byType(LoginScreen), findsOneWidget);
   });
 }
