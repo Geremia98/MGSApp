@@ -22,6 +22,8 @@ class EventModel {
   final DateTime? end;
   final DateTime? creationDate;
 
+  bool isFavourite;
+
   final String targetCountry;
   final int? minTargetAge;
   final int? maxTargetAge;
@@ -49,6 +51,7 @@ class EventModel {
     this.targetGruppo = '',
     this.targetGender = EventTargetGender.both,
     this.participants = const [],
+    this.isFavourite = false,
   });
 
   Map<String, dynamic> toPayload() {
@@ -67,14 +70,19 @@ class EventModel {
         firestoreEventTargetCountryField: targetCountry,
         firestoreEventTargetGruppoField: targetGruppo,
         firestoreEventTargetIspettoriaField: targetIspettoria,
-        firestoreEventTargetSexField: targetGender != null ? targetGender!.name : EventTargetGender.both,
+        firestoreEventTargetSexField:
+            targetGender != null ? targetGender!.name : EventTargetGender.both,
       }
     };
   }
 
   factory EventModel.fromFirestore(
-      String id, Map<String, dynamic> data, ImageModel? banner, List<String> participants) {
-
+    String id,
+    Map<String, dynamic> data,
+    ImageModel? banner,
+    List<String> participants,
+    bool isFavourite,
+  ) {
     final Map<String, dynamic> target = data[firestoreEventTarget] ?? {};
 
     return EventModel(
@@ -105,13 +113,16 @@ class EventModel {
           : 0,
       image: banner,
       targetGender: target.containsKey(firestoreEventTargetSexField)
-          ? EventTargetGender.values.firstWhere((value) => value.name == target[firestoreEventTargetSexField])
+          ? EventTargetGender.values.firstWhere(
+              (value) => value.name == target[firestoreEventTargetSexField])
           : EventTargetGender.both,
       minTargetAge: target.containsKey(firestoreEventMinTargetAgeField)
-          ? int.tryParse(target[firestoreEventMinTargetAgeField].toString() ?? '')
+          ? int.tryParse(
+              target[firestoreEventMinTargetAgeField].toString() ?? '')
           : null,
       maxTargetAge: target.containsKey(firestoreEventMaxTargetAgeField)
-          ? int.tryParse(target[firestoreEventMaxTargetAgeField].toString() ?? '')
+          ? int.tryParse(
+              target[firestoreEventMaxTargetAgeField].toString() ?? '')
           : null,
       targetCountry: target.containsKey(firestoreEventTargetCountryField)
           ? target[firestoreEventTargetCountryField]
@@ -123,6 +134,7 @@ class EventModel {
           ? target[firestoreUsersIspettoriaField]
           : '',
       participants: participants,
+      isFavourite: isFavourite,
     );
   }
 }

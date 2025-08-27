@@ -23,10 +23,21 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
   String? _selectedCountry;
   String? _selectedIspettoria;
   String? _selectedGroup;
+  bool isCountryBroadcast = false;
+  bool isIspettoriaBroadcast = false;
+  String? _selectedCountry;
+  String? _selectedIspettoria;
+  String? _selectedGroup;
 
   @override
   void initState() {
     controller = widget.controller;
+    isCountryBroadcast = controller.isCountryBroadcast;
+    isIspettoriaBroadcast = controller.isIspettoriaBroadcast;
+    _selectedCountry = controller.getCountry();
+    _selectedIspettoria = controller.getIspettoria();
+    _selectedGroup = controller.getGroup();
+    controller.setCurrentStageValid(_isStateValid());
     isCountryBroadcast = controller.isCountryBroadcast;
     isIspettoriaBroadcast = controller.isIspettoriaBroadcast;
     _selectedCountry = controller.getCountry();
@@ -60,6 +71,7 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
             children: [
               SelectorStyle(
                 constantDropDownCountryList,
+                _selectedCountry,
                 _selectedCountry,
                 onValueChange: onCountryChange,
                 title: 'Paese:',
@@ -96,6 +108,7 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
               SelectorStyle(
                 constantDropDownIspettoriaList,
                 _selectedIspettoria,
+                _selectedIspettoria,
                 onValueChange: onIspettoriaChange,
                 title: 'Ispettoria:',
                 isEnable: !isCountryBroadcast,
@@ -130,8 +143,10 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
               SelectorStyle(
                 constantDropDownGroupList,
                 _selectedGroup,
+                _selectedGroup,
                 onValueChange: onGroupChange,
                 title: 'Gruppo:',
+                isEnable: !isCountryBroadcast && !isIspettoriaBroadcast,
                 isEnable: !isCountryBroadcast && !isIspettoriaBroadcast,
               ),
             ],
@@ -145,11 +160,17 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
     setState(() {
       _selectedCountry = country;
     });
+    setState(() {
+      _selectedCountry = country;
+    });
     if (country == null || country.isEmpty) {
       controller.setCountry(null);
     } else {
       controller.setCountry(country);
+    } else {
+      controller.setCountry(country);
     }
+    controller.setCurrentStageValid(_isStateValid());
     controller.setCurrentStageValid(_isStateValid());
   }
 
@@ -157,11 +178,17 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
     setState(() {
       _selectedIspettoria = ispettoria;
     });
+    setState(() {
+      _selectedIspettoria = ispettoria;
+    });
     if (ispettoria == null || ispettoria.isEmpty) {
       controller.setIspettoria(null);
     } else {
       controller.setIspettoria(ispettoria);
+    } else {
+      controller.setIspettoria(ispettoria);
     }
+    controller.setCurrentStageValid(_isStateValid());
     controller.setCurrentStageValid(_isStateValid());
   }
 
@@ -169,8 +196,29 @@ class _EventTargetGroupStageState extends State<EventTargetGroupStage> {
     setState(() {
       _selectedGroup = group;
     });
+    setState(() {
+      _selectedGroup = group;
+    });
     if (group == null || group.isEmpty) {
       controller.setGroup(null);
+    } else {
+      controller.setGroup(group);
+    }
+    controller.setCurrentStageValid(_isStateValid());
+  }
+
+  bool _isStateValid() {
+    if (isCountryBroadcast) {
+      return _selectedCountry != null;
+    } else if (isIspettoriaBroadcast) {
+      return _selectedCountry != null && _selectedIspettoria != null;
+    } else {
+      return _selectedCountry != null &&
+          _selectedIspettoria != null &&
+          _selectedGroup != null;
+    }
+  }
+}
     } else {
       controller.setGroup(group);
     }
