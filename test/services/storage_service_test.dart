@@ -37,6 +37,8 @@ void main() {
 
       // Stub the mock wrapper to always return a mock reference
       when(mockErrorStorageWrapper.ref(any)).thenReturn(mockReference);
+      when(mockErrorStorageWrapper.ref()).thenReturn(mockReference);
+      when(mockReference.child(any)).thenReturn(mockReference);
     });
 
     group('storeEventBannerImage', () {
@@ -103,8 +105,8 @@ void main() {
     group('getUserProfileImage', () {
       test('returns ImageModel on success', () async {
         const userId = 'test-user';
-        final path = 'users/$userId/profile.jpg';
-        await mockSuccessStorage.ref(path).putData(Uint8List.fromList([4, 5, 6]));
+        final path = 'users/${userId}_profile.png';
+        await mockSuccessStorage.ref().child(path).putData(Uint8List.fromList([1, 2, 3]));
 
         final imageModel = await successStorageService.getUserProfileImage(userId);
 

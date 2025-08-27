@@ -395,3 +395,33 @@ class MockReference extends _i1.Mock implements _i2.Reference {
         ),
       ) as _i2.DownloadTask);
 }
+
+/// A class which mocks [ListResult].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockListResult extends _i1.Mock implements _i2.ListResult {
+  MockListResult() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.FirebaseStorage get storage => (super.noSuchMethod(
+        Invocation.getter(#storage),
+        returnValue: _FakeFirebaseStorage_1(
+          this,
+          Invocation.getter(#storage),
+        ),
+      ) as _i2.FirebaseStorage);
+
+  @override
+  List<_i2.Reference> get items => (super.noSuchMethod(
+        Invocation.getter(#items),
+        returnValue: <_i2.Reference>[],
+      ) as List<_i2.Reference>);
+
+  @override
+  List<_i2.Reference> get prefixes => (super.noSuchMethod(
+        Invocation.getter(#prefixes),
+        returnValue: <_i2.Reference>[],
+      ) as List<_i2.Reference>);
+}
