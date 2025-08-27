@@ -163,11 +163,15 @@ class PrimaryTextField extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
   final int maxLines;
+  final int minLines;
+  final int maxLength;
 
   const PrimaryTextField({
     required this.controller,
     required this.labelText,
     this.maxLines = 1,
+    this.minLines = 1,
+    this.maxLength = 100,
     Key? key,
   }) : super(key: key);
 
@@ -178,6 +182,8 @@ class PrimaryTextField extends StatelessWidget {
       controller: controller,
       labelText: labelText,
       maxLines: maxLines,
+      minLines: minLines,
+      maxLength: maxLength,
     );
   }
 }

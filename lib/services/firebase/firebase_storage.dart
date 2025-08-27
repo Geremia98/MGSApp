@@ -21,6 +21,7 @@ class FirebaseStorageService {
     try {
       ListResult result = await reference.listAll();
 
+      print(result.items.length);
 
       Map<String, String> downloadUrls = {};
 

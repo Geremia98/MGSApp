@@ -1,11 +1,8 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/models/event_firestore.dart';
 import 'package:mgs_app2/models/event_model.dart';
 import 'package:mgs_app2/models/image_model.dart';
 import 'package:mgs_app2/models/user_model.dart';
-import 'package:mgs_app2/services/firebase/auth.dart';
 import 'package:mgs_app2/services/firebase/firebase_storage.dart';
 
 enum AddEventStage {
@@ -44,6 +41,9 @@ class AddEventController {
   String? targetCountry;
   String? targetIspettoria;
   String? targetGroup;
+
+  bool isCountryBroadcast = false;
+  bool isIspettoriaBroadcast = false;
 
   int? minTargetAge;
   int? maxTargetAge;
@@ -178,9 +178,15 @@ class AddEventController {
         }
       case AddEventStage.targetGroup:
         {
-          return targetCountry != null &&
-              targetGroup != null &&
-              targetIspettoria != null;
+          if (isCountryBroadcast) {
+            return targetCountry != null;
+          } else if (isIspettoriaBroadcast) {
+            return targetCountry != null && targetIspettoria != null;
+          } else {
+            return targetCountry != null &&
+                targetIspettoria != null &&
+                targetGroup != null;
+          }
         }
       case AddEventStage.targetPerson:
         {
@@ -263,6 +269,14 @@ class AddEventController {
     targetGroup = group;
   }
 
+  void setCountryBroadcast(bool value) {
+    isCountryBroadcast = value;
+  }
+
+  void setIspettoriaBroadcast(bool value) {
+    isIspettoriaBroadcast = value;
+  }
+
   void setMinAge(int? age) {
     minTargetAge = age;
   }
@@ -299,10 +313,10 @@ class AddEventController {
 
   String? getGroup() => targetGroup;
 
-  int? getMinAge() => minTargetAge;
-
   int? getMaxAge() => maxTargetAge;
+  int? getMinAge() => minTargetAge;
 
   EventTargetGender? getGender() => targetGender;
 }
+
 
