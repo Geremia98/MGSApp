@@ -9,20 +9,20 @@ import 'package:mgs_app2/services/firebase/firestore/firestore_events_fields.dar
 import '../services/firebase/references.dart';
 
 class EventFirestore {
-  final FirebaseReferencesService _referencesService =
-      FirebaseReferencesService.getInstance();
-
-  late CollectionReference eventsCR;
-
-  EventFirestore() {
-    eventsCR = _referencesService.eventsCR;
+  EventFirestore({
+    CollectionReference? events,
+    FirebaseStorageService? storage,
+  }) : _storage = storage ?? FirebaseStorageService() {
+    eventsCR = events ?? FirebaseReferencesService.getInstance().eventsCR;
   }
+
+  late final CollectionReference eventsCR;
+  final FirebaseStorageService _storage;
 
   Future<List<EventModel>> retrieveUserJoinedEvents({
     bool onlyFuture = false,
   }) async {
     List<EventModel> events = [];
-    FirebaseStorageService storageService = FirebaseStorageService();
 
     try {
       // Prendo tutti gli eventi (puoi ottimizzare con query più complesse se necessario)
@@ -50,7 +50,7 @@ class EventFirestore {
             }
           }
 
-          ImageModel? image = await storageService.getEventBannerImage(doc.id);
+          ImageModel? image = await _storage.getEventBannerImage(doc.id);
           List<String> participants = await retrieveParticipantsUid(doc.id);
 
           events.add(EventModel.fromFirestore(
@@ -73,7 +73,6 @@ class EventFirestore {
 
   Future<List<EventModel>> retrieveEvents() async {
     List<EventModel> events = [];
-    FirebaseStorageService storageService = FirebaseStorageService();
 
     try {
       QuerySnapshot snap = await eventsCR
@@ -85,7 +84,7 @@ class EventFirestore {
             .get();
 
       for (QueryDocumentSnapshot doc in snap.docs) {
-        ImageModel? image = await storageService.getEventBannerImage(doc.id);
+        ImageModel? image = await _storage.getEventBannerImage(doc.id);
         List<String> participants = await retrieveParticipantsUid(doc.id);
 
         events.add(EventModel.fromFirestore(
@@ -119,7 +118,6 @@ class EventFirestore {
     bool onlyFuture = false,
   }) async {
     List<EventModel> events = [];
-    FirebaseStorageService storageService = FirebaseStorageService();
 
     try {
       QuerySnapshot snap = await eventsCR
@@ -140,7 +138,7 @@ class EventFirestore {
         }
 
         List<String> participants = await retrieveParticipantsUid(doc.id);
-        ImageModel? image = await storageService.getEventBannerImage(doc.id);
+        ImageModel? image = await _storage.getEventBannerImage(doc.id);
 
         events.add(EventModel.fromFirestore(
             doc.id, doc.data() as Map<String, dynamic>, image, participants));
@@ -163,10 +161,8 @@ class EventFirestore {
     try {
       DocumentReference ref = await eventsCR.add(event.toPayload());
 
-      FirebaseStorageService storageService = FirebaseStorageService();
-
       if (event.image != null) {
-       await storageService.storeEventBannerImage(ref.id, event.image!);
+       await _storage.storeEventBannerImage(ref.id, event.image!);
       }
 
       return ref.id;

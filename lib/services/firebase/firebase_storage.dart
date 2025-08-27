@@ -1,4 +1,3 @@
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,16 +6,16 @@ import 'package:mgs_app2/models/event_model.dart';
 import 'package:mgs_app2/models/image_model.dart';
 import 'package:mime/mime.dart';
 
-
 class FirebaseStorageService {
+  FirebaseStorageService({FirebaseStorage? storage})
+      : _storage = storage ?? FirebaseStorage.instance;
+  final FirebaseStorage _storage;
+
   Future<ImageModel?> getEventBannerImage(
     String eventId,
   ) async {
-
     // Get reference to your Firebase Storage bucket
-    final FirebaseStorage storage = FirebaseStorage.instance;
-    Reference reference = storage.ref().child(
-        'events/$eventId/');
+    Reference reference = _storage.ref().child('events/$eventId/');
     // List all items with the given prefix
     try {
       ListResult result = await reference.listAll();
@@ -26,8 +25,7 @@ class FirebaseStorageService {
       Map<String, String> downloadUrls = {};
 
       for (Reference item in result.items) {
-
-       return ImageModel(downloadUrl: await item.getDownloadURL());
+        return ImageModel(downloadUrl: await item.getDownloadURL());
       }
 
       return null;
@@ -39,13 +37,10 @@ class FirebaseStorageService {
   }
 
   Future<ImageModel?> getUserProfileImage(
-      String userUid,
-      ) async {
-
+    String userUid,
+  ) async {
     // Get reference to your Firebase Storage bucket
-    final FirebaseStorage storage = FirebaseStorage.instance;
-    Reference reference = storage.ref().child(
-        'users/$userUid/');
+    Reference reference = _storage.ref().child('users/$userUid/');
     // List all items with the given prefix
     try {
       ListResult result = await reference.listAll();
@@ -55,7 +50,6 @@ class FirebaseStorageService {
       Map<String, String> downloadUrls = {};
 
       for (Reference item in result.items) {
-
         return ImageModel(downloadUrl: await item.getDownloadURL());
       }
 
@@ -68,7 +62,6 @@ class FirebaseStorageService {
   }
 
   String? getExtensionFromMimeType(String? mimeType) {
-
     if (mimeType == null) {
       return null;
     }
@@ -106,12 +99,10 @@ class FirebaseStorageService {
   }
 
   Future<bool> storeEventBannerImage(
-      String eventId,
-      ImageModel banner,
-      ) async {
-
+    String eventId,
+    ImageModel banner,
+  ) async {
     // Get reference to your Firebase Storage bucket
-    final FirebaseStorage storage = FirebaseStorage.instance;
 
     final String? extension = getExtensionFromMimeType(banner.extension);
 
@@ -121,8 +112,7 @@ class FirebaseStorageService {
       }
       return false;
     }
-    Reference reference = storage.ref().child(
-        'events/$eventId/banner.$extension');
+    Reference reference = _storage.ref().child('events/$eventId/banner.$extension');
     // List all items with the given prefix
 
     if (banner.image == null) {
@@ -138,5 +128,4 @@ class FirebaseStorageService {
 
     return false;
   }
-
 }

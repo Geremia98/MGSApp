@@ -5,7 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'exceptions_translator.dart';
 
 class FirebaseAuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseAuthService({FirebaseAuth? auth}) : _auth = auth ?? FirebaseAuth.instance;
+  final FirebaseAuth _auth;
 
   FirebaseAuth getFirebaseInstance() => _auth;
 
