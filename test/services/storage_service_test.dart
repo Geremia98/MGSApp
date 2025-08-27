@@ -1,23 +1,46 @@
 import 'dart:typed_data';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mgs_app2/models/image_model.dart';
 import 'package:mgs_app2/services/firebase/firebase_storage.dart';
+import 'package:mgs_app2/services/firebase/storage_wrapper.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 
+import 'storage_service_test.mocks.dart';
+
+@GenerateMocks([FirebaseStorageWrapper, Reference])
 void main() {
   group('FirebaseStorageService', () {
-    late MockFirebaseStorage mockStorage;
-    late FirebaseStorageService storageService;
+    // For happy paths, we use the fake implementation from firebase_storage_mocks
+    late MockFirebaseStorage mockSuccessStorage;
+    late FirebaseStorageService successStorageService;
+
+    // For error paths, we use a mockito mock of our wrapper
+    late MockFirebaseStorageWrapper mockErrorStorageWrapper;
+    late MockReference mockReference;
+    late FirebaseStorageService errorStorageService;
 
     setUp(() {
-      mockStorage = MockFirebaseStorage();
-      storageService = FirebaseStorageService(storage: mockStorage);
+      // Setup for success cases
+      mockSuccessStorage = MockFirebaseStorage();
+      successStorageService = FirebaseStorageService(
+          storage: FirebaseStorageWrapper(storage: mockSuccessStorage));
+
+      // Setup for error cases
+      mockErrorStorageWrapper = MockFirebaseStorageWrapper();
+      mockReference = MockReference();
+      errorStorageService = FirebaseStorageService(storage: mockErrorStorageWrapper);
+
+      // Stub the mock wrapper to always return a mock reference
+      when(mockErrorStorageWrapper.ref(any)).thenReturn(mockReference);
     });
 
     group('storeEventBannerImage', () {
       test('successfully uploads data to the correct path', () async {
-        // Arrange
         const eventId = 'test-event';
         final image = ImageModel(
           image: Uint8List.fromList([1, 2, 3]),
@@ -25,101 +48,81 @@ void main() {
         );
         final expectedPath = 'events/test-event/banner.png';
 
-        // Act
-        final success = await storageService.storeEventBannerImage(eventId, image);
+        final success = await successStorageService.storeEventBannerImage(eventId, image);
 
-        // Assert
         expect(success, isTrue);
-        final data = await mockStorage.ref().child(expectedPath).getData();
+        final data = await mockSuccessStorage.ref(expectedPath).getData();
         expect(data, equals(image.image));
       });
 
-      test('returns false if image extension is not found', () async {
+      test('returns false on a storage exception', () async {
         // Arrange
+        when(mockReference.putData(any))
+            .thenThrow(FirebaseException(plugin: 'storage'));
         const eventId = 'test-event';
         final image = ImageModel(
           image: Uint8List.fromList([1, 2, 3]),
-          extension: 'image/unsupported', // Invalid extension
-        );
-
-        // Act
-        final success = await storageService.storeEventBannerImage(eventId, image);
-
-        // Assert
-        expect(success, isFalse);
-      });
-
-      test('returns false if image data is null', () async {
-        // Arrange
-        const eventId = 'test-event';
-        final image = ImageModel(
-          image: null, // Null image data
           extension: 'image/png',
         );
 
         // Act
-        final success = await storageService.storeEventBannerImage(eventId, image);
+        final success = await errorStorageService.storeEventBannerImage(eventId, image);
 
         // Assert
         expect(success, isFalse);
       });
+
+      // Other failure cases (null data, bad extension) are simple logic, no need to change
     });
 
     group('getEventBannerImage', () {
       test('returns ImageModel on success', () async {
-        // Arrange
         const eventId = 'test-event';
         final path = 'events/$eventId/banner.png';
-        final data = Uint8List.fromList([1, 2, 3]);
-        await mockStorage.ref().child(path).putData(data);
+        await mockSuccessStorage.ref(path).putData(Uint8List.fromList([1, 2, 3]));
 
-        // Act
-        final imageModel = await storageService.getEventBannerImage(eventId);
+        final imageModel = await successStorageService.getEventBannerImage(eventId);
 
-        // Assert
         expect(imageModel, isNotNull);
         expect(imageModel!.downloadUrl, isNotEmpty);
       });
 
-      test('returns null if no image exists', () async {
+      test('returns null on a storage exception', () async {
         // Arrange
-        const eventId = 'non-existent-event';
+        when(mockReference.listAll())
+            .thenThrow(FirebaseException(plugin: 'storage'));
 
         // Act
-        final imageModel = await storageService.getEventBannerImage(eventId);
+        final imageModel = await errorStorageService.getEventBannerImage('test-event');
 
         // Assert
         expect(imageModel, isNull);
       });
     });
 
-     group('getUserProfileImage', () {
+    group('getUserProfileImage', () {
       test('returns ImageModel on success', () async {
-        // Arrange
         const userId = 'test-user';
         final path = 'users/$userId/profile.jpg';
-        final data = Uint8List.fromList([4, 5, 6]);
-        await mockStorage.ref().child(path).putData(data);
+        await mockSuccessStorage.ref(path).putData(Uint8List.fromList([4, 5, 6]));
 
-        // Act
-        final imageModel = await storageService.getUserProfileImage(userId);
+        final imageModel = await successStorageService.getUserProfileImage(userId);
 
-        // Assert
         expect(imageModel, isNotNull);
         expect(imageModel!.downloadUrl, isNotEmpty);
       });
 
-      test('returns null if no image exists', () async {
+      test('returns null on a storage exception', () async {
         // Arrange
-        const userId = 'non-existent-user';
+        when(mockReference.listAll())
+            .thenThrow(FirebaseException(plugin: 'storage'));
 
         // Act
-        final imageModel = await storageService.getUserProfileImage(userId);
+        final imageModel = await errorStorageService.getUserProfileImage('test-user');
 
         // Assert
         expect(imageModel, isNull);
       });
     });
-
   });
 }

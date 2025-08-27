@@ -1,28 +1,23 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:mgs_app2/models/event_model.dart';
 import 'package:mgs_app2/models/image_model.dart';
-import 'package:mime/mime.dart';
+import 'package:mgs_app2/services/firebase/storage_wrapper.dart';
 
 class FirebaseStorageService {
-  FirebaseStorageService({FirebaseStorage? storage})
-      : _storage = storage ?? FirebaseStorage.instance;
-  final FirebaseStorage _storage;
+  FirebaseStorageService({FirebaseStorageWrapper? storage})
+      : _storage = storage ?? FirebaseStorageWrapper();
+  final FirebaseStorageWrapper _storage;
 
   Future<ImageModel?> getEventBannerImage(
     String eventId,
   ) async {
     // Get reference to your Firebase Storage bucket
-    Reference reference = _storage.ref().child('events/$eventId/');
+    Reference reference = _storage.ref('events/$eventId/');
     // List all items with the given prefix
     try {
       ListResult result = await reference.listAll();
 
       print(result.items.length);
-
-      Map<String, String> downloadUrls = {};
 
       for (Reference item in result.items) {
         return ImageModel(downloadUrl: await item.getDownloadURL());
@@ -40,14 +35,12 @@ class FirebaseStorageService {
     String userUid,
   ) async {
     // Get reference to your Firebase Storage bucket
-    Reference reference = _storage.ref().child('users/$userUid/');
+    Reference reference = _storage.ref('users/$userUid/');
     // List all items with the given prefix
     try {
       ListResult result = await reference.listAll();
 
       print(result.items.length);
-
-      Map<String, String> downloadUrls = {};
 
       for (Reference item in result.items) {
         return ImageModel(downloadUrl: await item.getDownloadURL());
@@ -112,7 +105,7 @@ class FirebaseStorageService {
       }
       return false;
     }
-    Reference reference = _storage.ref().child('events/$eventId/banner.$extension');
+    Reference reference = _storage.ref('events/$eventId/banner.$extension');
     // List all items with the given prefix
 
     if (banner.image == null) {
