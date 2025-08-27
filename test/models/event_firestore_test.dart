@@ -10,12 +10,15 @@ import 'package:mgs_app2/models/user_model.dart';
 import 'package:mgs_app2/services/firebase/firebase_storage.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/firestore_seed.dart';
 import 'event_firestore_test.mocks.dart';
 
 @GenerateMocks([FirebaseStorageService])
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences.setMockInitialValues({});
   group('EventFirestore', () {
     late FakeFirebaseFirestore fakeDb;
     late MockFirebaseStorageService mockStorageService;
