@@ -144,7 +144,12 @@ class EventFirestore {
             doc.id, doc.data() as Map<String, dynamic>, image, participants));
       }
 
-      events.addAll(await retrieveUserJoinedEvents(onlyFuture: onlyFuture));
+      final joinedEvents = await retrieveUserJoinedEvents(onlyFuture: onlyFuture);
+      events.addAll(joinedEvents);
+
+      // Remove duplicates
+      final uniqueIds = <String>{};
+      events.retainWhere((event) => uniqueIds.add(event.id));
 
       events.sort((a, b) => b.start!.compareTo(a.start!));
 
