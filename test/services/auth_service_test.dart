@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
@@ -10,7 +12,7 @@ import 'auth_service_test.mocks.dart';
 // A mock BuildContext since signOut requires it, but doesn't use it.
 class MockBuildContext extends Mock implements BuildContext {}
 
-@GenerateMocks([FirebaseAuth, User, UserCredential])
+@GenerateMocks([FirebaseAuth, User, UserCredential, AuthCredential])
 void main() {
   group('FirebaseAuthService', () {
     late MockFirebaseAuth mockFirebaseAuth;
@@ -25,18 +27,38 @@ void main() {
       authService = FirebaseAuthService(auth: mockFirebaseAuth);
     });
 
-    test('signOut successfully calls signOut on FirebaseAuth instance', () async {
-      // Arrange
-      when(mockFirebaseAuth.signOut()).thenAnswer((_) async => {});
-      when(mockFirebaseAuth.currentUser).thenReturn(mockUser);
-      when(mockUser.reload()).thenAnswer((_) async => {});
+    test('getFirebaseInstance returns the auth instance', () {
+      expect(authService.getFirebaseInstance(), mockFirebaseAuth);
+    });
 
-      // Act
-      await authService.signOut(MockBuildContext());
+    group('signOut', () {
+      test('successfully calls signOut and reloads user', () async {
+        // Arrange
+        when(mockFirebaseAuth.signOut()).thenAnswer((_) async => {});
+        when(mockFirebaseAuth.currentUser).thenReturn(mockUser);
+        when(mockUser.reload()).thenAnswer((_) async => {});
 
-      // Assert
-      verify(mockFirebaseAuth.signOut()).called(1);
-      verify(mockUser.reload()).called(1);
+        // Act
+        await authService.signOut(MockBuildContext());
+
+        // Assert
+        verify(mockFirebaseAuth.signOut()).called(1);
+        verify(mockUser.reload()).called(1);
+      });
+
+      test('handles error when reload fails', () async {
+        // Arrange
+        when(mockFirebaseAuth.signOut()).thenAnswer((_) async => {});
+        when(mockFirebaseAuth.currentUser).thenReturn(mockUser);
+        when(mockUser.reload()).thenThrow(Exception('Reload failed'));
+
+        // Act
+        await authService.signOut(MockBuildContext());
+
+        // Assert
+        verify(mockFirebaseAuth.signOut()).called(1);
+        verify(mockUser.reload()).called(1);
+      });
     });
 
     group('signInWithEmailAndPassword', () {
@@ -138,6 +160,11 @@ void main() {
         when(mockUser.emailVerified).thenReturn(false);
         expect(authService.isUserEmailVerified(), isFalse);
       });
+
+      test('isUserEmailVerified returns false when user is not logged in', () {
+        when(mockFirebaseAuth.currentUser).thenReturn(null);
+        expect(authService.isUserEmailVerified(), isFalse);
+      });
     });
 
     group('sendPasswordResetEmail', () {
@@ -157,7 +184,18 @@ void main() {
         expect(result, isTrue);
       });
 
-       test('returns null if email is empty', () async {
+      test('returns exception on failure', () async {
+        const email = 'test@test.com';
+        final exception = FirebaseAuthException(code: 'invalid-email');
+        when(mockFirebaseAuth.sendPasswordResetEmail(email: email)).thenThrow(exception);
+        when(mockFirebaseAuth.currentUser).thenReturn(null);
+
+        final result = await authService.sendPasswordResetEmail(email);
+
+        expect(result, isA<FirebaseAuthException>());
+      });
+
+      test('returns null if email is empty', () async {
         final result = await authService.sendPasswordResetEmail('');
         expect(result, isNull);
         verifyNever(mockFirebaseAuth.sendPasswordResetEmail(email: anyNamed('email')));
@@ -171,5 +209,155 @@ void main() {
       });
     });
 
+    group('resetPassword', () {
+      test('returns success message on success', () async {
+        when(mockFirebaseAuth.currentUser).thenReturn(mockUser);
+        when(mockUser.updatePassword('newPass')).thenAnswer((_) async => {});
+
+        final result = await authService.resetPassword('newPass');
+
+        expect(result, 'Password aggiornata');
+        verify(mockUser.updatePassword('newPass')).called(1);
+      });
+
+      test('returns error message on failure', () async {
+        final exception = FirebaseAuthException(code: 'requires-recent-login');
+        when(mockFirebaseAuth.currentUser).thenReturn(mockUser);
+        when(mockUser.updatePassword('newPass')).thenThrow(exception);
+
+        final result = await authService.resetPassword('newPass');
+
+        expect(result, isA<String>());
+        expect(result, isNot('Password aggiornata'));
+      });
+
+      test('does nothing if user is not logged in', () async {
+        when(mockFirebaseAuth.currentUser).thenReturn(null);
+
+        await authService.resetPassword('newPass');
+
+        verifyNever(mockUser.updatePassword(any));
+      });
+    });
+
+    group('resetEmail', () {
+      test('returns success message on success', () async {
+        when(mockFirebaseAuth.currentUser).thenReturn(mockUser);
+        when(mockUser.verifyBeforeUpdateEmail('new@email.com')).thenAnswer((_) async => {});
+        when(mockUser.sendEmailVerification()).thenAnswer((_) async => {});
+
+        final result = await authService.resetEmail('new@email.com');
+
+        expect(result,
+            'Ti abbiamo mandato un link di conferma sulla email new@email.com');
+        verify(mockUser.verifyBeforeUpdateEmail('new@email.com')).called(1);
+      });
+
+      test('returns error message on failure', () async {
+        final exception = FirebaseAuthException(code: 'email-already-in-use');
+        when(mockFirebaseAuth.currentUser).thenReturn(mockUser);
+        when(mockUser.verifyBeforeUpdateEmail('new@email.com')).thenThrow(exception);
+
+        final result = await authService.resetEmail('new@email.com');
+
+        expect(result, isA<String>());
+        expect(result, isNot(
+            'Ti abbiamo mandato un link di conferma sulla email new@email.com'));
+      });
+
+      test('returns null if user is not logged in', () async {
+        when(mockFirebaseAuth.currentUser).thenReturn(null);
+
+        final result = await authService.resetEmail('new@email.com');
+
+        expect(result, isNull);
+        verifyNever(mockUser.verifyBeforeUpdateEmail(any));
+      });
+    });
+
+    group('Other Auth Methods', () {
+
+      test('sendVerificationEmail calls sendEmailVerification on user', () async {
+        when(mockFirebaseAuth.currentUser).thenReturn(mockUser);
+        when(mockUser.sendEmailVerification()).thenAnswer((_) async => {});
+
+        await authService.sendVerificationEmail();
+
+        verify(mockUser.sendEmailVerification()).called(1);
+      });
+
+       test('sendVerificationEmail does nothing if user is null', () async {
+        when(mockFirebaseAuth.currentUser).thenReturn(null);
+
+        await authService.sendVerificationEmail();
+
+        verifyNever(mockUser.sendEmailVerification());
+      });
+
+      test('listenAuthStatus returns authStateChanges stream', () {
+        final controller = StreamController<User?>();
+        when(mockFirebaseAuth.authStateChanges()).thenAnswer((_) => controller.stream);
+
+        final result = authService.listenAuthStatus();
+
+        expect(result, isA<Stream<User?>>());
+      });
+
+       test('listenAuthStatus returns null on error', () {
+        when(mockFirebaseAuth.authStateChanges()).thenThrow(Exception('stream error'));
+
+        final result = authService.listenAuthStatus();
+
+        expect(result, isNull);
+      });
+
+      test('signInAnon returns null on error', () async {
+        when(mockFirebaseAuth.signInAnonymously()).thenThrow(Exception('anon error'));
+
+        final result = await authService.signInAnon();
+
+        expect(result, isNull);
+      });
+
+      test('signInWithCustomToken completes successfully', () async {
+        when(mockFirebaseAuth.signInWithCustomToken('token'))
+            .thenAnswer((_) async => mockUserCredential);
+
+        await authService.signInWithCustomToken('token');
+
+        verify(mockFirebaseAuth.signInWithCustomToken('token')).called(1);
+      });
+
+       test('signInWithCustomToken handles error', () async {
+        when(mockFirebaseAuth.signInWithCustomToken('token'))
+            .thenThrow(Exception('token error'));
+
+        await authService.signInWithCustomToken('token');
+
+        verify(mockFirebaseAuth.signInWithCustomToken('token')).called(1);
+      });
+
+      test('signInWithAuthCredential returns user on success', () async {
+        final mockCredential = MockAuthCredential();
+        when(mockFirebaseAuth.signInWithCredential(mockCredential))
+            .thenAnswer((_) async => mockUserCredential);
+        when(mockUserCredential.user).thenReturn(mockUser);
+
+        final result = await authService.signInWithAuthCredential(mockCredential);
+
+        expect(result, mockUser);
+      });
+
+       test('signInWithAuthCredential returns null on error', () async {
+        final mockCredential = MockAuthCredential();
+        when(mockFirebaseAuth.signInWithCredential(mockCredential))
+            .thenThrow(Exception('cred error'));
+
+        final result = await authService.signInWithAuthCredential(mockCredential);
+
+        expect(result, isNull);
+      });
+
+    });
   });
 }
