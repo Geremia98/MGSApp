@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/login_screens/login_screen.dart';
 import 'package:mgs_app2/screens/main_screens/home_screen.dart';
 import 'package:mgs_app2/services/translator/provider.dart';
-import 'package:mgs_app2/services/translator/translator.dart';
 import 'package:mgs_app2/wrapper.dart';
+import 'package:mgs_app2/services/translator/translator.dart' as impl;
 
 enum ThemeRoutePage {
   auth,
@@ -14,24 +14,42 @@ enum ThemeRoutePage {
 
 class ThemeService extends StatefulWidget {
   final ThemeRoutePage routePage;
+  final TranslatorLike? translator;
 
   const ThemeService({
     super.key,
     this.routePage = ThemeRoutePage.auth,
+    this.translator,
   });
 
   @override
   State<StatefulWidget> createState() => _ThemeService();
 }
 
+abstract class TranslatorLike {
+  Future<void> load(Locale locale);
+  Future<void> changeLanguage(BuildContext context, Locale newLocale);
+}
+
+class _DefaultTranslatorAdapter implements TranslatorLike {
+  final impl.Translator _inner = impl.Translator();
+
+  @override
+  Future<void> load(Locale locale) => _inner.load(locale);
+
+  @override
+  Future<void> changeLanguage(BuildContext context, Locale newLocale) =>
+      _inner.changeLanguage(context, newLocale);
+}
+
 class _ThemeService extends State<ThemeService> {
-  late Translator _translator; // Maintain an instance of Translator
+  late TranslatorLike _translator; 
   Future<void>? _loadLanguages;
 
   @override
   void initState() {
     super.initState();
-    _translator = Translator();
+    _translator = widget.translator ?? _DefaultTranslatorAdapter();
   }
 
   @override
