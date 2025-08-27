@@ -92,7 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         }
 
                         if (snap.data == null || snap.data!.isEmpty) {
-                          //TODO mettere una scritta 'nessun evento'
                           return SizedBox(
                             child: Text('Nessun evento'),
                           );
@@ -139,7 +138,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     future: eventFirestore.retrievePersonalEvents(),
                     builder: (BuildContext context,
                         AsyncSnapshot<List<EventModel>> snap) {
-                      print("retrigger");
                       if (snap.connectionState != ConnectionState.done && personalEvents.isEmpty) {
                         return Center(
                           child: CupertinoActivityIndicator(
@@ -147,9 +145,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         );
                       }
-
-                      print("retrigger 2");
-
 
                       if (snap.connectionState != ConnectionState.done) {
                         return SizedBox(
@@ -184,7 +179,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       }
 
-                      print("retrigger 3");
 
                       if (snap.data == null || snap.data!.isEmpty) {
                         personalEvents = [];
@@ -192,9 +186,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Text('Nessun evento'),
                         );
                       }
-
-                      print("retrigger 4");
-
 
                       personalEvents = snap.data!;
 

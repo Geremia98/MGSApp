@@ -1,6 +1,9 @@
-
 import 'package:mgs_app2/screens/main_screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:mgs_app2/services/functions/firebase_function_caller.dart';
+import 'package:mgs_app2/services/functions/function_response.dart';
+import 'package:mgs_app2/services/functions/response_type.dart';
+import 'package:mgs_app2/widgets/snackbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:mgs_app2/widgets/button.dart';
 import 'package:mgs_app2/widgets/text_field.dart';
@@ -19,6 +22,7 @@ class ReportBugScreen extends StatefulWidget {
 class _ReportBugScreenState extends State<ReportBugScreen> {
   final _descriptionController = TextEditingController();
   bool _isSubmitting = false;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
   void dispose() {
@@ -39,56 +43,43 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
       _isSubmitting = true;
     });
 
-    final String recipientEmail = 'smerex99@gmail.com'; // <-- IMPORTANT: email secondaria di Mario per debuggare
-    final String subject = 'Bug Report - ${widget.category}';
-    final String body = _descriptionController.text.trim();
+    final FirebaseFunctionCaller caller = FirebaseFunctionCaller();
+    
+    final FunctionResponse response = await caller.sendReport(widget.category, _descriptionController.text);
 
-    final Uri emailLaunchUri = Uri(
-      scheme: 'mailto',
-      path: recipientEmail,
-      query: 'subject=${Uri.encodeComponent(subject)}&body=${Uri.encodeComponent(body)}',
-    );
+    setState(() {
+      _isSubmitting = false;
+    });
 
-    try {
-      if (await canLaunchUrl(emailLaunchUri)) {
-        await launchUrl(emailLaunchUri);
-      } else {
-        throw 'Could not launch email client';
-      }
+    SnackBarStyle snackBarStyle = SnackBarStyle(context, scaffoldKey);
 
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Aprendo il client email...')),
-      );
-      if (!mounted) return;
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-        (Route<dynamic> route) => false,
-      );
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Impossibile aprire il client email: $e')),
-      );
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isSubmitting = false;
-        });
-      }
-    }
+   if (response.getType() == ResponseType.success) {
+     snackBarStyle.showSnackBar('Segnalazione inviata.');
+     if (!mounted) return;
+     Navigator.pushAndRemoveUntil(
+       context,
+       MaterialPageRoute(builder: (context) => const HomeScreen()),
+           (Route<dynamic> route) => false,
+     );
+     return;
+   }
+
+    snackBarStyle.showSnackBar('Errore durante l\'invio, riprova più tardi.');
+
+
   }
 
   @override
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
     return Scaffold(
+      key: scaffoldKey,
       body: SafeArea(
         bottom: false,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: appConfig.getWidth() * 5),
-          child: Column(
+          child: SingleChildScrollView(
+            child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               GoBackButton(
@@ -121,7 +112,8 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
               PrimaryTextField(
                 controller: _descriptionController,
                 labelText: 'Descrizione Bug',
-                maxLines: 5,
+                maxLines: 100,
+                maxLength: 1500,
               ),
               const SizedBox(height: 24),
               Center(
@@ -132,6 +124,7 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
               ),
             ],
           ),
+),
         ),
       ),
     );

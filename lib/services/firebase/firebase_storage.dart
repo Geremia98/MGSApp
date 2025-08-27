@@ -30,29 +30,25 @@ class FirebaseStorageService {
 
     return null;
   }
-
-  Future<ImageModel?> getUserProfileImage(
-    String userUid,
-  ) async {
-    // Get reference to your Firebase Storage bucket
-    Reference reference = _storage.ref('users/$userUid/');
-    // List all items with the given prefix
+  Future<ImageModel?> getUserProfileImage(String userUid) async {
     try {
-      ListResult result = await reference.listAll();
+      final Reference reference = _storage.ref().child('users/');
+      final ListResult result = await reference.listAll();
 
-      print(result.items.length);
-
-      for (Reference item in result.items) {
-        return ImageModel(downloadUrl: await item.getDownloadURL());
+      for (final item in result.items) {
+        final fullPath = item.name;
+        if (fullPath.startsWith(userUid)) {
+          final url = await item.getDownloadURL();
+          return ImageModel(downloadUrl: url);
+        }
       }
-
       return null;
     } catch (e) {
-      print('Error fetching banner images: $e');
+      print('Error fetching profile image: $e');
+      return null;
     }
-
-    return null;
   }
+
 
   String? getExtensionFromMimeType(String? mimeType) {
     if (mimeType == null) {

@@ -5,6 +5,7 @@ import 'package:mgs_app2/models/image_model.dart';
 import 'package:mgs_app2/models/user_model.dart';
 import 'package:mgs_app2/services/firebase/firebase_storage.dart';
 import 'package:mgs_app2/services/firebase/firestore/firestore_events_fields.dart';
+import 'package:mgs_app2/services/local/favorite_service.dart';
 
 import '../services/firebase/references.dart';
 
@@ -53,11 +54,15 @@ class EventFirestore {
           ImageModel? image = await _storage.getEventBannerImage(doc.id);
           List<String> participants = await retrieveParticipantsUid(doc.id);
 
+          final FavoritesService favoritesService = FavoritesService();
+          bool isFavourite = await favoritesService.isFavorite(doc.id);
+
           events.add(EventModel.fromFirestore(
             doc.id,
             doc.data() as Map<String, dynamic>,
             image,
             participants,
+            isFavourite,
           ));
         }
       }
@@ -76,19 +81,22 @@ class EventFirestore {
 
     try {
       QuerySnapshot snap = await eventsCR
-        /*.where('target.targetGender', whereIn: ['both', UserModel.gender.name])
+          /*.where('target.targetGender', whereIn: ['both', UserModel.gender.name])
             .where('target.targetCountry', isEqualTo: UserModel.country)
             .where('target.targetGruppo', isEqualTo: UserModel.group)
             .where('target.targetIspettoria', isEqualTo: UserModel.ispettoria)*/
-            .orderBy('start', descending: true)
-            .get();
+          .orderBy('start', descending: true)
+          .get();
 
       for (QueryDocumentSnapshot doc in snap.docs) {
         ImageModel? image = await _storage.getEventBannerImage(doc.id);
         List<String> participants = await retrieveParticipantsUid(doc.id);
 
+        final FavoritesService favoritesService = FavoritesService();
+        bool isFavourite = await favoritesService.isFavorite(doc.id);
+
         events.add(EventModel.fromFirestore(
-            doc.id, doc.data() as Map<String, dynamic>, image, participants));
+            doc.id, doc.data() as Map<String, dynamic>, image, participants, isFavourite));
       }
 
       return events;
@@ -138,10 +146,15 @@ class EventFirestore {
         }
 
         List<String> participants = await retrieveParticipantsUid(doc.id);
+
+        final FavoritesService favoritesService = FavoritesService();
+
+        bool isFavourite = await favoritesService.isFavorite(doc.id);
+
         ImageModel? image = await _storage.getEventBannerImage(doc.id);
 
         events.add(EventModel.fromFirestore(
-            doc.id, doc.data() as Map<String, dynamic>, image, participants));
+            doc.id, doc.data() as Map<String, dynamic>, image, participants, isFavourite));
       }
 
       final joinedEvents = await retrieveUserJoinedEvents(onlyFuture: onlyFuture);
@@ -159,6 +172,32 @@ class EventFirestore {
         print('error while fetching events: $error');
       }
       return [];
+    }
+  }
+
+  Future<EventModel?> getEventById(String id) async {
+    FirebaseStorageService storageService = FirebaseStorageService();
+
+    try {
+      DocumentSnapshot doc = await eventsCR.doc(id).get();
+
+      if (!doc.exists) {
+        return null;
+      }
+
+      List<String> participants = await retrieveParticipantsUid(doc.id);
+      ImageModel? image = await storageService.getEventBannerImage(doc.id);
+
+      final FavoritesService favoritesService = FavoritesService();
+      bool isFavourite = await favoritesService.isFavorite(doc.id);
+
+      return EventModel.fromFirestore(
+          doc.id, doc.data() as Map<String, dynamic>, image, participants, isFavourite);
+    } catch (error) {
+      if (kDebugMode) {
+        print('error while fetching events: $error');
+      }
+      return null;
     }
   }
 

@@ -24,7 +24,6 @@ class MyConsigliatiCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(event.image);
     final AppConfig appConfig = AppConfig(context);
     return GestureDetector(
       onTap: () async {

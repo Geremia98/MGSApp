@@ -37,10 +37,8 @@ class _EventiDelMeseReminder extends State<EventiDelMeseReminder> {
             !snap.hasData ||
             snap.data == null ||
             snap.data!.isEmpty) {
-          print("no data");
           return SizedBox();
         }
-        print(snap.data!.length);
 
 
         return TweenAnimationBuilder<double>(
