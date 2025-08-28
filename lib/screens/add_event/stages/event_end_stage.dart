@@ -48,12 +48,12 @@ class _TitleStageState extends State<EventEndStage> {
   late AddEventController controller;
   String? _errorMessage;
 
-  @override
+    @override
   void initState() {
     super.initState();
 
     controller = widget.controller;
-    _validateEndDateTime();
+    controller.setCurrentStageValid(false);
   }
 
   @override
@@ -96,14 +96,12 @@ class _TitleStageState extends State<EventEndStage> {
               ),
               SizedBox(width: 18),
               GestureDetector(
-                onTap: () async {
+                                onTap: () async {
                   final DateTime? startDate = await showDatePicker(
                       context: context,
                       firstDate: controller.getStartDate()!,
                       lastDate: controller.getStartDate()!.add(Duration(days: 365)));
-                    setState(() {
-                      onDateChange(startDate);
-                    });
+                  onDateChange(startDate);
                 },
                 child: Container(
                   padding: EdgeInsets.all(5),
@@ -156,12 +154,10 @@ class _TitleStageState extends State<EventEndStage> {
               ),
               SizedBox(width: 18),
               GestureDetector(
-                onTap: () async {
+                                onTap: () async {
                   final TimeOfDay? startTime = await showTimePicker(
                       context: context, initialTime: controller.getStartTime()!);
-                    setState(() {
-                      onTimeChange(startTime);
-                    });
+                  onTimeChange(startTime);
                 },
                 child: Container(
                   padding: EdgeInsets.all(5),
@@ -204,13 +200,17 @@ class _TitleStageState extends State<EventEndStage> {
   }
 
   void onDateChange(DateTime? date) {
-    controller.setEndDate(date);
-    _validateEndDateTime();
+    setState(() {
+      controller.setEndDate(date);
+      _validateEndDateTime();
+    });
   }
 
   void onTimeChange(TimeOfDay? time) {
-    controller.setEndTIme(time);
-    _validateEndDateTime();
+    setState(() {
+      controller.setEndTIme(time);
+      _validateEndDateTime();
+    });
   }
 
   void _validateEndDateTime() {
@@ -219,20 +219,20 @@ class _TitleStageState extends State<EventEndStage> {
     final DateTime? endDate = controller.getEndDate();
     final TimeOfDay? endTime = controller.getEndTime();
 
-    if (startDate == null || startTime == null || endDate == null || endTime == null) {
-      _errorMessage = 'Seleziona sia la data che l\'ora di inizio e fine evento.';
+    if (endDate == null || endTime == null) {
+      _errorMessage = null;
       controller.setCurrentStageValid(false);
       return;
     }
 
-    final DateTime startDateTime = DateTime(startDate.year, startDate.month, startDate.day, startTime.hour, startTime.minute);
+    final DateTime startDateTime = DateTime(startDate!.year, startDate.month, startDate.day, startTime!.hour, startTime.minute);
     final DateTime endDateTime = DateTime(endDate.year, endDate.month, endDate.day, endTime.hour, endTime.minute);
 
     if (endDateTime.isAfter(startDateTime)) {
       _errorMessage = null;
       controller.setCurrentStageValid(true);
     } else {
-      _errorMessage = 'La data e l\'ora di fine evento devono essere successive alla data e ora di inizio.';
+      _errorMessage = 'La data e l\'ora di fine evento devono essere successive alla data e ora di inizio evento.';
       controller.setCurrentStageValid(false);
     }
   }
