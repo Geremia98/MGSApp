@@ -28,6 +28,7 @@ Widget buildTextField(
   bool enabled = true,
   int maxLength = 100,
   List<TextInputFormatter>? inputFormatters,
+  FocusNode? focusNode,
 }) {
   labelColor ??= Colors.grey;
   iconColor ??= Colors.grey;
@@ -60,6 +61,7 @@ Widget buildTextField(
       SizedBox(
         //height: maxLines == 1 ? showError ? appConfig.getHeight() * 8 : appConfig.getHeight() * 5 : appConfig.getHeight() * 15,
         child: TextFormField(
+          focusNode: focusNode,
           keyboardType: textInputType,
           validator: validator,
           enabled: enabled,
