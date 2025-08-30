@@ -36,7 +36,9 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
   }
 
   void onFavouriteChange(String eventId, bool isFavourite) {
-    events.where((e) => e.id == eventId).first.isFavourite = isFavourite;
+    setState(() {
+      events.where((e) => e.id == eventId).first.isFavourite = isFavourite;
+    });
   }
 
   @override
@@ -477,7 +479,7 @@ class _MyEventCardState extends State<MyEventCard>
   }
 }
 
-class LikeButton extends StatefulWidget {
+class LikeButton extends StatelessWidget {
   const LikeButton({
     super.key,
     required this.width,
@@ -492,38 +494,22 @@ class LikeButton extends StatefulWidget {
   final void Function(String, bool) onFavouriteChange;
 
   @override
-  State<LikeButton> createState() => _LikeButtonState();
-}
-
-class _LikeButtonState extends State<LikeButton> {
-  late bool isLike;
-
-  @override
-  void initState() {
-    super.initState();
-    isLike = widget.isLike;
-  }
-
-  @override
   Widget build(BuildContext context) {
     final FavoritesService favoritesService = FavoritesService();
 
     return IconButton(
         onPressed: () {
-          setState(() {
-            isLike = !isLike;
-
-            widget.onFavouriteChange(widget.eventId, isLike);
-            if (isLike) {
-              favoritesService.addFavorite(widget.eventId);
-              return;
-            }
-            favoritesService.removeFavorite(widget.eventId);
-          });
+          final newIsLike = !isLike;
+          onFavouriteChange(eventId, newIsLike);
+          if (newIsLike) {
+            favoritesService.addFavorite(eventId);
+          } else {
+            favoritesService.removeFavorite(eventId);
+          }
         },
         icon: Icon(
           isLike ? Icons.favorite_rounded : Icons.favorite_outline,
-          size: widget.width * 0.06,
+          size: width * 0.06,
         ));
   }
 }
