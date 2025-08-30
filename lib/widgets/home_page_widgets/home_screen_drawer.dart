@@ -11,6 +11,8 @@ import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
 import 'package:mgs_app2/wrapper.dart';
 
+import '../../screens/manage_events/manage_events_screen.dart';
+
 class HomePageDrawer extends StatelessWidget {
   const HomePageDrawer({
     super.key,
@@ -75,6 +77,25 @@ class HomePageDrawer extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => const AddEventScreen(),
+                      ),
+                    );
+
+                    if (value is EventModel) {
+                      onEventCreation(value);
+                    }
+                  }),
+            if (UserModel.bossCode.isNotEmpty)
+              ItemForMenu(
+                  appConfig: appConfig,
+                  height: height,
+                  width: width,
+                  icon: Icons.dashboard,
+                  title: 'Gestisci eventi',
+                  onTap: () async {
+                    Object? value = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ManageEventsScreen(),
                       ),
                     );
 
