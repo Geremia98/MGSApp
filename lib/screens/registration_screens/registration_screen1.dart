@@ -201,6 +201,7 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                           child: TextFormField(
                             decoration: InputDecoration(
                               hintText: 'XX',
+                              counterText: "",
                             ),
                             keyboardType: TextInputType.number,
                             inputFormatters: [FilteringTextInputFormatter.digitsOnly],

@@ -185,8 +185,7 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                       },
                       title: 'Boss? ',
                     ),
-                    controller.bossCode.isNotEmpty ||
-                            _selectedBoss.first == true
+                                        _selectedBoss.first == true
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
