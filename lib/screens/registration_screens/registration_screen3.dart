@@ -30,7 +30,7 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
   late bool _isDisabled;
   late Set<bool> _selectedBoss;
   String? _bossCodeError;
-  final String _correctBossCode = 'Geminigreat';
+  final String _correctBossCode = 'Mariogreat';
 
   TextEditingController textFieldValue = TextEditingController();
 
