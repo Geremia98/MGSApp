@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
 import 'package:mgs_app2/widgets/buttons.dart';
+import 'package:mgs_app2/widgets/participant_bubbles.dart';
 
 import '../../models/event_model.dart';
 import 'event_screen.dart';
@@ -179,6 +180,7 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
                   titolo: event.title,
                   luogo: event.location,
                   isLike: event.isFavourite,
+                  participants: event.participants,
                   dataInizio: DateFormat('dd-MM-yyyy hh:mm').format(event.start!),
                   onFavouriteChange: onFavouriteChange,
                   index: index,
@@ -206,6 +208,7 @@ class MyEventCard extends StatefulWidget {
     required this.triggerAnimation,
     required this.isLike,
     required this.onFavouriteChange,
+    required this.participants,
   });
 
   final bool triggerAnimation;
@@ -219,6 +222,7 @@ class MyEventCard extends StatefulWidget {
   final int index;
   final bool isLike;
   final void Function(String, bool) onFavouriteChange;
+  final List<String> participants;
 
   @override
   State<MyEventCard> createState() => _MyEventCardState();
@@ -382,55 +386,7 @@ class _MyEventCardState extends State<MyEventCard>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            PersonForStack(
-                              height: widget.height,
-                              width: widget.width,
-                              image: 'assets/images/female.jpg',
-                              borderColor: Colors.white,
-                              boxcolor: Colors.amber,
-                            ),
-                            Positioned(
-                              left: widget.width * 0.06,
-                              child: PersonForStack(
-                                height: widget.height,
-                                width: widget.width,
-                                image: 'assets/images/male.jpg',
-                                borderColor: Colors.white,
-                                boxcolor: Colors.amber,
-                              ),
-                            ),
-                            Positioned(
-                              left: widget.width * 0.06 * 2,
-                              child: Container(
-                                width: widget.width * 0.08,
-                                height: widget.width * 0.08,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xff7c94b6),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(50.0),
-                                  ),
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: widget.width * 0.005,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    '15+',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: widget.width * 0.03,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        ParticipantBubbles(participants: widget.participants),
                         Container(
                           margin: EdgeInsets.only(left: widget.width * 0.001),
                           child: LikeButton(
@@ -485,43 +441,6 @@ class LikeButton extends StatelessWidget {
           isLike ? Icons.favorite_rounded : Icons.favorite_outline,
           size: width * 0.06,
         ));
-  }
-}
-
-class PersonForStack extends StatelessWidget {
-  const PersonForStack({
-    required this.borderColor,
-    required this.boxcolor,
-    required this.height,
-    required this.image,
-    required this.width,
-    super.key,
-  });
-
-  final double height;
-  final double width;
-  final String image;
-  final Color boxcolor;
-  final Color borderColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width * 0.08,
-      height: width * 0.08,
-      decoration: BoxDecoration(
-        color: boxcolor,
-        image: DecorationImage(
-          image: AssetImage(image),
-          fit: BoxFit.cover,
-        ),
-        borderRadius: const BorderRadius.all(Radius.circular(50.0)),
-        border: Border.all(
-          color: borderColor,
-          width: width * 0.005,
-        ),
-      ),
-    );
   }
 }
 
