@@ -62,7 +62,10 @@ class _EventScreenState extends State<EventScreen> {
             height: height * 0.5 + _extraHeight,
             child: widget.event.image == null ||
                     widget.event.image!.downloadUrl == null
-                ? SizedBox()
+                ? Image.asset(
+                    'assets/images/ballo.png',
+                    fit: BoxFit.cover,
+                  )
                 : CachedNetworkImage(
                     imageUrl: widget.event.image!.downloadUrl!,
                     fit: BoxFit.cover,
