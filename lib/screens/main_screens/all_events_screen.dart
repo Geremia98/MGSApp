@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mgs_app2/models/event_firestore.dart';
@@ -318,22 +319,25 @@ class _MyEventCardState extends State<MyEventCard>
                         'assets/images/ballo.png',
                         fit: BoxFit.cover,
                       )
-                    : Image.network(
-                        widget.image!.downloadUrl!,
+                    : CachedNetworkImage(
+                        imageUrl: widget.image!.downloadUrl!,
                         fit: BoxFit.cover,
-                        loadingBuilder: (context, widget, loadingProgress) {
-                          if (loadingProgress == null) return widget;
-                          return ColorFiltered(
-                            colorFilter: const ColorFilter.mode(
-                              Colors.grey,
-                              BlendMode.saturation,
-                            ),
-                            child: Image.asset(
-                              'assets/images/ballo.png',
-                              fit: BoxFit.cover,
-                            ),
-                          );
-                        },
+                        memCacheWidth: 600,
+                        memCacheHeight: 400,
+                        placeholder: (context, url) => ColorFiltered(
+                          colorFilter: const ColorFilter.mode(
+                            Colors.grey,
+                            BlendMode.saturation,
+                          ),
+                          child: Image.asset(
+                            'assets/images/ballo.png',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Image.asset(
+                          'assets/images/ballo.png',
+                          fit: BoxFit.cover,
+                        ),
                       ),
               ),
             ),
