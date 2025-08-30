@@ -27,6 +27,7 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
   List<EventModel> events = [];
   String filter = '';
   bool alreadyLoaded = false;
+  Set<int> animatedIndexes = {};
 
   @override
   void initState() {
@@ -154,8 +155,6 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
-    Set<int> animatedIndexes = {};
-
     return Column(
       children: [
         MyPersonalRow(
@@ -176,13 +175,9 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
             ? SizedBox()
             : Expanded(
                 child: ListView.builder(
-                  shrinkWrap: true,
+                  cacheExtent: 2000.0,
                   itemCount: events!.length,
-                  physics: const AlwaysScrollableScrollPhysics(),
                   itemBuilder: (BuildContext context, int index) {
-                    final firstTime = !animatedIndexes.contains(index);
-                    if (firstTime) animatedIndexes.add(index);
-
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -195,18 +190,14 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
                         );
                       },
                       child: MyEventCard(
-                        triggerAnimation: firstTime,
-                        height: height,
-                        width: width,
+                        key: ValueKey(events.elementAt(index).id),
                         eventId: events!.elementAt(index).id,
                         image: events!.elementAt(index).image,
                         titolo: events!.elementAt(index).title,
                         luogo: events!.elementAt(index).location,
                         isLike: events!.elementAt(index).isFavourite,
-                        dataInizio: DateFormat('dd-MM-yyyy hh:mm')
-                            .format(events!.elementAt(index).start!),
                         onFavouriteChange: onFavouriteChange,
-                        index: index,
+                        start: events!.elementAt(index).start!,
                       ),
                     );
                   },
@@ -220,99 +211,57 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
 class MyEventCard extends StatefulWidget {
   const MyEventCard({
     super.key,
-    required this.height,
-    required this.width,
     required this.image,
     required this.titolo,
     required this.luogo,
     required this.eventId,
-    required this.dataInizio,
-    required this.index,
-    required this.triggerAnimation,
     required this.isLike,
     required this.onFavouriteChange,
+    required this.start,
   });
 
-  final bool triggerAnimation;
-  final double height;
-  final double width;
   final ImageModel? image;
   final String titolo;
   final String luogo;
-  final String dataInizio;
   final String eventId;
-  final int index;
   final bool isLike;
   final void Function(String, bool) onFavouriteChange;
+  final DateTime start;
 
   @override
   State<MyEventCard> createState() => _MyEventCardState();
 }
 
-class _MyEventCardState extends State<MyEventCard>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
-
-    _scaleAnimation = Tween<double>(begin: 0.9, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
-    );
-
-    if (widget.triggerAnimation) {
-      Future.delayed(Duration(milliseconds: widget.index * 50), () {
-        if (mounted) {
-          _controller.forward();
-        }
-      });
-    } else {
-      // se già eseguita, vai direttamente allo stato finale
-      _controller.value = 1.0;
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
+class _MyEventCardState extends State<MyEventCard> {
   @override
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+    final String dataInizio = DateFormat('dd-MM-yyyy hh:mm').format(widget.start);
 
-    return ScaleTransition(
-      scale: _scaleAnimation,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: widget.height * 0.005),
+    return Container(
+        margin: EdgeInsets.symmetric(vertical: height * 0.005),
         padding: EdgeInsets.symmetric(
-          horizontal: widget.width * 0.025,
-          vertical: widget.width * 0.025,
+          horizontal: width * 0.025,
+          vertical: width * 0.025,
         ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(widget.width * 0.02)),
+          borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
           border: getCustomBorder(
             appConfig: appConfig,
-            width: widget.width * 0.0015,
+            width: width * 0.0015,
           ),
         ),
         child: Row(
           children: [
             Container(
-              height: widget.width * 0.3,
-              width: widget.width * 0.3,
-              margin: EdgeInsets.only(right: widget.width * 0.04),
+              height: width * 0.3,
+              width: width * 0.3,
+              margin: EdgeInsets.only(right: width * 0.04),
               child: ClipRRect(
                 borderRadius:
-                    BorderRadius.all(Radius.circular(widget.width * 0.01)),
+                    BorderRadius.all(Radius.circular(width * 0.01)),
                 child: widget.image == null || widget.image!.downloadUrl == null
                     ? Image.asset(
                         'assets/images/ballo.png',
@@ -345,14 +294,14 @@ class _MyEventCardState extends State<MyEventCard>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(bottom: widget.height * 0.007),
+                    margin: EdgeInsets.only(bottom: height * 0.007),
                     child: Text(
                       widget.titolo,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: widget.width * 0.04,
+                        fontSize: width * 0.04,
                       ),
                     ),
                   ),
@@ -361,9 +310,9 @@ class _MyEventCardState extends State<MyEventCard>
                       GestureDetector(
                         onTap: () {},
                         child: Padding(
-                          padding: EdgeInsets.only(right: widget.width * 0.02),
+                          padding: EdgeInsets.only(right: width * 0.02),
                           child: Icon(
-                            size: widget.width * 0.035,
+                            size: width * 0.035,
                             Icons.place_outlined,
                           ),
                         ),
@@ -374,7 +323,7 @@ class _MyEventCardState extends State<MyEventCard>
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            fontSize: widget.width * 0.035,
+                            fontSize: width * 0.035,
                           ),
                         ),
                       ),
@@ -385,25 +334,25 @@ class _MyEventCardState extends State<MyEventCard>
                       GestureDetector(
                         onTap: () {},
                         child: Padding(
-                          padding: EdgeInsets.only(right: widget.width * 0.02),
+                          padding: EdgeInsets.only(right: width * 0.02),
                           child: Icon(
-                            size: widget.width * 0.035,
+                            size: width * 0.035,
                             Icons.calendar_today_outlined,
                           ),
                         ),
                       ),
                       Expanded(
                         child: Text(
-                          widget.dataInizio,
+                          dataInizio,
                           style: TextStyle(
-                            fontSize: widget.width * 0.035,
+                            fontSize: width * 0.035,
                           ),
                         ),
                       ),
                     ],
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: widget.height * 0.007),
+                    margin: EdgeInsets.only(top: height * 0.007),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -411,27 +360,27 @@ class _MyEventCardState extends State<MyEventCard>
                           clipBehavior: Clip.none,
                           children: [
                             PersonForStack(
-                              height: widget.height,
-                              width: widget.width,
+                              height: height,
+                              width: width,
                               image: 'assets/images/female.jpg',
                               borderColor: Colors.white,
                               boxcolor: Colors.amber,
                             ),
                             Positioned(
-                              left: widget.width * 0.06,
+                              left: width * 0.06,
                               child: PersonForStack(
-                                height: widget.height,
-                                width: widget.width,
+                                height: height,
+                                width: width,
                                 image: 'assets/images/male.jpg',
                                 borderColor: Colors.white,
                                 boxcolor: Colors.amber,
                               ),
                             ),
                             Positioned(
-                              left: widget.width * 0.06 * 2,
+                              left: width * 0.06 * 2,
                               child: Container(
-                                width: widget.width * 0.08,
-                                height: widget.width * 0.08,
+                                width: width * 0.08,
+                                height: width * 0.08,
                                 decoration: BoxDecoration(
                                   color: const Color(0xff7c94b6),
                                   borderRadius: const BorderRadius.all(
@@ -439,7 +388,7 @@ class _MyEventCardState extends State<MyEventCard>
                                   ),
                                   border: Border.all(
                                     color: Colors.white,
-                                    width: widget.width * 0.005,
+                                    width: width * 0.005,
                                   ),
                                 ),
                                 child: Center(
@@ -448,7 +397,7 @@ class _MyEventCardState extends State<MyEventCard>
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: widget.width * 0.03,
+                                      fontSize: width * 0.03,
                                     ),
                                   ),
                                 ),
@@ -457,9 +406,9 @@ class _MyEventCardState extends State<MyEventCard>
                           ],
                         ),
                         Container(
-                          margin: EdgeInsets.only(left: widget.width * 0.001),
+                          margin: EdgeInsets.only(left: width * 0.001),
                           child: LikeButton(
-                            width: widget.width,
+                            width: width,
                             eventId: widget.eventId,
                             isLike: widget.isLike,
                             onFavouriteChange: widget.onFavouriteChange,
@@ -473,8 +422,7 @@ class _MyEventCardState extends State<MyEventCard>
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }
 
@@ -503,6 +451,16 @@ class _LikeButtonState extends State<LikeButton> {
   void initState() {
     super.initState();
     isLike = widget.isLike;
+  }
+
+  @override
+  void didUpdateWidget(covariant LikeButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isLike != oldWidget.isLike) {
+      setState(() {
+        isLike = widget.isLike;
+      });
+    }
   }
 
   @override
