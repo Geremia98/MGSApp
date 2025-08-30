@@ -212,8 +212,7 @@ class _EventScreenState extends State<EventScreen> {
                         Text(
                           widget.event.desc,
                           textAlign: TextAlign.center, // Changed from TextAlign.start
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 8,
+                          // Removed overflow and maxLines
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -284,7 +283,7 @@ class _EventScreenState extends State<EventScreen> {
                         ),
                         widget.event.creatorUid == UserModel.uid ||
                                 widget.event.start!.isBefore(DateTime.now())
-                            ? SizedBox()
+                            ? SizedBox() 
                             : Padding(
                                 padding: const EdgeInsets.only(
                                   top: 30,
