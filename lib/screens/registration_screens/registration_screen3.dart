@@ -29,6 +29,8 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
   late RegistrationController controller;
   late bool _isDisabled;
   late Set<bool> _selectedBoss;
+  String? _bossCodeError;
+  final String _correctBossCode = 'Geminigreat';
 
   TextEditingController textFieldValue = TextEditingController();
 
@@ -42,19 +44,33 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
   }
 
   void isNextStepAvailable() {
-    if (controller.country.isNotEmpty &&
-            controller.ispettoria.isNotEmpty &&
-            controller.group.isNotEmpty &&
-            _selectedBoss.first == false
-        ? true
-        : controller.bossCode.isNotEmpty) {
-      setState(() {
-        _isDisabled = false;
-      });
+    if (_selectedBoss.first == true) {
+      if (controller.bossCode == _correctBossCode) {
+        setState(() {
+          _bossCodeError = null;
+          _isDisabled = false;
+        });
+      } else {
+        setState(() {
+          _bossCodeError = 'Codice errato';
+          _isDisabled = true;
+        });
+      }
     } else {
       setState(() {
-        _isDisabled = true;
+        _bossCodeError = null;
       });
+      if (controller.country.isNotEmpty &&
+          controller.ispettoria.isNotEmpty &&
+          controller.group.isNotEmpty) {
+        setState(() {
+          _isDisabled = false;
+        });
+      } else {
+        setState(() {
+          _isDisabled = true;
+        });
+      }
     }
   }
 
@@ -169,20 +185,35 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                       },
                       title: 'Boss? ',
                     ),
-                    controller.bossCode.isNotEmpty ||
-                            _selectedBoss.first == true
-                        ? buildMyTextFormField(
-                            obscureText: true,
-                            appConfig,
-                            onChanged: (value) {
-                              controller.setBossCode(value);
-                              isNextStepAvailable();
-                            },
-                            textCapitalization: TextCapitalization.sentences,
-                            hintText: 'XXXXXX',
-                            labelText: 'Codice del Boss: ',
-                            initialValue: controller.bossCode,
-                            enabled: true,
+                                        _selectedBoss.first == true
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              buildMyTextFormField(
+                                obscureText: true,
+                                appConfig,
+                                onChanged: (value) {
+                                  controller.setBossCode(value);
+                                  isNextStepAvailable();
+                                },
+                                textCapitalization: TextCapitalization.sentences,
+                                hintText: 'XXXXXX',
+                                labelText: 'Codice del Boss: ',
+                                initialValue: controller.bossCode,
+                                enabled: true,
+                              ),
+                              if (_bossCodeError != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Text(
+                                    _bossCodeError!,
+                                    style: TextStyle(
+                                      color: Theme.of(context).colorScheme.error,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                            ],
                           )
                         : const SizedBox(),
                   ],

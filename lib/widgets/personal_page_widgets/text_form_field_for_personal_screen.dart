@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/widgets/font.dart';
@@ -8,6 +9,7 @@ Widget buildMyTextFormField(
     double textPadding = 15,
   String labelText = '',
   TextInputType textInputType = TextInputType.text,
+  List<TextInputFormatter>? inputFormatters,
   IconData? icon,
   String hintText = '',
   TextEditingController? controller,
@@ -59,6 +61,7 @@ Widget buildMyTextFormField(
                 height: helperText ? heightTextFormFieldWithError : heightTextFormFieldWithoutError,
                 child: TextFormField(
             keyboardType: textInputType,
+            inputFormatters: inputFormatters,
             validator: validator,
             enabled: enabled,
             obscureText: obscureText,

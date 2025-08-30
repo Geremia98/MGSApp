@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:mgs_app2/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/registration_screens/optional_registration_screen1.dart';
@@ -196,14 +197,18 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                         ),
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 10),
-                          child: buildMyTextFormField(
-                            appConfig,
-                            hintText: 'XX',
-                            textPadding: 10,
-                            maxLength: 11,
+                          width: appConfig.getWidth() * 10,
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              hintText: 'XX',
+                              counterText: "",
+                            ),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                            maxLength: 2,
                             onChanged: (value) {
                               _feelAge =
-                                  value!.isNotEmpty ? int.parse(value) : 0;
+                                  value.isNotEmpty ? int.parse(value) : 0;
                               calculateWetherEnablingTheButton();
                             },
                           ),
