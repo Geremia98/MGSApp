@@ -176,9 +176,8 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
             ? SizedBox()
             : Expanded(
                 child: ListView.builder(
-                  shrinkWrap: true,
+                  cacheExtent: 3000.0,
                   itemCount: events!.length,
-                  physics: const AlwaysScrollableScrollPhysics(),
                   itemBuilder: (BuildContext context, int index) {
                     final firstTime = !animatedIndexes.contains(index);
                     if (firstTime) animatedIndexes.add(index);
