@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mgs_app2/models/event_firestore.dart';
 import 'package:mgs_app2/models/image_model.dart';
 import 'package:mgs_app2/services/local/favorite_service.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
 import 'package:mgs_app2/widgets/buttons.dart';
+import 'package:mgs_app2/widgets/participant_bubbles.dart';
 
 import '../../models/event_model.dart';
 import 'event_screen.dart';
@@ -23,20 +24,22 @@ class AllEventsScreen extends StatefulWidget {
 
 class _AllEventsScreenState extends State<AllEventsScreen> {
   late Future<List<EventModel>> futureEvents;
-  List<EventModel> filteredEvents = [];
-  List<EventModel> events = [];
   String filter = '';
-  bool alreadyLoaded = false;
 
   @override
   void initState() {
     super.initState();
-
     futureEvents = widget.futureEvents;
   }
 
   void onFavouriteChange(String eventId, bool isFavourite) {
-    events.where((e) => e.id == eventId).first.isFavourite = isFavourite;
+    setState(() {
+      futureEvents = futureEvents.then((events) {
+        final event = events.firstWhere((e) => e.id == eventId);
+        event.isFavourite = isFavourite;
+        return events;
+      });
+    });
   }
 
   @override
@@ -46,114 +49,92 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
     final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
-      body: Stack(children: [
-        SafeArea(
-          bottom: false,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: width * 0.04),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                GoBackButton(
-                  icon: Icons.arrow_back_rounded,
-                  onTap: () => Navigator.pop(context),
-                  appConfig: appConfig,
-                ),
-                Expanded(
-                  child: FutureBuilder(
-                    future:
-                        futureEvents,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<EventModel>> snap) {
-                      if (snap.data != null) {
-                        events = snap.data!;
-                      }
+      body: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              GoBackButton(
+                icon: Icons.arrow_back_rounded,
+                onTap: () => Navigator.pop(context),
+                appConfig: appConfig,
+              ),
+              Expanded(
+                child: FutureBuilder<List<EventModel>>(
+                  future: futureEvents,
+                  builder: (context, snap) {
+                    if (snap.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if (snap.hasError) {
+                      return Center(child: Text('Error loading events'));
+                    }
+                    if (!snap.hasData || snap.data!.isEmpty) {
+                      return Center(child: Text('No events found'));
+                    }
 
-                      return buildPage(snap.data == null
-                          ? null
-                          : filter.isEmpty
-                              ? events
-                              : filteredEvents);
-                    },
-                  ),
+                    final allEvents = snap.data!;
+                    final filteredEvents = _getFilteredEvents(allEvents);
+
+                    return buildPage(filteredEvents);
+                  },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      ]),
+      ),
     );
   }
 
-  void onFilter(String value) {
-    if (value.isEmpty) {
-      setState(() {
-        filter = '';
-      });
-      return;
+  List<EventModel> _getFilteredEvents(List<EventModel> events) {
+    if (filter.isEmpty) {
+      return events;
     }
-
-    switch (value) {
+    switch (filter) {
       case 'fav':
-        setState(() {
-          filter = 'fav';
-          filteredEvents = events.where((e) => e.isFavourite == true).toList();
-        });
-        return;
+        return events.where((e) => e.isFavourite == true).toList();
       case 'day':
-        setState(() {
-          filter = 'day';
-          final now = DateTime.now();
-          final today = DateTime(now.year, now.month, now.day);
-
-          filteredEvents = events.where((e) {
-            final start = e.start!;
-            final eventDay = DateTime(start.year, start.month, start.day);
-            return eventDay == today;
-          }).toList();
-        });
-        return;
-
+        final now = DateTime.now();
+        final today = DateTime(now.year, now.month, now.day);
+        return events.where((e) {
+          final start = e.start!;
+          final eventDay = DateTime(start.year, start.month, start.day);
+          return eventDay == today;
+        }).toList();
       case 'week':
-        setState(() {
-          filter = 'week';
-          final now = DateTime.now();
-          // Trova il lunedì della settimana corrente
-          final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-          final endOfWeek = startOfWeek.add(const Duration(days: 7));
-
-          filteredEvents = events.where((e) {
-            final start = e.start!;
-            return start.isAfter(startOfWeek) && start.isBefore(endOfWeek);
-          }).toList();
-        });
-        return;
-
+        final now = DateTime.now();
+        final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+        final endOfWeek = startOfWeek.add(const Duration(days: 7));
+        return events.where((e) {
+          final start = e.start!;
+          return start.isAfter(startOfWeek) && start.isBefore(endOfWeek);
+        }).toList();
       case 'month':
-        setState(() {
-          filter = 'month';
-          final now = DateTime.now();
-          final startOfMonth = DateTime(now.year, now.month, 1);
-          final startOfNextMonth = DateTime(now.year, now.month + 1, 1);
-
-          filteredEvents = events.where((e) {
-            final start = e.start!;
-            return start.isAfter(
-                    startOfMonth.subtract(const Duration(seconds: 1))) &&
-                start.isBefore(startOfNextMonth);
-          }).toList();
-        });
-        return;
-
+        final now = DateTime.now();
+        final startOfMonth = DateTime(now.year, now.month, 1);
+        final startOfNextMonth = DateTime(now.year, now.month + 1, 1);
+        return events.where((e) {
+          final start = e.start!;
+          return start.isAfter(startOfMonth.subtract(const Duration(seconds: 1))) &&
+              start.isBefore(startOfNextMonth);
+        }).toList();
       default:
-        return;
+        return events;
     }
   }
 
-  Widget buildPage(List<EventModel>? events) {
+  void onFilter(String value) {
+    setState(() {
+      filter = value;
+    });
+  }
+
+  Widget buildPage(List<EventModel> events) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-
     Set<int> animatedIndexes = {};
 
     return Column(
@@ -162,56 +143,52 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
           width: width,
           titolo: widget.titolo,
           height: height,
-          count: events == null ? -1 : events.length,
+          count: events.length,
         ),
-        events == null
-            ? SizedBox()
-            : ButtonRow(
-                height: height,
-                width: width,
-                coloreBottonePremuto: ThemeData().highlightColor,
-                sortFilter: onFilter,
-              ),
-        events == null
-            ? SizedBox()
-            : Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: events!.length,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemBuilder: (BuildContext context, int index) {
-                    final firstTime = !animatedIndexes.contains(index);
-                    if (firstTime) animatedIndexes.add(index);
+        ButtonRow(
+          height: height,
+          width: width,
+          coloreBottonePremuto: ThemeData().highlightColor,
+          sortFilter: onFilter,
+        ),
+        Expanded(
+          child: ListView.builder(
+            cacheExtent: 3000.0,
+            itemCount: events.length,
+            itemBuilder: (BuildContext context, int index) {
+              final firstTime = !animatedIndexes.contains(index);
+              if (firstTime) animatedIndexes.add(index);
+              final event = events[index];
 
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EventScreen(
-                              event: events.elementAt(index),
-                            ),
-                          ),
-                        );
-                      },
-                      child: MyEventCard(
-                        triggerAnimation: firstTime,
-                        height: height,
-                        width: width,
-                        eventId: events!.elementAt(index).id,
-                        image: events!.elementAt(index).image,
-                        titolo: events!.elementAt(index).title,
-                        luogo: events!.elementAt(index).location,
-                        isLike: events!.elementAt(index).isFavourite,
-                        dataInizio: DateFormat('dd-MM-yyyy hh:mm')
-                            .format(events!.elementAt(index).start!),
-                        onFavouriteChange: onFavouriteChange,
-                        index: index,
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EventScreen(
+                        event: event,
                       ),
-                    );
-                  },
+                    ),
+                  );
+                },
+                child: MyEventCard(
+                  triggerAnimation: firstTime,
+                  height: height,
+                  width: width,
+                  eventId: event.id,
+                  image: event.image,
+                  titolo: event.title,
+                  luogo: event.location,
+                  isLike: event.isFavourite,
+                  participants: event.participants,
+                  dataInizio: DateFormat('dd-MM-yyyy hh:mm').format(event.start!),
+                  onFavouriteChange: onFavouriteChange,
+                  index: index,
                 ),
-              ),
+              );
+            },
+          ),
+        ),
       ],
     );
   }
@@ -231,6 +208,7 @@ class MyEventCard extends StatefulWidget {
     required this.triggerAnimation,
     required this.isLike,
     required this.onFavouriteChange,
+    required this.participants,
   });
 
   final bool triggerAnimation;
@@ -244,6 +222,7 @@ class MyEventCard extends StatefulWidget {
   final int index;
   final bool isLike;
   final void Function(String, bool) onFavouriteChange;
+  final List<String> participants;
 
   @override
   State<MyEventCard> createState() => _MyEventCardState();
@@ -318,11 +297,25 @@ class _MyEventCardState extends State<MyEventCard>
                         'assets/images/ballo.png',
                         fit: BoxFit.cover,
                       )
-                    : Image.network(
-                        widget.image!.downloadUrl!,
+                    : CachedNetworkImage(
+                        imageUrl: widget.image!.downloadUrl!,
                         fit: BoxFit.cover,
-                        cacheWidth: 600,
-                        cacheHeight: 400,
+                        memCacheWidth: 600,
+                        memCacheHeight: 400,
+                        placeholder: (context, url) => ColorFiltered(
+                          colorFilter: const ColorFilter.mode(
+                            Colors.grey,
+                            BlendMode.saturation,
+                          ),
+                          child: Image.asset(
+                            'assets/images/ballo.png',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Image.asset(
+                          'assets/images/ballo.png',
+                          fit: BoxFit.cover,
+                        ),
                       ),
               ),
             ),
@@ -393,55 +386,7 @@ class _MyEventCardState extends State<MyEventCard>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            PersonForStack(
-                              height: widget.height,
-                              width: widget.width,
-                              image: 'assets/images/female.jpg',
-                              borderColor: Colors.white,
-                              boxcolor: Colors.amber,
-                            ),
-                            Positioned(
-                              left: widget.width * 0.06,
-                              child: PersonForStack(
-                                height: widget.height,
-                                width: widget.width,
-                                image: 'assets/images/male.jpg',
-                                borderColor: Colors.white,
-                                boxcolor: Colors.amber,
-                              ),
-                            ),
-                            Positioned(
-                              left: widget.width * 0.06 * 2,
-                              child: Container(
-                                width: widget.width * 0.08,
-                                height: widget.width * 0.08,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xff7c94b6),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(50.0),
-                                  ),
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: widget.width * 0.005,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    '15+',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: widget.width * 0.03,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        ParticipantBubbles(participants: widget.participants),
                         Container(
                           margin: EdgeInsets.only(left: widget.width * 0.001),
                           child: LikeButton(
@@ -464,7 +409,7 @@ class _MyEventCardState extends State<MyEventCard>
   }
 }
 
-class LikeButton extends StatefulWidget {
+class LikeButton extends StatelessWidget {
   const LikeButton({
     super.key,
     required this.width,
@@ -479,76 +424,23 @@ class LikeButton extends StatefulWidget {
   final void Function(String, bool) onFavouriteChange;
 
   @override
-  State<LikeButton> createState() => _LikeButtonState();
-}
-
-class _LikeButtonState extends State<LikeButton> {
-  late bool isLike;
-
-  @override
-  void initState() {
-    super.initState();
-    isLike = widget.isLike;
-  }
-
-  @override
   Widget build(BuildContext context) {
     final FavoritesService favoritesService = FavoritesService();
 
     return IconButton(
         onPressed: () {
-          setState(() {
-            isLike = !isLike;
-
-            widget.onFavouriteChange(widget.eventId, isLike);
-            if (isLike) {
-              favoritesService.addFavorite(widget.eventId);
-              return;
-            }
-            favoritesService.removeFavorite(widget.eventId);
-          });
+          final newIsLike = !isLike;
+          onFavouriteChange(eventId, newIsLike);
+          if (newIsLike) {
+            favoritesService.addFavorite(eventId);
+          } else {
+            favoritesService.removeFavorite(eventId);
+          }
         },
         icon: Icon(
           isLike ? Icons.favorite_rounded : Icons.favorite_outline,
-          size: widget.width * 0.06,
+          size: width * 0.06,
         ));
-  }
-}
-
-class PersonForStack extends StatelessWidget {
-  const PersonForStack({
-    required this.borderColor,
-    required this.boxcolor,
-    required this.height,
-    required this.image,
-    required this.width,
-    super.key,
-  });
-
-  final double height;
-  final double width;
-  final String image;
-  final Color boxcolor;
-  final Color borderColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width * 0.08,
-      height: width * 0.08,
-      decoration: BoxDecoration(
-        color: boxcolor,
-        image: DecorationImage(
-          image: AssetImage(image),
-          fit: BoxFit.cover,
-        ),
-        borderRadius: const BorderRadius.all(Radius.circular(50.0)),
-        border: Border.all(
-          color: borderColor,
-          width: width * 0.005,
-        ),
-      ),
-    );
   }
 }
 
