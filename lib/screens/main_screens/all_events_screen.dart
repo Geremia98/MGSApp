@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mgs_app2/models/event_firestore.dart';
 import 'package:mgs_app2/models/image_model.dart';
 import 'package:mgs_app2/services/local/favorite_service.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
