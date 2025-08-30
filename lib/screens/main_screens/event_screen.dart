@@ -200,8 +200,9 @@ class _EventScreenState extends State<EventScreen> {
                               EdgeInsets.symmetric(vertical: height * 0.02),
                           child: Text(
                             widget.event.title,
-                            maxLines: 3,
+                            maxLines: 2, // Changed from 3 to 2
                             overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center, // Added textAlign
                             style: const TextStyle(
                               fontSize: 35,
                               fontWeight: FontWeight.bold,
@@ -210,7 +211,7 @@ class _EventScreenState extends State<EventScreen> {
                         ),
                         Text(
                           widget.event.desc,
-                          textAlign: TextAlign.start,
+                          textAlign: TextAlign.center, // Changed from TextAlign.start
                           overflow: TextOverflow.ellipsis,
                           maxLines: 8,
                           style: TextStyle(
@@ -226,8 +227,7 @@ class _EventScreenState extends State<EventScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
-                              Container(
-                                width: width * 0.4,
+                              Expanded(
                                 child: Column(
                                   children: [
                                     EventDetailBox(
@@ -236,8 +236,8 @@ class _EventScreenState extends State<EventScreen> {
                                       icon: Icons.calendar_month_rounded,
                                       title: 'Data inizio',
                                       subTitle: DateFormat('dd-MM-yyyy')
-                                              .format(widget.event.start!) +
-                                          '\n' +
+                                              .format(widget.event.start!)
+                                          + '\n' +
                                           DateFormat('hh:mm')
                                               .format(widget.event.start!),
                                     ),
@@ -253,8 +253,7 @@ class _EventScreenState extends State<EventScreen> {
                                   ],
                                 ),
                               ),
-                              Container(
-                                width: width * 0.4,
+                              Expanded(
                                 child: Column(
                                   children: [
                                     EventDetailBox(
@@ -263,8 +262,8 @@ class _EventScreenState extends State<EventScreen> {
                                         icon: Icons.calendar_month_rounded,
                                         title: 'Data fine',
                                         subTitle: DateFormat('dd-MM-yyyy')
-                                                .format(widget.event.end!) +
-                                            '\n' +
+                                                .format(widget.event.end!)
+                                            + '\n' +
                                             DateFormat('hh:mm')
                                                 .format(widget.event.end!)),
                                     SizedBox(
@@ -482,7 +481,7 @@ class EventDetailBox extends StatelessWidget {
         );
       },
       child: Container(
-        width: width * 0.4,
+        width: width * 0.45, // Changed from 0.4 to 0.45
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -495,28 +494,30 @@ class EventDetailBox extends StatelessWidget {
                 color: appConfig.getTheme().focusColor,
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: width * 0.035,
-                  ),
-                ),
-                SizedBox(
-                  width: width * 0.25,
-                  child: Text(
-                    subTitle,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
                       fontSize: width * 0.035,
                     ),
                   ),
-                )
-              ],
+                  SizedBox(
+                    // Removed fixed width
+                    child: Text(
+                      subTitle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: width * 0.035,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             )
           ],
         ),
