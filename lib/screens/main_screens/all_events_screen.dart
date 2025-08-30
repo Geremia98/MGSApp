@@ -321,8 +321,19 @@ class _MyEventCardState extends State<MyEventCard>
                     : Image.network(
                         widget.image!.downloadUrl!,
                         fit: BoxFit.cover,
-                        cacheWidth: 600,
-                        cacheHeight: 400,
+                        loadingBuilder: (context, widget, loadingProgress) {
+                          if (loadingProgress == null) return widget;
+                          return ColorFiltered(
+                            colorFilter: const ColorFilter.mode(
+                              Colors.grey,
+                              BlendMode.saturation,
+                            ),
+                            child: Image.asset(
+                              'assets/images/ballo.png',
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        },
                       ),
               ),
             ),
