@@ -175,7 +175,7 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
             ? SizedBox()
             : Expanded(
                 child: ListView.builder(
-                  cacheExtent: 2000.0,
+                  cacheExtent: 3000.0,
                   itemCount: events!.length,
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
