@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'package:mgs_app2/models/user_model.dart';
 import 'package:mgs_app2/screens/main_screens/credit_card_screen.dart';
@@ -61,10 +62,29 @@ class _EventScreenState extends State<EventScreen> {
             height: height * 0.5 + _extraHeight,
             child: widget.event.image == null ||
                     widget.event.image!.downloadUrl == null
-                ? SizedBox()
-                : Image.network(
-                    widget.event.image!.downloadUrl!,
+                ? Image.asset(
+                    'assets/images/ballo.png',
                     fit: BoxFit.cover,
+                  )
+                : CachedNetworkImage(
+                    imageUrl: widget.event.image!.downloadUrl!,
+                    fit: BoxFit.cover,
+                    memCacheWidth: 600,
+                    memCacheHeight: 400,
+                    placeholder: (context, url) => ColorFiltered(
+                      colorFilter: const ColorFilter.mode(
+                        Colors.grey,
+                        BlendMode.saturation,
+                      ),
+                      child: Image.asset(
+                        'assets/images/ballo.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Image.asset(
+                      'assets/images/ballo.png',
+                      fit: BoxFit.cover,
+                    ),
                   ),
           ),
           widget.event.creatorUid == UserModel.uid ||
