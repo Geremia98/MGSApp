@@ -19,8 +19,8 @@ class CustomColors extends ThemeExtension<CustomColors> {
     return CustomColors(
       enabledCheckSquaredButton: enabledCheckSquaredButton ?? this.enabledCheckSquaredButton,
       disabledCheckSquaredButton: disabledCheckSquaredButton ?? this.disabledCheckSquaredButton,
-      enabledUndoSquaredButton: enabledCheckSquaredButton ?? this.enabledCheckSquaredButton,
-      disabledUndoSquaredButton: disabledCheckSquaredButton ?? this.disabledCheckSquaredButton,
+      enabledUndoSquaredButton: enabledUndoSquaredButton ?? this.enabledUndoSquaredButton,
+      disabledUndoSquaredButton: disabledUndoSquaredButton ?? this.disabledUndoSquaredButton,
 
     );
   }
