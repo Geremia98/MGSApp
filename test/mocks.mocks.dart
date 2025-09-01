@@ -3,11 +3,19 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
+import 'dart:async' as _i6;
 
-import 'package:mgs_app2/models/image_model.dart' as _i4;
-import 'package:mgs_app2/services/firebase/firebase_storage.dart' as _i2;
+import 'package:cloud_firestore/cloud_firestore.dart' as _i2;
+import 'package:mgs_app2/models/event_firestore.dart' as _i8;
+import 'package:mgs_app2/models/event_model.dart' as _i9;
+import 'package:mgs_app2/models/image_model.dart' as _i7;
+import 'package:mgs_app2/services/firebase/firebase_storage.dart' as _i5;
+import 'package:mgs_app2/services/functions/firebase_function_caller.dart'
+    as _i11;
+import 'package:mgs_app2/services/functions/function_handler.dart' as _i3;
+import 'package:mgs_app2/services/functions/function_response.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:mockito/src/dummies.dart' as _i10;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -23,39 +31,72 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
+class _FakeCollectionReference_0<T extends Object?> extends _i1.SmartFake
+    implements _i2.CollectionReference<T> {
+  _FakeCollectionReference_0(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeFunctionHandler_1 extends _i1.SmartFake
+    implements _i3.FunctionHandler {
+  _FakeFunctionHandler_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeFunctionResponse_2 extends _i1.SmartFake
+    implements _i4.FunctionResponse {
+  _FakeFunctionResponse_2(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [FirebaseStorageService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockFirebaseStorageService extends _i1.Mock
-    implements _i2.FirebaseStorageService {
+    implements _i5.FirebaseStorageService {
   MockFirebaseStorageService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<_i4.ImageModel?> getEventBannerImage(String? eventId) =>
+  _i6.Future<_i7.ImageModel?> getEventBannerImage(String? eventId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getEventBannerImage,
           [eventId],
         ),
-        returnValue: _i3.Future<_i4.ImageModel?>.value(),
-      ) as _i3.Future<_i4.ImageModel?>);
+        returnValue: _i6.Future<_i7.ImageModel?>.value(),
+      ) as _i6.Future<_i7.ImageModel?>);
 
   @override
-  _i3.Future<_i4.ImageModel?> getUserProfileImage(String? userUid) =>
+  _i6.Future<_i7.ImageModel?> getUserProfileImage(String? userUid) =>
       (super.noSuchMethod(
         Invocation.method(
           #getUserProfileImage,
           [userUid],
         ),
-        returnValue: _i3.Future<_i4.ImageModel?>.value(),
-      ) as _i3.Future<_i4.ImageModel?>);
+        returnValue: _i6.Future<_i7.ImageModel?>.value(),
+      ) as _i6.Future<_i7.ImageModel?>);
 
   @override
-  _i3.Future<bool> storeEventBannerImage(
+  _i6.Future<bool> storeEventBannerImage(
     String? eventId,
-    _i4.ImageModel? banner,
+    _i7.ImageModel? banner,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -65,6 +106,190 @@ class MockFirebaseStorageService extends _i1.Mock
             banner,
           ],
         ),
-        returnValue: _i3.Future<bool>.value(false),
-      ) as _i3.Future<bool>);
+        returnValue: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
+}
+
+/// A class which mocks [EventFirestore].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockEventFirestore extends _i1.Mock implements _i8.EventFirestore {
+  MockEventFirestore() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.CollectionReference<Object?> get eventsCR => (super.noSuchMethod(
+        Invocation.getter(#eventsCR),
+        returnValue: _FakeCollectionReference_0<Object?>(
+          this,
+          Invocation.getter(#eventsCR),
+        ),
+      ) as _i2.CollectionReference<Object?>);
+
+  @override
+  set eventsCR(_i2.CollectionReference<Object?>? _eventsCR) =>
+      super.noSuchMethod(
+        Invocation.setter(
+          #eventsCR,
+          _eventsCR,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i6.Future<List<_i9.EventModel>> retrieveUserJoinedEvents(
+          {bool? onlyFuture = false}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #retrieveUserJoinedEvents,
+          [],
+          {#onlyFuture: onlyFuture},
+        ),
+        returnValue: _i6.Future<List<_i9.EventModel>>.value(<_i9.EventModel>[]),
+      ) as _i6.Future<List<_i9.EventModel>>);
+
+  @override
+  _i6.Future<List<_i9.EventModel>> retrieveEvents() => (super.noSuchMethod(
+        Invocation.method(
+          #retrieveEvents,
+          [],
+        ),
+        returnValue: _i6.Future<List<_i9.EventModel>>.value(<_i9.EventModel>[]),
+      ) as _i6.Future<List<_i9.EventModel>>);
+
+  @override
+  _i6.Future<List<String>> retrieveParticipantsUid(String? eventId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #retrieveParticipantsUid,
+          [eventId],
+        ),
+        returnValue: _i6.Future<List<String>>.value(<String>[]),
+      ) as _i6.Future<List<String>>);
+
+  @override
+  _i6.Future<List<_i9.EventModel>> retrievePersonalEvents(
+          {bool? onlyFuture = false}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #retrievePersonalEvents,
+          [],
+          {#onlyFuture: onlyFuture},
+        ),
+        returnValue: _i6.Future<List<_i9.EventModel>>.value(<_i9.EventModel>[]),
+      ) as _i6.Future<List<_i9.EventModel>>);
+
+  @override
+  _i6.Future<_i9.EventModel?> getEventById(String? id) => (super.noSuchMethod(
+        Invocation.method(
+          #getEventById,
+          [id],
+        ),
+        returnValue: _i6.Future<_i9.EventModel?>.value(),
+      ) as _i6.Future<_i9.EventModel?>);
+
+  @override
+  _i6.Future<String> addEvent(_i9.EventModel? event) => (super.noSuchMethod(
+        Invocation.method(
+          #addEvent,
+          [event],
+        ),
+        returnValue: _i6.Future<String>.value(_i10.dummyValue<String>(
+          this,
+          Invocation.method(
+            #addEvent,
+            [event],
+          ),
+        )),
+      ) as _i6.Future<String>);
+}
+
+/// A class which mocks [FirebaseFunctionCaller].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockFirebaseFunctionCaller extends _i1.Mock
+    implements _i11.FirebaseFunctionCaller {
+  MockFirebaseFunctionCaller() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i3.FunctionHandler get handler => (super.noSuchMethod(
+        Invocation.getter(#handler),
+        returnValue: _FakeFunctionHandler_1(
+          this,
+          Invocation.getter(#handler),
+        ),
+      ) as _i3.FunctionHandler);
+
+  @override
+  _i6.Future<_i4.FunctionResponse> sendReport(
+    String? section,
+    String? text,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #sendReport,
+          [
+            section,
+            text,
+          ],
+        ),
+        returnValue:
+            _i6.Future<_i4.FunctionResponse>.value(_FakeFunctionResponse_2(
+          this,
+          Invocation.method(
+            #sendReport,
+            [
+              section,
+              text,
+            ],
+          ),
+        )),
+      ) as _i6.Future<_i4.FunctionResponse>);
+
+  @override
+  _i6.Future<_i4.FunctionResponse> joinEvent(
+    String? eventId, {
+    String? paymentMethodId = '',
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #joinEvent,
+          [eventId],
+          {#paymentMethodId: paymentMethodId},
+        ),
+        returnValue:
+            _i6.Future<_i4.FunctionResponse>.value(_FakeFunctionResponse_2(
+          this,
+          Invocation.method(
+            #joinEvent,
+            [eventId],
+            {#paymentMethodId: paymentMethodId},
+          ),
+        )),
+      ) as _i6.Future<_i4.FunctionResponse>);
+
+  @override
+  _i6.Future<_i4.FunctionResponse> leaveEvent(
+    String? eventId, {
+    String? paymentMethodId = '',
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #leaveEvent,
+          [eventId],
+          {#paymentMethodId: paymentMethodId},
+        ),
+        returnValue:
+            _i6.Future<_i4.FunctionResponse>.value(_FakeFunctionResponse_2(
+          this,
+          Invocation.method(
+            #leaveEvent,
+            [eventId],
+            {#paymentMethodId: paymentMethodId},
+          ),
+        )),
+      ) as _i6.Future<_i4.FunctionResponse>);
 }

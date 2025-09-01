@@ -51,6 +51,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/test_image.png
     - resources/languages/it.json
     - resources/languages/errors/it.json
     - resources/languages/en.json

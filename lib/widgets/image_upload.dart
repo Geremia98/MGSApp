@@ -43,6 +43,8 @@ class ImageUploadCard extends StatefulWidget {
   final double width;
   final double height;
 
+  final ImagePickerService? service;
+
   const ImageUploadCard({
     this.width = 100,
     this.height = 100,
@@ -50,6 +52,7 @@ class ImageUploadCard extends StatefulWidget {
     this.onImagePicked,
     this.initialImage,
     this.keepLatestImageShown = true,
+    this.service,
     super.key,
   });
 
@@ -58,7 +61,7 @@ class ImageUploadCard extends StatefulWidget {
 }
 
 class _ImageUploadCardState extends State<ImageUploadCard> {
-  final ImagePickerService service = ImagePickerService();
+  late final ImagePickerService service;
   late AppConfig appConfig;
   XFile? image;
   ImageModel? croppedImage;
@@ -71,6 +74,7 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
 
   @override
   void initState() {
+    service = widget.service ?? ImagePickerService();
     croppedImage = widget.initialImage;
     imageType = widget.imageType;
     onImagePicked = widget.onImagePicked;
