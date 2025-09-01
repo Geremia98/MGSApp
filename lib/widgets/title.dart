@@ -75,7 +75,7 @@ TextStyle textStyleSubtitle(BuildContext context) {
   return TextStyle(
     color: appConfig.getTheme().primaryColor,
     fontSize: fontSizeSubtitle,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w500,
     overflow: TextOverflow.ellipsis,
   );
 }

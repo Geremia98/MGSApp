@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mgs_app2/models/event_model.dart';
 
@@ -54,6 +55,9 @@ class UserModel {
             orElse: () => UserGender.male,
           )
         : UserGender.male;
+    birth = data.containsKey(firestoreUsersBirthField)
+        ? (data[firestoreUsersBirthField] as Timestamp).toDate()
+        : DateTime.now();
     myEventsList = data.containsKey(firestoreUsersMyEventsListField)
         ? (data[firestoreUsersMyEventsListField] as List).whereType<EventModel>().toList()
         : [];

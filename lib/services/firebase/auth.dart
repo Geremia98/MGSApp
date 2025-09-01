@@ -143,7 +143,23 @@ class FirebaseAuthService {
       if (kDebugMode) {
         print('Error while registering: $error');
       }
-      return error.toString();
+      return translateFirebaseAuthError(error.toString());
+    }
+  }
+
+  String translateFirebaseAuthError(String error) {
+    if (error.contains('email-already-in-use')) {
+      return 'Email già registrata';
+    } else if (error.contains('invalid-email')) {
+      return 'Email non valida';
+    } else if (error.contains('weak-password')) {
+      return 'Password troppo debole';
+    } else if (error.contains('operation-not-allowed')) {
+      return 'Registrazione non consentita';
+    } else if (error.contains('too-many-requests')) {
+      return 'Troppe richieste, riprova più tardi';
+    } else {
+      return 'Errore durante la registrazione';
     }
   }
 

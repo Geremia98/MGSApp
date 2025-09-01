@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:mgs_app2/models/image_model.dart';
+import 'package:mgs_app2/models/participant_model.dart';
 import 'package:mgs_app2/models/user_model.dart';
 import 'package:mgs_app2/services/firebase/firebase_storage.dart';
 import 'package:mgs_app2/services/firebase/firestore/firestore_users_fields.dart';
@@ -15,6 +17,49 @@ class UserFirestore {
 
   UserFirestore() {
     _userCR = _referencesService.usersCR;
+  }
+
+  Future<ParticipantModel> getParticipant(String uid) async {
+
+    final DocumentSnapshot snap = await _userCR.doc(uid).get();
+
+    if (!snap.exists || snap.data() == null) {
+      throw Exception('User not found');
+    }
+
+    final Map<String, dynamic> data = snap.data() as Map<String, dynamic>;
+
+    final FirebaseStorageService storageService = FirebaseStorageService();
+    ImageModel? image = await storageService.getUserProfileImage(UserModel.uid);
+
+    return ParticipantModel.fromFirestore(uid, data, image);
+  }
+
+  Future<void> updateUserInfo({required String name,required String surname,required DateTime birth,required UserGender gender}) async{
+
+    await _userCR.doc(UserModel.uid).update({
+      firestoreUsersNameField: name,
+      firestoreUsersSurnameField: surname,
+      firestoreUsersBirthField: birth,
+      firestoreUsersGenderField: gender.name,
+    });
+
+  }
+
+  Future<void> updateUserGroup({required String group,required String ispettoria,required String country}) async{
+    await _userCR.doc(UserModel.uid).update({
+      firestoreUsersGroupField: group,
+      firestoreUsersIspettoriaField: ispettoria,
+      firestoreUsersCountryField: country,
+    });
+
+  }
+
+  Future<void> setBossCode({required String code}) async{
+    await _userCR.doc(UserModel.uid).update({
+      firestoreUsersBossCodeField: code,
+    });
+
   }
 
   Future<bool> registerUser() async {

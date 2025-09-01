@@ -1,130 +1,124 @@
+import 'dart:math';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:mgs_app2/services/firebase/firebase_storage.dart';
+import 'package:mgs_app2/widgets/button.dart';
 
-class ParticipantBubbles extends StatelessWidget {
-  final List<dynamic> participants;
+import '../models/image_model.dart';
 
-  const ParticipantBubbles({
-    super.key,
-    required this.participants,
-  });
+class ParticipantBubbles extends StatefulWidget {
+  final List<String> participants;
+  final bool showText;
+  
+  const ParticipantBubbles({super.key, this.participants = const [], this.showText = true});
+
+  @override
+  State<ParticipantBubbles> createState() => _ParticipantBubblesState();
+}
+
+class _ParticipantBubblesState extends State<ParticipantBubbles> {
+  
+  late List<Future<ImageModel?>> usersImages;
+  
+  @override
+  void initState() {
+    super.initState();
+    final FirebaseStorageService storage = FirebaseStorageService();
+
+    usersImages = [];
+
+    for (String uid in widget.participants) {
+      usersImages.add(storage.getUserProfileImage(uid));
+      
+      if (usersImages.length >= 2) {
+        break;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        widget.participants.isEmpty ? SizedBox() : SizedBox(
+          height: 25,
+          width: min(widget.participants.length, 3) * 25 -
+              (min(widget.participants.length - 1, 3)) * 6,
+          child: Stack(
+            children: getImages(widget.participants),
+          ),
+        ),
+        !widget.showText ? SizedBox() : Padding(
+          padding: EdgeInsets.only(
+            left: widget.participants.length == 0 ? 0 : 10,
+          ),
+          child: Text(
+            widget.participants.isEmpty
+                ? 'Nessun partecipante'
+                : '${widget.participants.length} partecipant${widget.participants.length == 1 ? 'e' : 'i'}',
+            style: textStyleEventCardSubtitle(context),
+          ),
+        ),
+      ],
+    );
+  }
 
-    // 1. Se non ci sono ancora utenti iscritti: un pallino con un'icona del profilo e label '0 partecipanti'
-    if (participants.isEmpty) {
-      return Row(
-        children: [
-          Container(
-            width: width * 0.08,
-            height: width * 0.08,
-            decoration: BoxDecoration(
-              color: const Color(0xff7c94b6),
-              borderRadius: const BorderRadius.all(
-                Radius.circular(50.0),
-              ),
-              border: Border.all(
-                color: Colors.white,
-                width: width * 0.005,
-              ),
-            ),
-            child: Icon(
-              Icons.person_outline,
-              color: Colors.white,
-              size: width * 0.05,
-            ),
+  List<Widget> getImages(List<String> uids) {
+    final FirebaseStorageService storage = FirebaseStorageService();
+
+    List<Widget> images = [];
+
+    for (int i = 0; i < min(uids.length, 3); i++) {
+      String? uid = uids.elementAt(i);
+
+      images.add(
+        Positioned(
+          left: i * 14,
+          child: FutureBuilder(
+            future: usersImages.length - 1 < i ? null : usersImages.elementAt(i),
+            builder: (BuildContext context, AsyncSnapshot<ImageModel?> snap) {
+              if (snap.connectionState != ConnectionState.done ||
+                  snap.data == null ||
+                  snap.data!.downloadUrl == null) {
+                return Container(
+                  height: 25,
+                  width: 25,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Image.asset(
+                      'assets/images/male.jpg',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              }
+              return Container(
+                height: 25,
+                width: 25,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: Image.network(
+                    snap.data!.downloadUrl!,
+                    fit: BoxFit.cover,
+                    cacheHeight: 50,
+                    cacheWidth: 50,
+                  ),
+                ),
+              );
+            },
           ),
-          Padding(
-            padding: EdgeInsets.only(left: width * 0.02),
-            child: const Text("0 partecipanti"),
-          ),
-        ],
+        ),
       );
     }
 
-    final int displayCount = participants.length > 2 ? 3 : participants.length;
-
-    return SizedBox(
-      height: width * 0.08,
-      width: width * 0.08 + (displayCount - 1) * (width * 0.06),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: List.generate(displayCount, (index) {
-          // 3. Se ce ne sono 3 o più: prendo i primi due della lista e poi il pallino grigio
-          if (index == 2) {
-            return Positioned(
-              left: index * (width * 0.06),
-              child: Container(
-                width: width * 0.08,
-                height: width * 0.08,
-                decoration: BoxDecoration(
-                  color: const Color(0xff7c94b6),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(50.0),
-                  ),
-                  border: Border.all(
-                    color: Colors.white,
-                    width: width * 0.005,
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    '+${participants.length - 2}',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: width * 0.03,
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }
-
-          // 2. Se ce ne sono 2 .... i due pallini senza il terzo
-          return Positioned(
-            left: index * (width * 0.06),
-            child: _PersonBubble(
-              width: width,
-              // Use different placeholders for visual distinction
-              image: index.isEven
-                  ? 'assets/images/female.jpg'
-                  : 'assets/images/male.jpg',
-            ),
-          );
-        }),
-      ),
-    );
-  }
-}
-
-class _PersonBubble extends StatelessWidget {
-  const _PersonBubble({
-    required this.width,
-    required this.image,
-  });
-
-  final double width;
-  final String image;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width * 0.08,
-      height: width * 0.08,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(image),
-          fit: BoxFit.cover,
-        ),
-        borderRadius: const BorderRadius.all(Radius.circular(50.0)),
-        border: Border.all(
-          color: Colors.white,
-          width: width * 0.005,
-        ),
-      ),
-    );
+    return images;
   }
 }

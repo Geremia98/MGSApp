@@ -11,10 +11,9 @@ class AddEventNavigator extends StatefulWidget {
   final AddEventController controller;
 
   const AddEventNavigator(
-      this.controller,
-      {
-        super.key,
-      });
+    this.controller, {
+    super.key,
+  });
 
   @override
   _AddEventNavigatorState createState() => _AddEventNavigatorState();
@@ -42,20 +41,21 @@ class _AddEventNavigatorState extends State<AddEventNavigator> {
       controller.isFirstStage()
           ? const SizedBox()
           : GoBackButton(
-            icon: Icons.arrow_back_rounded, 
-            onTap: () {
-              controller.prevStage();
-            }, 
-            appConfig: appConfig
-            ),
+              icon: Icons.arrow_back_rounded,
+              onTap: () {
+                controller.prevStage();
+              },
+              appConfig: appConfig),
       ButtonText(
         text: controller.isLatestStage()
-            ? 'Posta'
+            ? controller.initialEvent != null
+                ? 'Modifica'
+                : 'Posta'
             : translator.translate('continue'),
         onTap: () => controller.nextStage(context),
         isEnabled: controller.isCurrentStageValid,
         isLoading: controller.isLoading,
-        fixedWidth: appConfig.getWidth()*30,
+        fixedWidth: appConfig.getWidth() * 30,
         //isEnabled: controller.isCurrentStageFilled(),
       ),
     ]);
@@ -63,7 +63,7 @@ class _AddEventNavigatorState extends State<AddEventNavigator> {
 
   void updateStatus() {
     WidgetsBinding.instance.addPostFrameCallback(
-          (_) => setState(() {}),
+      (_) => setState(() {}),
     );
   }
 }

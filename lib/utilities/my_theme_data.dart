@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/my_colors.dart';
 
+Color shimmerColorBase = Colors.grey.withOpacity(0.2);
+Color shimmerColorHighlight = Colors.grey.withOpacity(0.1);
 
 ThemeData getDarkTheme() => _darkTheme;
 ThemeData getLightTheme() => _lightTheme;
@@ -118,10 +120,11 @@ final ThemeData _darkTheme = ThemeData(
 Border getCustomBorder({
     double width = 1.0,
     AppConfig? appConfig,
+  Color? color,
   }) {
     return Border.all(
       width: width,
-      color: appConfig!.getTheme().cardColor,
+      color: color ?? appConfig!.getTheme().cardColor,
     );
 }
 

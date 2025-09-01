@@ -6,6 +6,8 @@ import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
 import 'package:mgs_app2/utilities/utils.dart';
+import 'package:mgs_app2/widgets/button.dart';
+import 'package:shimmer/shimmer.dart';
 
 class MyConsigliatiCard extends StatelessWidget {
   const MyConsigliatiCard({
@@ -15,23 +17,38 @@ class MyConsigliatiCard extends StatelessWidget {
     required this.event,
     required this.appConfig,
     required this.onPop,
+    required this.isLoading,
   });
 
   final double height;
   final double width;
-  final EventModel event;
+  final EventModel? event;
   final AppConfig appConfig;
   final void Function(bool) onPop;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
+
+    if (isLoading) {
+      return Shimmer.fromColors(
+          baseColor: shimmerColorBase,
+          highlightColor: shimmerColorHighlight,
+          child: buildWidget(context));
+    }
+
+    return buildWidget(context);
+  }
+
+  Widget buildWidget(BuildContext context) {
     return GestureDetector(
       onTap: () async {
+        if (event == null) return;
         final result = await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => EventScreen(event: event),
+            builder: (context) => EventScreen(event: event!),
           ),
         );
 
@@ -45,52 +62,53 @@ class MyConsigliatiCard extends StatelessWidget {
       child: Container(
         constraints:
             BoxConstraints(maxHeight: height * 0.4, maxWidth: width * 0.7),
-        padding: EdgeInsets.only(right: width * 0.03),
+        padding: EdgeInsets.only(right: 15),
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
-            side: getCustomBorderSide(
-                appConfig: appConfig,
-                width: width * bigRecommendedEventsCardBorderThickness),
           ),
           child: Stack(children: [
             Positioned.fill(
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
-                child: event.image == null || event.image!.downloadUrl == null
-                    ? Image.asset(
-                        'assets/images/party.png',
-                        fit: BoxFit.cover,
-                      )
-                    : CachedNetworkImage(
-                        imageUrl: event.image!.downloadUrl!,
-                        fit: BoxFit.cover,
-                        memCacheWidth: 600,
-                        memCacheHeight: 400,
-                        placeholder: (context, url) => ColorFiltered(
-                          colorFilter: const ColorFilter.mode(
-                            Colors.grey,
-                            BlendMode.saturation,
-                          ),
-                          child: Image.asset(
-                            'assets/images/ballo.png',
+                child: event == null
+                    ? SizedBox()
+                    : event!.image == null || event!.image!.downloadUrl == null
+                        ? Image.asset(
+                            'assets/images/party.png',
                             fit: BoxFit.cover,
+                          )
+                        : Hero(
+                            tag: 'event-image-${event!.id}',
+                            child: CachedNetworkImage(
+                              imageUrl: event!.image!.downloadUrl!,
+                              fit: BoxFit.cover,
+                              memCacheWidth: 600,
+                              memCacheHeight: 400,
+                              placeholder: (context, url) => ColorFiltered(
+                                colorFilter: const ColorFilter.mode(
+                                  Colors.grey,
+                                  BlendMode.saturation,
+                                ),
+                                child: Image.asset(
+                                  'assets/images/ballo.png',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Image.asset(
+                                'assets/images/party.png',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
-                        ),
-                        errorWidget: (context, url, error) => Image.asset(
-                          'assets/images/party.png',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
               ),
             ),
             Positioned(
-                left: width * 0.025,
-                bottom: width * 0.025,
+                left: 10,
+                bottom: 10,
                 child: Container(
                   constraints: BoxConstraints(maxWidth: width * 0.5),
-                  padding: EdgeInsets.symmetric(
-                      horizontal: width * 0.02, vertical: width * 0.01),
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
                     color: Theme.of(context).scaffoldBackgroundColor,
                     borderRadius:
@@ -100,18 +118,16 @@ class MyConsigliatiCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          event.title,
+                          event == null ? '' : event!.title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: width * 0.04),
+                          style: textStyleEventCardTitle(context),
                         ),
                         Text(
-                          formatDateToDayMonth(event.start),
-                          style: TextStyle(
-                            fontSize: width * 0.037,
-                          ),
+                          event == null
+                              ? ''
+                              : formatDateToDayMonth(event!.start),
+                          style: textStyleEventCardSubtitle(context),
                         ),
                       ]),
                 )),

@@ -20,18 +20,19 @@ class SortOfAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         GestureDetector(
-          onTap: () => {
-            globalKey.currentState!.openDrawer()
-          },
+          onTap: () => {globalKey.currentState!.openDrawer()},
           child: Container(
-            padding: EdgeInsets.all(appConfig.getWidth() * 1.2),
+            height: 45,
+            width: 45,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(
                   appConfig.getWidth() * 1.8), // Bordi arrotondati
               border: getCustomBorder(
-                width: appConfig.getWidth() * bigRoutingButtonBorderThickness,
+                width: 0.5,
                 appConfig: appConfig,
               ),
             ),
@@ -41,25 +42,19 @@ class SortOfAppBar extends StatelessWidget {
             ),
           ),
         ),
-        const Expanded(
-            child: SizedBox(
-          width: 10,
-        )),
         GestureDetector(
           onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const PersonalScreen()),
-              ),
+            context,
+            MaterialPageRoute(builder: (context) => const PersonalScreen()),
+          ),
           child: MyProfilePicture(
             appConfig: appConfig,
-            borderThickness: homeScreenProfilePicBorderThickness,
-            borderRadius: homeScreenProfilePicBorderRadius,
-            dimension: homeScreenProfilePicDimension,
+            borderThickness: 0.5,
+            borderRadius: appConfig.getWidth() * 1.8,
+            dimension: 45,
           ),
         ),
       ],
     );
   }
 }
-
-

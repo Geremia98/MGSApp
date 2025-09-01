@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:mgs_app2/models/event_model.dart';
 import 'package:mgs_app2/screens/add_event/add_event_controller.dart';
 import 'package:mgs_app2/screens/add_event/add_event_navigator.dart';
 import 'package:mgs_app2/screens/add_event/progress_bar.dart';
@@ -21,7 +22,10 @@ import 'package:mgs_app2/widgets/snackbar.dart';
 import '../../utilities/app_config.dart';
 
 class AddEventScreen extends StatefulWidget {
+
+  final EventModel? event;
   const AddEventScreen({
+    this.event,
     super.key,
   });
 
@@ -67,6 +71,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
     controller = AddEventController(
       pageController: pageController,
+      initialEvent: widget.event,
     );
   }
 

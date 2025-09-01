@@ -6,7 +6,9 @@ import 'package:mgs_app2/widgets/button.dart';
 import 'package:mgs_app2/widgets/snackbar.dart';
 import 'package:mgs_app2/widgets/text_field.dart';
 
+import '../../utilities/constants_dimensions.dart';
 import '../../widgets/back_button_app_bar.dart';
+import '../../widgets/buttons.dart';
 import '../../widgets/font.dart';
 
 class ChangeEmailScreen extends StatefulWidget {
@@ -28,66 +30,52 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
 
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: appConfig.getTheme().scaffoldBackgroundColor,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: appConfig.getWidth() * 5),
-          child: SizedBox(
+      body: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.symmetric(
+          horizontal: appConfig.getWidth() * horizontalPadding,
+          vertical: appConfig.getHeight() * verticalPadding,
+        ),
+        child: SizedBox(
             height: appConfig.getHeight() * 100,
             width: appConfig.getWidth() * 100,
             child: Form(
               key: formKey,
               child: Column(
                 children: [
-                  BackButtonAppBar(
-                    iconData: Icons.arrow_back_rounded,
-                    appConfig: appConfig,
+                  GoBackButton(
+                    icon: Icons.arrow_back_rounded,
                     onTap: () {
                       Navigator.pop(context);
                     },
+                    appConfig: appConfig,
+                    title: 'Modifica email',
                   ),
                   SizedBox(
                     height: appConfig.getHeight() * 5,
                   ),
                   Center(
                     child: Text(
-                      'Reimposta email',
-                      style: TextStyle(
-                        fontSize: fontSizeTitle,
-                        fontWeight: FontWeight.w700,
-                        height: 1.2,
-                        color: appConfig.getTheme().secondaryHeaderColor,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Center(
-                    child: Text(
                       'Inserisci la tua nuova email. Verrà inviata una mail di conferma per completare la richiesta.',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: fontSizeSubtitle,
+                        fontSize: appConfig.getWidth() * 3.5,
                         fontWeight: FontWeight.w500,
                         color: appConfig.getTheme().secondaryHeaderColor,
                       ),
                     ),
                   ),
                   SizedBox(
-                    height: 50,
+                    height: appConfig.getHeight() * 5,
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: appConfig.getWidth() * 5),
-                    child: buildTextField(
+                  buildTextField(
                       appConfig,
                       hintText: 'Email',
                       onChanged: onEmailChange,
                       validator: onEmailChange,
-                    ),
                   ),
                   const SizedBox(
-                    height: 50,
+                    height: 40,
                   ),
                   ButtonText(
                     text: 'Modifica',
@@ -97,7 +85,6 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
                 ],
               ),
             ),
-          ),
         ),
       ),
     );

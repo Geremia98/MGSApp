@@ -51,11 +51,42 @@ class AddEventController {
 
   bool isLoading = false;
 
+  EventModel? initialEvent;
+
   AddEventController({
     required this.pageController,
+    this.initialEvent,
   }) {
     _stage = AddEventStage.values.first;
     isCurrentStageValid = false;
+
+    if (initialEvent != null) {
+      initEvent();
+    }
+  }
+
+  void initEvent(){
+
+    startDate = initialEvent!.start;
+    endDate = initialEvent!.end;
+    startTime = TimeOfDay(hour: initialEvent!.start!.hour, minute: initialEvent!.start!.minute);
+    endTime = TimeOfDay(hour: initialEvent!.end!.hour, minute: initialEvent!.end!.minute);;
+
+    description = initialEvent!.desc;
+    title = initialEvent!.title;
+
+     bannerImage = initialEvent!.image;
+
+    location = initialEvent!.location;
+    price = initialEvent!.price;
+
+    targetCountry = initialEvent!.targetCountry;
+    targetIspettoria = initialEvent!.targetIspettoria.isEmpty ? null : initialEvent!.targetIspettoria;
+    targetGroup = initialEvent!.targetGruppo.isEmpty ? null : initialEvent!.targetGruppo;
+
+    minTargetAge = initialEvent!.minTargetAge;
+    maxTargetAge = initialEvent!.maxTargetAge;
+    targetGender = initialEvent!.targetGender;
   }
 
   void setAnimateProgressBar(void Function() animateFunction) {
@@ -131,10 +162,15 @@ class AddEventController {
 
     EventFirestore eventFirestore = EventFirestore();
 
-    String result = await eventFirestore.addEvent(eventModel);
+    String result;
+
+    if (initialEvent == null) {
+    result = await eventFirestore.addEvent(eventModel);
+    } else {
+      result = await eventFirestore.editEvent(eventModel, initialEvent!.id);
+    }
 
     FirebaseStorageService storageService = FirebaseStorageService();
-
 
     if (result.isNotEmpty) {
       eventModel.image = await storageService.getEventBannerImage(result);

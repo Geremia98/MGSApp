@@ -13,6 +13,9 @@ import 'package:mgs_app2/widgets/home_page_widgets/my_events_card.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/sort_of_app_bar.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/my_personal_home_raw.dart';
 import 'package:mgs_app2/widgets/snackbar.dart';
+import 'package:shimmer/shimmer.dart';
+
+import '../../utilities/my_theme_data.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'HomeScreen';
@@ -53,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
         height: height,
         width: width,
         onEventCreation: onEventCreation,
+        onEventsChange: onEventsChange,
       ),
       body: SafeArea(
         bottom: false,
@@ -66,9 +70,10 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SortOfAppBar(
-                    iconData: Icons.grid_view_rounded,
-                    appConfig: appConfig,
-                    globalKey: _globalKey,),
+                  iconData: Icons.grid_view_rounded,
+                  appConfig: appConfig,
+                  globalKey: _globalKey,
+                ),
                 EventiDelMeseReminder(),
                 MyPersonalHomeRow(
                   appConfig: appConfig,
@@ -78,20 +83,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   futureEvents: eventFirestore.retrieveEvents(),
                 ),
                 SizedBox(
-                  height: height * 0.23,
+                  height: height * 0.20,
                   child: FutureBuilder(
                       future: retrieveEvents,
                       builder: (BuildContext context,
                           AsyncSnapshot<List<EventModel>> snap) {
-                        if (snap.connectionState != ConnectionState.done) {
-                          return Center(
-                            child: CupertinoActivityIndicator(
-                              color: appConfig.getTheme().secondaryHeaderColor,
-                            ),
-                          );
-                        }
-
-                        if (snap.data == null || snap.data!.isEmpty) {
+                        if (snap.connectionState == ConnectionState.done &&
+                            (snap.data == null || snap.data!.isEmpty)) {
                           return SizedBox(
                             child: Text('Nessun evento'),
                           );
@@ -100,9 +98,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         return ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
-                          itemCount: math.min(snap.data!.length, 3),
+                          itemCount: snap.data == null
+                              ? 3
+                              : math.min(snap.data!.length, 3),
                           itemBuilder: (BuildContext context, int index) {
-                            EventModel event = snap.data![index];
+                            EventModel? event =
+                                snap.data == null ? null : snap.data![index];
                             return TweenAnimationBuilder<double>(
                               tween: Tween(begin: 0.7, end: 1.0),
                               duration:
@@ -120,7 +121,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 width: width,
                                 event: event,
                                 onPop: needsRefreshEvents,
-
+                                isLoading: snap.connectionState !=
+                                    ConnectionState.done,
                               ),
                             );
                           },
@@ -135,90 +137,58 @@ class _HomeScreenState extends State<HomeScreen> {
                   titolo: 'I miei eventi',
                 ),
                 FutureBuilder(
-                    future: eventFirestore.retrievePersonalEvents(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<EventModel>> snap) {
-                      if (snap.connectionState != ConnectionState.done && personalEvents.isEmpty) {
-                        return Center(
-                          child: CupertinoActivityIndicator(
-                            color: appConfig.getTheme().secondaryHeaderColor,
-                          ),
-                        );
-                      }
+                  future: eventFirestore.retrievePersonalEvents(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<EventModel>> snap) {
 
-                      if (snap.connectionState != ConnectionState.done) {
-                        return SizedBox(
-                          height: height * 0.4,
-                          child: ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            itemCount: math.min(personalEvents.length, 3),
-                            itemBuilder: (BuildContext context, int index) {
-                              EventModel event = personalEvents[index];
-                              return TweenAnimationBuilder<double>(
-                                tween: Tween(begin: 0.7, end: 1.0),
-                                duration:
-                                Duration(milliseconds: 300 + index * 100),
-                                curve: Curves.easeOutBack,
-                                builder: (context, value, child) {
-                                  return Transform.scale(
-                                    scale: value,
-                                    child: child,
-                                  );
-                                },
-                                child: MyEventsCard(
-                                  appConfig: appConfig,
-                                  height: height,
-                                  width: width,
-                                  event: event,
-                                  onPop: needsRefreshEvents,
+                    if (snap.connectionState == ConnectionState.done &&
+                        (snap.data == null || snap.data!.isEmpty)) {
+                      return SizedBox(
+                        child: Text('Nessun evento'),
+                      );
+                    }
 
-                                ),
+                    if (snap.connectionState == ConnectionState.done) {
+                      personalEvents = snap.data!;
+                    }
+
+                    return SizedBox(
+                      height: height * 0.4,
+                      child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        itemCount: snap.connectionState != ConnectionState.done && personalEvents.isEmpty
+                            ? 2
+                            : math.min(personalEvents.length, 3),
+                        itemBuilder: (BuildContext context, int index) {
+                          EventModel? event =
+                              snap.connectionState != ConnectionState.done && personalEvents.isEmpty
+                                  ? null
+                                  : personalEvents[index];
+                          return TweenAnimationBuilder<double>(
+                            tween: Tween(begin: 0.7, end: 1.0),
+                            duration: Duration(milliseconds: 300 + index * 100),
+                            curve: Curves.easeOutBack,
+                            builder: (context, value, child) {
+                              return Transform.scale(
+                                scale: value,
+                                child: child,
                               );
                             },
-                          ),
-                        );
-                      }
-
-
-                      if (snap.data == null || snap.data!.isEmpty) {
-                        personalEvents = [];
-                        return SizedBox(
-                          child: Text('Nessun evento'),
-                        );
-                      }
-
-                      personalEvents = snap.data!;
-
-                      return SizedBox(
-                        height: height * 0.4,
-                        child: ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          itemCount: math.min(snap.data!.length, 3),
-                          itemBuilder: (BuildContext context, int index) {
-                            EventModel event = snap.data![index];
-                            return TweenAnimationBuilder<double>(
-                              tween: Tween(begin: 0.7, end: 1.0),
-                              duration:
-                                  Duration(milliseconds: 300 + index * 100),
-                              curve: Curves.easeOutBack,
-                              builder: (context, value, child) {
-                                return Transform.scale(
-                                  scale: value,
-                                  child: child,
-                                );
-                              },
-                              child: MyEventsCard(
-                                appConfig: appConfig,
-                                height: height,
-                                width: width,
-                                event: event,
-                                onPop: needsRefreshEvents,
-                              ),
-                            );
-                          },
-                        ),
-                      );
-                    }),
+                            child: MyEventsCard(
+                              appConfig: appConfig,
+                              height: height,
+                              width: width,
+                              event: event,
+                              onPop: needsRefreshEvents,
+                              isLoading:
+                                  snap.connectionState != ConnectionState.done && personalEvents.isEmpty,
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ),
@@ -229,10 +199,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void needsRefreshEvents(bool value) {
     if (value) {
-      setState(() {
-
-      });
+      setState(() {});
     }
+  }
+
+  void onEventsChange() {
+    setState(() {
+      retrievePersonalEvents = eventFirestore.retrievePersonalEvents();
+    });
   }
 
   void onEventCreation(EventModel? event) {
@@ -250,5 +224,4 @@ class _HomeScreenState extends State<HomeScreen> {
       retrievePersonalEvents = eventFirestore.retrievePersonalEvents();
     });
   }
-
 }

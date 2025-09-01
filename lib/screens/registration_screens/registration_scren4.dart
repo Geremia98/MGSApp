@@ -4,6 +4,7 @@ import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/widgets/back_button_app_bar.dart';
 import 'package:mgs_app2/widgets/personal_page_widgets/my_big_async_button.dart';
 import 'package:mgs_app2/widgets/personal_page_widgets/text_form_field_for_personal_screen.dart';
+import 'package:mgs_app2/widgets/title.dart';
 
 import '../../widgets/font.dart';
 
@@ -78,13 +79,9 @@ class _RegistrationScreen4State extends State<RegistrationScreen4> {
                   ),
                   Center(
                     child: Text(
-                      'Ultimo step ...\nmail e password',
-                      style: TextStyle(
-                        fontSize: fontSizeTitle,
-                        fontWeight: FontWeight.w700,
-                        height: 1.2,
-                        color: appConfig.getTheme().secondaryHeaderColor,
-                      ),
+                      'Ultimo step ...\nemail e password',
+                      style: textStyleTitle(context),
+                      maxLines: 2,
                     ),
                   ),
                   SizedBox(
@@ -93,11 +90,7 @@ class _RegistrationScreen4State extends State<RegistrationScreen4> {
                   Center(
                     child: Text(
                       '(Yep, le tue credenziali)',
-                      style: TextStyle(
-                        fontSize: appConfig.getWidth() * 4,
-                        fontWeight: FontWeight.w500,
-                        color: appConfig.getTheme().secondaryHeaderColor,
-                      ),
+                      style: textStyleSubtitle(context),
                     ),
                   ),
                   SizedBox(
