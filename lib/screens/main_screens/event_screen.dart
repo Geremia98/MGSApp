@@ -14,8 +14,9 @@ import '../../models/event_model.dart';
 
 class EventScreen extends StatefulWidget {
   final EventModel event;
+  final FirebaseFunctionCaller? functionCaller;
 
-  EventScreen({required this.event, super.key});
+  EventScreen({required this.event, this.functionCaller, super.key});
 
   @override
   State<EventScreen> createState() => _EventScreenState();
@@ -355,7 +356,7 @@ class _EventScreenState extends State<EventScreen> {
   Future<void> leaveEvent() async {
     //TODO aggiungere una schermata "are you sure"
 
-    final FirebaseFunctionCaller caller = FirebaseFunctionCaller();
+    final FirebaseFunctionCaller caller = widget.functionCaller ?? FirebaseFunctionCaller();
     final SnackBarStyle snackBarStyle = SnackBarStyle(context, scaffoldKey);
 
     setState(() {
@@ -384,7 +385,7 @@ class _EventScreenState extends State<EventScreen> {
   }
 
   Future<void> joinEvent() async {
-    final FirebaseFunctionCaller caller = FirebaseFunctionCaller();
+    final FirebaseFunctionCaller caller = widget.functionCaller ?? FirebaseFunctionCaller();
     final SnackBarStyle snackBarStyle = SnackBarStyle(context, scaffoldKey);
 
     if (widget.event.price == 0) {
