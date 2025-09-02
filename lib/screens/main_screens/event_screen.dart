@@ -489,35 +489,35 @@ class EventDetailBox extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: EdgeInsets.only(right: width * 0.05),
+              padding: EdgeInsets.only(right: width * 0.02),
               child: Icon(
                 icon,
-                size: width * 0.1,
+                size: width * 0.08,
                 color: appConfig.getTheme().focusColor,
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: width * 0.035,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: width * 0.032,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                SizedBox(
-                  width: width * 0.25,
-                  child: Text(
+                  Text(
                     subTitle,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: width * 0.035,
+                      fontSize: width * 0.032,
                     ),
                   ),
-                )
-              ],
+                ],
+              ),
             )
           ],
         ),
