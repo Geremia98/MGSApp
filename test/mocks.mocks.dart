@@ -4,6 +4,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i9;
+import 'dart:ui' as _i19;
 
 import 'package:cloud_firestore/cloud_firestore.dart' as _i2;
 import 'package:firebase_auth/firebase_auth.dart' as _i5;
@@ -20,6 +21,7 @@ import 'package:mgs_app2/services/functions/firebase_function_caller.dart'
     as _i14;
 import 'package:mgs_app2/services/functions/function_handler.dart' as _i3;
 import 'package:mgs_app2/services/functions/function_response.dart' as _i4;
+import 'package:mgs_app2/services/translator/translator.dart' as _i18;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i13;
 
@@ -863,4 +865,77 @@ class MockBuildContext extends _i1.Mock implements _i6.BuildContext {
           ),
         ),
       ) as _i7.DiagnosticsNode);
+}
+
+/// A class which mocks [Translator].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockTranslator extends _i1.Mock implements _i18.Translator {
+  @override
+  _i9.Future<void> addTranslationsFromJson(String? path) => (super.noSuchMethod(
+        Invocation.method(
+          #addTranslationsFromJson,
+          [path],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
+  _i9.Future<void> load(_i19.Locale? locale) => (super.noSuchMethod(
+        Invocation.method(
+          #load,
+          [locale],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
+  String translate(String? key) => (super.noSuchMethod(
+        Invocation.method(
+          #translate,
+          [key],
+        ),
+        returnValue: _i13.dummyValue<String>(
+          this,
+          Invocation.method(
+            #translate,
+            [key],
+          ),
+        ),
+        returnValueForMissingStub: _i13.dummyValue<String>(
+          this,
+          Invocation.method(
+            #translate,
+            [key],
+          ),
+        ),
+      ) as String);
+
+  @override
+  void setLocale(_i19.Locale? locale) => super.noSuchMethod(
+        Invocation.method(
+          #setLocale,
+          [locale],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i9.Future<void> changeLanguage(
+    _i6.BuildContext? context,
+    _i19.Locale? locale,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #changeLanguage,
+          [
+            context,
+            locale,
+          ],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
 }
