@@ -469,11 +469,13 @@ class MyPersonalRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            titolo,
-            style: TextStyle(
-              fontSize: width * 0.06,
-              fontWeight: FontWeight.bold,
+          Expanded(
+            child: Text(
+              titolo,
+              style: TextStyle(
+                fontSize: width * 0.06,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           count == -1
