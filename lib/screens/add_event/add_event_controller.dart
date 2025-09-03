@@ -107,7 +107,7 @@ class AddEventController {
     );
   }
 
-  void publish(BuildContext context) async {
+  Future<void> publish(BuildContext context, {EventFirestore? eventFirestore, FirebaseStorageService? storageService}) async {
 
     isLoading = true;
     changeNextButton();
@@ -129,15 +129,15 @@ class AddEventController {
       image: bannerImage,
     );
 
-    EventFirestore eventFirestore = EventFirestore();
+    EventFirestore firestore = eventFirestore ?? EventFirestore();
 
-    String result = await eventFirestore.addEvent(eventModel);
+    String result = await firestore.addEvent(eventModel);
 
-    FirebaseStorageService storageService = FirebaseStorageService();
+    FirebaseStorageService storage = storageService ?? FirebaseStorageService();
 
 
     if (result.isNotEmpty) {
-      eventModel.image = await storageService.getEventBannerImage(result);
+      eventModel.image = await storage.getEventBannerImage(result);
 
       Navigator.of(context).pop(eventModel);
       return;

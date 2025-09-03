@@ -3,19 +3,27 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i6;
+import 'dart:async' as _i9;
+import 'dart:ui' as _i19;
 
 import 'package:cloud_firestore/cloud_firestore.dart' as _i2;
-import 'package:mgs_app2/models/event_firestore.dart' as _i8;
-import 'package:mgs_app2/models/event_model.dart' as _i9;
-import 'package:mgs_app2/models/image_model.dart' as _i7;
-import 'package:mgs_app2/services/firebase/firebase_storage.dart' as _i5;
+import 'package:firebase_auth/firebase_auth.dart' as _i5;
+import 'package:flutter/cupertino.dart' as _i15;
+import 'package:flutter/foundation.dart' as _i7;
+import 'package:flutter/src/widgets/framework.dart' as _i6;
+import 'package:flutter/src/widgets/notification_listener.dart' as _i17;
+import 'package:mgs_app2/models/event_firestore.dart' as _i11;
+import 'package:mgs_app2/models/event_model.dart' as _i12;
+import 'package:mgs_app2/models/image_model.dart' as _i10;
+import 'package:mgs_app2/services/firebase/auth.dart' as _i16;
+import 'package:mgs_app2/services/firebase/firebase_storage.dart' as _i8;
 import 'package:mgs_app2/services/functions/firebase_function_caller.dart'
-    as _i11;
+    as _i14;
 import 'package:mgs_app2/services/functions/function_handler.dart' as _i3;
 import 'package:mgs_app2/services/functions/function_response.dart' as _i4;
+import 'package:mgs_app2/services/translator/translator.dart' as _i18;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i10;
+import 'package:mockito/src/dummies.dart' as _i13;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -64,39 +72,94 @@ class _FakeFunctionResponse_2 extends _i1.SmartFake
         );
 }
 
+class _FakeFirebaseAuth_3 extends _i1.SmartFake implements _i5.FirebaseAuth {
+  _FakeFirebaseAuth_3(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeWidget_4 extends _i1.SmartFake implements _i6.Widget {
+  _FakeWidget_4(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+
+  @override
+  String toString({_i7.DiagnosticLevel? minLevel = _i7.DiagnosticLevel.info}) =>
+      super.toString();
+}
+
+class _FakeInheritedWidget_5 extends _i1.SmartFake
+    implements _i6.InheritedWidget {
+  _FakeInheritedWidget_5(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+
+  @override
+  String toString({_i7.DiagnosticLevel? minLevel = _i7.DiagnosticLevel.info}) =>
+      super.toString();
+}
+
+class _FakeDiagnosticsNode_6 extends _i1.SmartFake
+    implements _i7.DiagnosticsNode {
+  _FakeDiagnosticsNode_6(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+
+  @override
+  String toString({
+    _i7.TextTreeConfiguration? parentConfiguration,
+    _i7.DiagnosticLevel? minLevel = _i7.DiagnosticLevel.info,
+  }) =>
+      super.toString();
+}
+
 /// A class which mocks [FirebaseStorageService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockFirebaseStorageService extends _i1.Mock
-    implements _i5.FirebaseStorageService {
-  MockFirebaseStorageService() {
-    _i1.throwOnMissingStub(this);
-  }
-
+    implements _i8.FirebaseStorageService {
   @override
-  _i6.Future<_i7.ImageModel?> getEventBannerImage(String? eventId) =>
+  _i9.Future<_i10.ImageModel?> getEventBannerImage(String? eventId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getEventBannerImage,
           [eventId],
         ),
-        returnValue: _i6.Future<_i7.ImageModel?>.value(),
-      ) as _i6.Future<_i7.ImageModel?>);
+        returnValue: _i9.Future<_i10.ImageModel?>.value(),
+        returnValueForMissingStub: _i9.Future<_i10.ImageModel?>.value(),
+      ) as _i9.Future<_i10.ImageModel?>);
 
   @override
-  _i6.Future<_i7.ImageModel?> getUserProfileImage(String? userUid) =>
+  _i9.Future<_i10.ImageModel?> getUserProfileImage(String? userUid) =>
       (super.noSuchMethod(
         Invocation.method(
           #getUserProfileImage,
           [userUid],
         ),
-        returnValue: _i6.Future<_i7.ImageModel?>.value(),
-      ) as _i6.Future<_i7.ImageModel?>);
+        returnValue: _i9.Future<_i10.ImageModel?>.value(),
+        returnValueForMissingStub: _i9.Future<_i10.ImageModel?>.value(),
+      ) as _i9.Future<_i10.ImageModel?>);
 
   @override
-  _i6.Future<bool> storeEventBannerImage(
+  _i9.Future<bool> storeEventBannerImage(
     String? eventId,
-    _i7.ImageModel? banner,
+    _i10.ImageModel? banner,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -106,22 +169,23 @@ class MockFirebaseStorageService extends _i1.Mock
             banner,
           ],
         ),
-        returnValue: _i6.Future<bool>.value(false),
-      ) as _i6.Future<bool>);
+        returnValue: _i9.Future<bool>.value(false),
+        returnValueForMissingStub: _i9.Future<bool>.value(false),
+      ) as _i9.Future<bool>);
 }
 
 /// A class which mocks [EventFirestore].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockEventFirestore extends _i1.Mock implements _i8.EventFirestore {
-  MockEventFirestore() {
-    _i1.throwOnMissingStub(this);
-  }
-
+class MockEventFirestore extends _i1.Mock implements _i11.EventFirestore {
   @override
   _i2.CollectionReference<Object?> get eventsCR => (super.noSuchMethod(
         Invocation.getter(#eventsCR),
         returnValue: _FakeCollectionReference_0<Object?>(
+          this,
+          Invocation.getter(#eventsCR),
+        ),
+        returnValueForMissingStub: _FakeCollectionReference_0<Object?>(
           this,
           Invocation.getter(#eventsCR),
         ),
@@ -138,7 +202,7 @@ class MockEventFirestore extends _i1.Mock implements _i8.EventFirestore {
       );
 
   @override
-  _i6.Future<List<_i9.EventModel>> retrieveUserJoinedEvents(
+  _i9.Future<List<_i12.EventModel>> retrieveUserJoinedEvents(
           {bool? onlyFuture = false}) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -146,30 +210,37 @@ class MockEventFirestore extends _i1.Mock implements _i8.EventFirestore {
           [],
           {#onlyFuture: onlyFuture},
         ),
-        returnValue: _i6.Future<List<_i9.EventModel>>.value(<_i9.EventModel>[]),
-      ) as _i6.Future<List<_i9.EventModel>>);
+        returnValue:
+            _i9.Future<List<_i12.EventModel>>.value(<_i12.EventModel>[]),
+        returnValueForMissingStub:
+            _i9.Future<List<_i12.EventModel>>.value(<_i12.EventModel>[]),
+      ) as _i9.Future<List<_i12.EventModel>>);
 
   @override
-  _i6.Future<List<_i9.EventModel>> retrieveEvents() => (super.noSuchMethod(
+  _i9.Future<List<_i12.EventModel>> retrieveEvents() => (super.noSuchMethod(
         Invocation.method(
           #retrieveEvents,
           [],
         ),
-        returnValue: _i6.Future<List<_i9.EventModel>>.value(<_i9.EventModel>[]),
-      ) as _i6.Future<List<_i9.EventModel>>);
+        returnValue:
+            _i9.Future<List<_i12.EventModel>>.value(<_i12.EventModel>[]),
+        returnValueForMissingStub:
+            _i9.Future<List<_i12.EventModel>>.value(<_i12.EventModel>[]),
+      ) as _i9.Future<List<_i12.EventModel>>);
 
   @override
-  _i6.Future<List<String>> retrieveParticipantsUid(String? eventId) =>
+  _i9.Future<List<String>> retrieveParticipantsUid(String? eventId) =>
       (super.noSuchMethod(
         Invocation.method(
           #retrieveParticipantsUid,
           [eventId],
         ),
-        returnValue: _i6.Future<List<String>>.value(<String>[]),
-      ) as _i6.Future<List<String>>);
+        returnValue: _i9.Future<List<String>>.value(<String>[]),
+        returnValueForMissingStub: _i9.Future<List<String>>.value(<String>[]),
+      ) as _i9.Future<List<String>>);
 
   @override
-  _i6.Future<List<_i9.EventModel>> retrievePersonalEvents(
+  _i9.Future<List<_i12.EventModel>> retrievePersonalEvents(
           {bool? onlyFuture = false}) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -177,43 +248,51 @@ class MockEventFirestore extends _i1.Mock implements _i8.EventFirestore {
           [],
           {#onlyFuture: onlyFuture},
         ),
-        returnValue: _i6.Future<List<_i9.EventModel>>.value(<_i9.EventModel>[]),
-      ) as _i6.Future<List<_i9.EventModel>>);
+        returnValue:
+            _i9.Future<List<_i12.EventModel>>.value(<_i12.EventModel>[]),
+        returnValueForMissingStub:
+            _i9.Future<List<_i12.EventModel>>.value(<_i12.EventModel>[]),
+      ) as _i9.Future<List<_i12.EventModel>>);
 
   @override
-  _i6.Future<_i9.EventModel?> getEventById(String? id) => (super.noSuchMethod(
+  _i9.Future<_i12.EventModel?> getEventById(String? id) => (super.noSuchMethod(
         Invocation.method(
           #getEventById,
           [id],
         ),
-        returnValue: _i6.Future<_i9.EventModel?>.value(),
-      ) as _i6.Future<_i9.EventModel?>);
+        returnValue: _i9.Future<_i12.EventModel?>.value(),
+        returnValueForMissingStub: _i9.Future<_i12.EventModel?>.value(),
+      ) as _i9.Future<_i12.EventModel?>);
 
   @override
-  _i6.Future<String> addEvent(_i9.EventModel? event) => (super.noSuchMethod(
+  _i9.Future<String> addEvent(_i12.EventModel? event) => (super.noSuchMethod(
         Invocation.method(
           #addEvent,
           [event],
         ),
-        returnValue: _i6.Future<String>.value(_i10.dummyValue<String>(
+        returnValue: _i9.Future<String>.value(_i13.dummyValue<String>(
           this,
           Invocation.method(
             #addEvent,
             [event],
           ),
         )),
-      ) as _i6.Future<String>);
+        returnValueForMissingStub:
+            _i9.Future<String>.value(_i13.dummyValue<String>(
+          this,
+          Invocation.method(
+            #addEvent,
+            [event],
+          ),
+        )),
+      ) as _i9.Future<String>);
 }
 
 /// A class which mocks [FirebaseFunctionCaller].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockFirebaseFunctionCaller extends _i1.Mock
-    implements _i11.FirebaseFunctionCaller {
-  MockFirebaseFunctionCaller() {
-    _i1.throwOnMissingStub(this);
-  }
-
+    implements _i14.FirebaseFunctionCaller {
   @override
   _i3.FunctionHandler get handler => (super.noSuchMethod(
         Invocation.getter(#handler),
@@ -221,10 +300,14 @@ class MockFirebaseFunctionCaller extends _i1.Mock
           this,
           Invocation.getter(#handler),
         ),
+        returnValueForMissingStub: _FakeFunctionHandler_1(
+          this,
+          Invocation.getter(#handler),
+        ),
       ) as _i3.FunctionHandler);
 
   @override
-  _i6.Future<_i4.FunctionResponse> sendReport(
+  _i9.Future<_i4.FunctionResponse> sendReport(
     String? section,
     String? text,
   ) =>
@@ -237,7 +320,7 @@ class MockFirebaseFunctionCaller extends _i1.Mock
           ],
         ),
         returnValue:
-            _i6.Future<_i4.FunctionResponse>.value(_FakeFunctionResponse_2(
+            _i9.Future<_i4.FunctionResponse>.value(_FakeFunctionResponse_2(
           this,
           Invocation.method(
             #sendReport,
@@ -247,10 +330,21 @@ class MockFirebaseFunctionCaller extends _i1.Mock
             ],
           ),
         )),
-      ) as _i6.Future<_i4.FunctionResponse>);
+        returnValueForMissingStub:
+            _i9.Future<_i4.FunctionResponse>.value(_FakeFunctionResponse_2(
+          this,
+          Invocation.method(
+            #sendReport,
+            [
+              section,
+              text,
+            ],
+          ),
+        )),
+      ) as _i9.Future<_i4.FunctionResponse>);
 
   @override
-  _i6.Future<_i4.FunctionResponse> joinEvent(
+  _i9.Future<_i4.FunctionResponse> joinEvent(
     String? eventId, {
     String? paymentMethodId = '',
   }) =>
@@ -261,7 +355,7 @@ class MockFirebaseFunctionCaller extends _i1.Mock
           {#paymentMethodId: paymentMethodId},
         ),
         returnValue:
-            _i6.Future<_i4.FunctionResponse>.value(_FakeFunctionResponse_2(
+            _i9.Future<_i4.FunctionResponse>.value(_FakeFunctionResponse_2(
           this,
           Invocation.method(
             #joinEvent,
@@ -269,10 +363,19 @@ class MockFirebaseFunctionCaller extends _i1.Mock
             {#paymentMethodId: paymentMethodId},
           ),
         )),
-      ) as _i6.Future<_i4.FunctionResponse>);
+        returnValueForMissingStub:
+            _i9.Future<_i4.FunctionResponse>.value(_FakeFunctionResponse_2(
+          this,
+          Invocation.method(
+            #joinEvent,
+            [eventId],
+            {#paymentMethodId: paymentMethodId},
+          ),
+        )),
+      ) as _i9.Future<_i4.FunctionResponse>);
 
   @override
-  _i6.Future<_i4.FunctionResponse> leaveEvent(
+  _i9.Future<_i4.FunctionResponse> leaveEvent(
     String? eventId, {
     String? paymentMethodId = '',
   }) =>
@@ -283,7 +386,7 @@ class MockFirebaseFunctionCaller extends _i1.Mock
           {#paymentMethodId: paymentMethodId},
         ),
         returnValue:
-            _i6.Future<_i4.FunctionResponse>.value(_FakeFunctionResponse_2(
+            _i9.Future<_i4.FunctionResponse>.value(_FakeFunctionResponse_2(
           this,
           Invocation.method(
             #leaveEvent,
@@ -291,5 +394,548 @@ class MockFirebaseFunctionCaller extends _i1.Mock
             {#paymentMethodId: paymentMethodId},
           ),
         )),
-      ) as _i6.Future<_i4.FunctionResponse>);
+        returnValueForMissingStub:
+            _i9.Future<_i4.FunctionResponse>.value(_FakeFunctionResponse_2(
+          this,
+          Invocation.method(
+            #leaveEvent,
+            [eventId],
+            {#paymentMethodId: paymentMethodId},
+          ),
+        )),
+      ) as _i9.Future<_i4.FunctionResponse>);
+}
+
+/// A class which mocks [NavigatorObserver].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockNavigatorObserver extends _i1.Mock implements _i15.NavigatorObserver {
+  @override
+  void didPush(
+    _i15.Route<dynamic>? route,
+    _i15.Route<dynamic>? previousRoute,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #didPush,
+          [
+            route,
+            previousRoute,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void didPop(
+    _i15.Route<dynamic>? route,
+    _i15.Route<dynamic>? previousRoute,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #didPop,
+          [
+            route,
+            previousRoute,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void didRemove(
+    _i15.Route<dynamic>? route,
+    _i15.Route<dynamic>? previousRoute,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #didRemove,
+          [
+            route,
+            previousRoute,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void didReplace({
+    _i15.Route<dynamic>? newRoute,
+    _i15.Route<dynamic>? oldRoute,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #didReplace,
+          [],
+          {
+            #newRoute: newRoute,
+            #oldRoute: oldRoute,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void didChangeTop(
+    _i15.Route<dynamic>? topRoute,
+    _i15.Route<dynamic>? previousTopRoute,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #didChangeTop,
+          [
+            topRoute,
+            previousTopRoute,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void didStartUserGesture(
+    _i15.Route<dynamic>? route,
+    _i15.Route<dynamic>? previousRoute,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #didStartUserGesture,
+          [
+            route,
+            previousRoute,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void didStopUserGesture() => super.noSuchMethod(
+        Invocation.method(
+          #didStopUserGesture,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+}
+
+/// A class which mocks [FirebaseAuthService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockFirebaseAuthService extends _i1.Mock
+    implements _i16.FirebaseAuthService {
+  @override
+  _i5.FirebaseAuth getFirebaseInstance() => (super.noSuchMethod(
+        Invocation.method(
+          #getFirebaseInstance,
+          [],
+        ),
+        returnValue: _FakeFirebaseAuth_3(
+          this,
+          Invocation.method(
+            #getFirebaseInstance,
+            [],
+          ),
+        ),
+        returnValueForMissingStub: _FakeFirebaseAuth_3(
+          this,
+          Invocation.method(
+            #getFirebaseInstance,
+            [],
+          ),
+        ),
+      ) as _i5.FirebaseAuth);
+
+  @override
+  bool isUserEmailVerified() => (super.noSuchMethod(
+        Invocation.method(
+          #isUserEmailVerified,
+          [],
+        ),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+
+  @override
+  _i9.Future<void> sendVerificationEmail() => (super.noSuchMethod(
+        Invocation.method(
+          #sendVerificationEmail,
+          [],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
+  bool isUserLogged() => (super.noSuchMethod(
+        Invocation.method(
+          #isUserLogged,
+          [],
+        ),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+
+  @override
+  _i9.Future<dynamic> signInAnon() => (super.noSuchMethod(
+        Invocation.method(
+          #signInAnon,
+          [],
+        ),
+        returnValue: _i9.Future<dynamic>.value(),
+        returnValueForMissingStub: _i9.Future<dynamic>.value(),
+      ) as _i9.Future<dynamic>);
+
+  @override
+  _i9.Future<void> signOut(_i6.BuildContext? context) => (super.noSuchMethod(
+        Invocation.method(
+          #signOut,
+          [context],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
+  _i9.Future<void> signInWithCustomToken(String? customToken) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #signInWithCustomToken,
+          [customToken],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
+  _i9.Future<dynamic> signInWithEmailAndPassword(
+    String? email,
+    String? password,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #signInWithEmailAndPassword,
+          [
+            email,
+            password,
+          ],
+        ),
+        returnValue: _i9.Future<dynamic>.value(),
+        returnValueForMissingStub: _i9.Future<dynamic>.value(),
+      ) as _i9.Future<dynamic>);
+
+  @override
+  _i9.Future<_i5.User?> signInWithAuthCredential(
+          _i5.AuthCredential? credential) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #signInWithAuthCredential,
+          [credential],
+        ),
+        returnValue: _i9.Future<_i5.User?>.value(),
+        returnValueForMissingStub: _i9.Future<_i5.User?>.value(),
+      ) as _i9.Future<_i5.User?>);
+
+  @override
+  _i9.Future<dynamic> registerWithEmailAndPassword(
+    String? email,
+    String? password,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #registerWithEmailAndPassword,
+          [
+            email,
+            password,
+          ],
+        ),
+        returnValue: _i9.Future<dynamic>.value(),
+        returnValueForMissingStub: _i9.Future<dynamic>.value(),
+      ) as _i9.Future<dynamic>);
+
+  @override
+  _i9.Future<dynamic> sendPasswordResetEmail(String? email) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #sendPasswordResetEmail,
+          [email],
+        ),
+        returnValue: _i9.Future<dynamic>.value(),
+        returnValueForMissingStub: _i9.Future<dynamic>.value(),
+      ) as _i9.Future<dynamic>);
+
+  @override
+  _i9.Future<dynamic> resetPassword(String? newPass) => (super.noSuchMethod(
+        Invocation.method(
+          #resetPassword,
+          [newPass],
+        ),
+        returnValue: _i9.Future<dynamic>.value(),
+        returnValueForMissingStub: _i9.Future<dynamic>.value(),
+      ) as _i9.Future<dynamic>);
+
+  @override
+  _i9.Future<String?> resetEmail(String? newEmail) => (super.noSuchMethod(
+        Invocation.method(
+          #resetEmail,
+          [newEmail],
+        ),
+        returnValue: _i9.Future<String?>.value(),
+        returnValueForMissingStub: _i9.Future<String?>.value(),
+      ) as _i9.Future<String?>);
+}
+
+/// A class which mocks [BuildContext].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockBuildContext extends _i1.Mock implements _i6.BuildContext {
+  @override
+  _i6.Widget get widget => (super.noSuchMethod(
+        Invocation.getter(#widget),
+        returnValue: _FakeWidget_4(
+          this,
+          Invocation.getter(#widget),
+        ),
+        returnValueForMissingStub: _FakeWidget_4(
+          this,
+          Invocation.getter(#widget),
+        ),
+      ) as _i6.Widget);
+
+  @override
+  bool get mounted => (super.noSuchMethod(
+        Invocation.getter(#mounted),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+
+  @override
+  bool get debugDoingBuild => (super.noSuchMethod(
+        Invocation.getter(#debugDoingBuild),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+
+  @override
+  _i6.InheritedWidget dependOnInheritedElement(
+    _i6.InheritedElement? ancestor, {
+    Object? aspect,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #dependOnInheritedElement,
+          [ancestor],
+          {#aspect: aspect},
+        ),
+        returnValue: _FakeInheritedWidget_5(
+          this,
+          Invocation.method(
+            #dependOnInheritedElement,
+            [ancestor],
+            {#aspect: aspect},
+          ),
+        ),
+        returnValueForMissingStub: _FakeInheritedWidget_5(
+          this,
+          Invocation.method(
+            #dependOnInheritedElement,
+            [ancestor],
+            {#aspect: aspect},
+          ),
+        ),
+      ) as _i6.InheritedWidget);
+
+  @override
+  void visitAncestorElements(_i6.ConditionalElementVisitor? visitor) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #visitAncestorElements,
+          [visitor],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void visitChildElements(_i6.ElementVisitor? visitor) => super.noSuchMethod(
+        Invocation.method(
+          #visitChildElements,
+          [visitor],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void dispatchNotification(_i17.Notification? notification) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #dispatchNotification,
+          [notification],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i7.DiagnosticsNode describeElement(
+    String? name, {
+    _i7.DiagnosticsTreeStyle? style = _i7.DiagnosticsTreeStyle.errorProperty,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #describeElement,
+          [name],
+          {#style: style},
+        ),
+        returnValue: _FakeDiagnosticsNode_6(
+          this,
+          Invocation.method(
+            #describeElement,
+            [name],
+            {#style: style},
+          ),
+        ),
+        returnValueForMissingStub: _FakeDiagnosticsNode_6(
+          this,
+          Invocation.method(
+            #describeElement,
+            [name],
+            {#style: style},
+          ),
+        ),
+      ) as _i7.DiagnosticsNode);
+
+  @override
+  _i7.DiagnosticsNode describeWidget(
+    String? name, {
+    _i7.DiagnosticsTreeStyle? style = _i7.DiagnosticsTreeStyle.errorProperty,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #describeWidget,
+          [name],
+          {#style: style},
+        ),
+        returnValue: _FakeDiagnosticsNode_6(
+          this,
+          Invocation.method(
+            #describeWidget,
+            [name],
+            {#style: style},
+          ),
+        ),
+        returnValueForMissingStub: _FakeDiagnosticsNode_6(
+          this,
+          Invocation.method(
+            #describeWidget,
+            [name],
+            {#style: style},
+          ),
+        ),
+      ) as _i7.DiagnosticsNode);
+
+  @override
+  List<_i7.DiagnosticsNode> describeMissingAncestor(
+          {required Type? expectedAncestorType}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #describeMissingAncestor,
+          [],
+          {#expectedAncestorType: expectedAncestorType},
+        ),
+        returnValue: <_i7.DiagnosticsNode>[],
+        returnValueForMissingStub: <_i7.DiagnosticsNode>[],
+      ) as List<_i7.DiagnosticsNode>);
+
+  @override
+  _i7.DiagnosticsNode describeOwnershipChain(String? name) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #describeOwnershipChain,
+          [name],
+        ),
+        returnValue: _FakeDiagnosticsNode_6(
+          this,
+          Invocation.method(
+            #describeOwnershipChain,
+            [name],
+          ),
+        ),
+        returnValueForMissingStub: _FakeDiagnosticsNode_6(
+          this,
+          Invocation.method(
+            #describeOwnershipChain,
+            [name],
+          ),
+        ),
+      ) as _i7.DiagnosticsNode);
+}
+
+/// A class which mocks [Translator].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockTranslator extends _i1.Mock implements _i18.Translator {
+  @override
+  _i9.Future<void> addTranslationsFromJson(String? path) => (super.noSuchMethod(
+        Invocation.method(
+          #addTranslationsFromJson,
+          [path],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
+  _i9.Future<void> load(_i19.Locale? locale) => (super.noSuchMethod(
+        Invocation.method(
+          #load,
+          [locale],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
+  String translate(String? key) => (super.noSuchMethod(
+        Invocation.method(
+          #translate,
+          [key],
+        ),
+        returnValue: _i13.dummyValue<String>(
+          this,
+          Invocation.method(
+            #translate,
+            [key],
+          ),
+        ),
+        returnValueForMissingStub: _i13.dummyValue<String>(
+          this,
+          Invocation.method(
+            #translate,
+            [key],
+          ),
+        ),
+      ) as String);
+
+  @override
+  void setLocale(_i19.Locale? locale) => super.noSuchMethod(
+        Invocation.method(
+          #setLocale,
+          [locale],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i9.Future<void> changeLanguage(
+    _i6.BuildContext? context,
+    _i19.Locale? locale,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #changeLanguage,
+          [
+            context,
+            locale,
+          ],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
 }

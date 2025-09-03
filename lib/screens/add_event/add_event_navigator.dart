@@ -9,11 +9,13 @@ import '../../widgets/button.dart';
 
 class AddEventNavigator extends StatefulWidget {
   final AddEventController controller;
+  final Translator? translator;
 
   const AddEventNavigator(
       this.controller,
       {
         super.key,
+        this.translator,
       });
 
   @override
@@ -31,7 +33,7 @@ class _AddEventNavigatorState extends State<AddEventNavigator> {
     super.initState();
     controller = widget.controller;
     controller.updateStagesButton = updateStatus;
-    translator = Translator();
+    translator = widget.translator ?? Translator();
   }
 
   @override

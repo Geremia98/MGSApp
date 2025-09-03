@@ -12,7 +12,9 @@ import '../../widgets/back_button_app_bar.dart';
 import '../../widgets/font.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
-  const ForgotPasswordScreen({super.key});
+  final FirebaseAuthService? authService;
+  final GlobalKey<FormState>? formKey;
+  const ForgotPasswordScreen({super.key, this.authService, this.formKey});
 
   @override
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
@@ -20,9 +22,15 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  late final GlobalKey<FormState> formKey;
   bool isLoading = false;
   String email = '';
+
+  @override
+  void initState() {
+    super.initState();
+    formKey = widget.formKey ?? GlobalKey<FormState>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +120,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     }
 
 
-    FirebaseAuthService authService = FirebaseAuthService();
+    FirebaseAuthService authService = widget.authService ?? FirebaseAuthService();
 
     setState(() {
       isLoading = true;
