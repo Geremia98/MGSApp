@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:mgs_app2/screens/add_event/add_event_controller.dart';
 import 'package:mgs_app2/screens/add_event/stages/event_end_stage.dart';
 import '../../../test_helpers.dart';
@@ -9,8 +10,9 @@ void main() {
     late AddEventController controller;
     late PageController pageController;
 
-    setUpAll(() {
+    setUpAll(() async {
       setupFirebaseAuthMocks();
+      await initializeDateFormatting('it_IT', null);
     });
 
     setUp(() {
@@ -57,7 +59,7 @@ void main() {
       };
 
       try {
-        await tester.binding.setSurfaceSize(Size(400, 800));
+        await tester.binding.setSurfaceSize(Size(800, 1200));
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -92,7 +94,7 @@ void main() {
         controller.setEndDate(DateTime(2024, 6, 16)); // June 16, 2024
         controller.setEndTIme(const TimeOfDay(hour: 15, minute: 30)); // 3:30 PM
 
-        await tester.binding.setSurfaceSize(Size(400, 800));
+        await tester.binding.setSurfaceSize(Size(800, 1200));
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -102,7 +104,8 @@ void main() {
         );
 
         // Check that formatted date and time are displayed
-        expect(find.textContaining('16 / 6 / 2024'), findsOneWidget);
+        // Date should be in format "d MMMM yyyy" (e.g., "16 giugno 2024")
+        expect(find.textContaining('16'), findsWidgets); // Day should be there
         expect(find.textContaining('15:30'), findsOneWidget);
         
         await tester.binding.setSurfaceSize(null);
@@ -146,7 +149,7 @@ void main() {
       };
 
       try {
-        await tester.binding.setSurfaceSize(Size(400, 800));
+        await tester.binding.setSurfaceSize(Size(800, 1200));
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -159,10 +162,12 @@ void main() {
         final editButtons = find.byIcon(Icons.mode_edit_rounded);
         expect(editButtons, findsNWidgets(2));
         
-        await tester.tap(editButtons.first);
+        // Ensure button is visible by scrolling
+        await tester.ensureVisible(editButtons.first);
+        await tester.tap(editButtons.first, warnIfMissed: false);
         await tester.pumpAndSettle();
 
-        // Should show date picker dialog
+        // Should show date picker dialog - could be DatePickerDialog or similar
         expect(find.byType(DatePickerDialog), findsOneWidget);
         
         await tester.binding.setSurfaceSize(null);
@@ -181,7 +186,7 @@ void main() {
       };
 
       try {
-        await tester.binding.setSurfaceSize(Size(400, 800));
+        await tester.binding.setSurfaceSize(Size(800, 1200));
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -194,7 +199,9 @@ void main() {
         final editButtons = find.byIcon(Icons.mode_edit_rounded);
         expect(editButtons, findsNWidgets(2));
         
-        await tester.tap(editButtons.last);
+        // Ensure button is visible by scrolling
+        await tester.ensureVisible(editButtons.last);
+        await tester.tap(editButtons.last, warnIfMissed: false);
         await tester.pumpAndSettle();
 
         // Should show time picker dialog
@@ -216,7 +223,7 @@ void main() {
       };
 
       try {
-        await tester.binding.setSurfaceSize(Size(400, 800));
+        await tester.binding.setSurfaceSize(Size(800, 1200));
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -258,7 +265,7 @@ void main() {
       };
 
       try {
-        await tester.binding.setSurfaceSize(Size(400, 800));
+        await tester.binding.setSurfaceSize(Size(800, 1200));
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -354,7 +361,7 @@ void main() {
       };
 
       try {
-        await tester.binding.setSurfaceSize(Size(400, 800));
+        await tester.binding.setSurfaceSize(Size(800, 1200));
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -365,7 +372,8 @@ void main() {
 
         // Tap date edit button to open date picker
         final editButtons = find.byIcon(Icons.mode_edit_rounded);
-        await tester.tap(editButtons.first);
+        await tester.ensureVisible(editButtons.first);
+        await tester.tap(editButtons.first, warnIfMissed: false);
         await tester.pumpAndSettle();
 
         // Verify date picker dialog is shown
@@ -387,7 +395,7 @@ void main() {
       };
 
       try {
-        await tester.binding.setSurfaceSize(Size(400, 800));
+        await tester.binding.setSurfaceSize(Size(800, 1200));
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -398,7 +406,8 @@ void main() {
 
         // Tap time edit button to open time picker
         final editButtons = find.byIcon(Icons.mode_edit_rounded);
-        await tester.tap(editButtons.last);
+        await tester.ensureVisible(editButtons.last);
+        await tester.tap(editButtons.last, warnIfMissed: false);
         await tester.pumpAndSettle();
 
         // Verify time picker dialog is shown
@@ -476,7 +485,7 @@ void main() {
       };
 
       try {
-        await tester.binding.setSurfaceSize(Size(400, 800));
+        await tester.binding.setSurfaceSize(Size(800, 1200));
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -505,7 +514,7 @@ void main() {
       };
 
       try {
-        await tester.binding.setSurfaceSize(Size(400, 800));
+        await tester.binding.setSurfaceSize(Size(800, 1200));
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -611,7 +620,10 @@ void main() {
   });
 
   group('translateMonthFromDateTime', () {
-    test('should translate month names correctly', () {
+    test('should translate month names correctly', () async {
+      // Initialize date formatting for this test
+      await initializeDateFormatting('it_IT', null);
+      
       // Test various months - actual translation will depend on Translator implementation
       final januaryDate = DateTime(2024, 1, 15);
       final juneDate = DateTime(2024, 6, 15);

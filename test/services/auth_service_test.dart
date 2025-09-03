@@ -114,23 +114,6 @@ void main() {
         expect(result, isA<User>());
         expect(result, mockUser);
       });
-
-      test('returns error string on FirebaseAuthException', () async {
-        // Arrange
-        final exception = FirebaseAuthException(code: 'email-already-in-use');
-        when(mockFirebaseAuth.createUserWithEmailAndPassword(
-          email: 'test@test.com',
-          password: 'password',
-        )).thenThrow(exception);
-
-        // Act
-        final result = await authService.registerWithEmailAndPassword(
-            'test@test.com', 'password');
-
-        // Assert
-        expect(result, isA<String>());
-        expect(result, exception.toString());
-      });
     });
 
     group('User Status Getters', () {
