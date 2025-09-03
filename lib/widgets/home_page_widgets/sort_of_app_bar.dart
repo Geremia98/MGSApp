@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mgs_app2/models/image_model.dart';
 import 'package:mgs_app2/screens/main_screens/personal_screen.dart';
+import 'package:mgs_app2/services/firebase/firebase_storage.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
@@ -11,11 +11,13 @@ class SortOfAppBar extends StatelessWidget {
       {super.key,
       required this.iconData,
       required this.appConfig,
-      required this.globalKey});
+      required this.globalKey,
+      this.storageService});
 
   final AppConfig appConfig;
   final IconData iconData;
   final GlobalKey<ScaffoldState> globalKey;
+  final FirebaseStorageService? storageService;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +57,7 @@ class SortOfAppBar extends StatelessWidget {
             borderThickness: homeScreenProfilePicBorderThickness,
             borderRadius: homeScreenProfilePicBorderRadius,
             dimension: homeScreenProfilePicDimension,
+            storageService: storageService,
           ),
         ),
       ],

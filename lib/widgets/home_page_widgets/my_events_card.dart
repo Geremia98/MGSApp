@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/models/event_model.dart';
 import 'package:mgs_app2/screens/main_screens/event_screen.dart';
+import 'package:mgs_app2/services/functions/firebase_function_caller.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
@@ -15,6 +16,7 @@ class MyEventsCard extends StatelessWidget {
     required this.event,
     required this.appConfig,
     required this.onPop,
+    this.functionCaller,
   });
 
   final double height;
@@ -22,6 +24,7 @@ class MyEventsCard extends StatelessWidget {
   final EventModel event;
   final AppConfig appConfig;
   final void Function(bool) onPop;
+  final FirebaseFunctionCaller? functionCaller;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,12 @@ class MyEventsCard extends StatelessWidget {
         final result = await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => EventScreen(event: event),
+            builder: (context) => Material(
+              child: EventScreen(
+                event: event,
+                functionCaller: functionCaller,
+              ),
+            ),
           ),
         );
 
