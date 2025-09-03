@@ -77,6 +77,7 @@ class ButtonText extends StatelessWidget {
   final bool isEnabled;
   final double fixedWidth;
   final Color? color;
+  final Color? textColor;
 
   const ButtonText({
     required this.text,
@@ -84,6 +85,7 @@ class ButtonText extends StatelessWidget {
     this.isLoading = false,
     this.isEnabled = true,
     this.fixedWidth = -1,
+    this.textColor,
     this.color,
     super.key,
   });
@@ -95,7 +97,7 @@ class ButtonText extends StatelessWidget {
     return GestureDetector(
       onTap: isLoading || !isEnabled ? null : onTap,
       child: Container(
-        height: appConfig.getHeight() * 5,
+        height: 40,
         width: fixedWidth != -1 ? fixedWidth : null,
         padding: EdgeInsets.symmetric(
           horizontal: fixedWidth == -1 ? appConfig.getWidth() * 15 : 0,
@@ -111,7 +113,7 @@ class ButtonText extends StatelessWidget {
               Center(
                 child: Text(
                   text,
-                  style: textStyleButton(context),
+                  style: textStyleButton(context).copyWith(color: textColor ?? textStyleButton(context).color),
                 ),
               ),
               isLoading
@@ -243,13 +245,52 @@ BoxDecoration buttonTextDisabledDecoration(BuildContext context) {
 TextStyle textStyleButton(BuildContext context) {
   return TextStyle(
     fontSize: fontSizeButton,
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.bold,
     color: AppConfig(context)
         .getTheme()
         .scaffoldBackgroundColor,
   );
 }
 
+TextStyle textStyleTitle(BuildContext context) {
+  return TextStyle(
+    fontSize: fontSizeHuge,
+    fontWeight: FontWeight.w700,
+    color: AppConfig(context)
+        .getTheme()
+        .primaryColor,
+  );
+}
+
+TextStyle textStyleSubtitle(BuildContext context) {
+  return TextStyle(
+    fontSize: fontSizeMedium,
+    fontWeight: FontWeight.w500,
+    color: AppConfig(context)
+        .getTheme()
+        .primaryColor,
+  );
+}
+
+TextStyle textStyleEventCardTitle(BuildContext context) {
+  return TextStyle(
+    fontSize: fontSizeMedium,
+    fontWeight: FontWeight.w700,
+    color: AppConfig(context)
+        .getTheme()
+        .secondaryHeaderColor,
+  );
+}
+
+TextStyle textStyleEventCardSubtitle(BuildContext context) {
+  return TextStyle(
+    fontSize: fontSizeMedium - 1,
+    fontWeight: FontWeight.w500,
+    color: AppConfig(context)
+        .getTheme()
+        .secondaryHeaderColor,
+  );
+}
 
 BoxDecoration buttonAsTextFieldDecoration(BuildContext context, bool hasError) {
   final AppConfig appConfig = AppConfig(context);

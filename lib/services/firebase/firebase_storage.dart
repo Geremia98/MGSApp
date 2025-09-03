@@ -17,7 +17,6 @@ class FirebaseStorageService {
     try {
       ListResult result = await reference.listAll();
 
-      print(result.items.length);
 
       for (Reference item in result.items) {
         return ImageModel(downloadUrl: await item.getDownloadURL());

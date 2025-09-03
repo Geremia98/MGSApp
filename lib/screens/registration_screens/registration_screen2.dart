@@ -5,6 +5,7 @@ import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/widgets/back_button_app_bar.dart';
 import 'package:mgs_app2/widgets/image_upload.dart';
 import 'package:mgs_app2/widgets/personal_page_widgets/my_squared_icon_button.dart';
+import 'package:mgs_app2/widgets/title.dart';
 
 import '../../widgets/font.dart';
 
@@ -31,13 +32,13 @@ class _RegistrationScreen2State extends State<RegistrationScreen2> {
     super.initState();
     controller = widget.controller;
 
-    controller.profilePic.toString().isNotEmpty
+    controller.profilePic == null
         ? _isDisabled = true
         : _isDisabled = false;
   }
 
   void calculateWetherEnablingTheButton() {
-    controller.profilePic.toString().isNotEmpty
+    controller.profilePic != null
         ? setState(() {
             _isDisabled = false;
           })
@@ -92,12 +93,7 @@ class _RegistrationScreen2State extends State<RegistrationScreen2> {
                   Center(
                     child: Text(
                       '... 1, 2, 3 ...\nCHEEESE!',
-                      style: TextStyle(
-                        fontSize: fontSizeTitle,
-                        fontWeight: FontWeight.w700,
-                        height: 1.2,
-                        color: appConfig.getTheme().secondaryHeaderColor,
-                      ),
+                      style: textStyleTitle(context),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -105,11 +101,7 @@ class _RegistrationScreen2State extends State<RegistrationScreen2> {
                     child: Text(
                       '(Sarà la tua foto profilo)',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: appConfig.getWidth() * 4,
-                        fontWeight: FontWeight.w500,
-                        color: appConfig.getTheme().secondaryHeaderColor,
-                      ),
+                      style: textStyleSubtitle(context),
                     ),
                   ),
                   SizedBox(height: 50),

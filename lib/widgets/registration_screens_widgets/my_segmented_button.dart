@@ -1,112 +1,181 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-import 'package:mgs_app2/utilities/constants_dimensions.dart';
 
-class MySegmentedButton<T> extends StatefulWidget {
-  final Set<T> selected;
-  final String title;
-  final String leftString;
-  final String rightString;
-  final void Function(Set<T>) onValueChange;
+import '../../utilities/constants_dimensions.dart';
+
+class MyCustomSegmentedButton<T> extends StatefulWidget {
   final T leftValue;
   final T rightValue;
-  final bool isEnable;
+  final String leftText;
+  final String rightText;
+  final T selected;
+  final void Function(T) onValueChange;
+  final bool isEnabled;
+  final double height;
+  final double width;
+  final String title;
+  final double borderRadius;
 
-  const MySegmentedButton(
-      {required this.leftString,
-      required this.rightString,
-      required this.selected,
-      required this.onValueChange,
-      required this.title,
-      required this.leftValue,
-      required this.rightValue,
-      required this.isEnable,
-      super.key});
+  const MyCustomSegmentedButton({
+    super.key,
+    required this.leftValue,
+    required this.rightValue,
+    required this.leftText,
+    required this.rightText,
+    required this.selected,
+    required this.onValueChange,
+    this.isEnabled = true,
+    this.title = '',
+    this.height = heightTextFormFieldWithoutError,
+    this.width = 200,
+    this.borderRadius = 10,
+  });
 
   @override
-  State<MySegmentedButton<T>> createState() => _MySegmentedButtonState<T>();
+  State<MyCustomSegmentedButton<T>> createState() =>
+      _MyCustomSegmentedButtonState<T>();
 }
-
-class _MySegmentedButtonState<T> extends State<MySegmentedButton<T>> {
-  late AppConfig _appConfig;
-  late Set<T> _selected;
-  late String _title;
-  late String _leftString;
-  late String _rightString;
-  late T _leftValue;
-  late T _rightValue;
-  late void Function(Set<T>) _onValueChange;
+class _MyCustomSegmentedButtonState<T>
+    extends State<MyCustomSegmentedButton<T>> {
+  late T _selected;
 
   @override
   void initState() {
-    _selected = widget.selected;
-    _title = widget.title;
-    _leftString = widget.leftString;
-    _rightString = widget.rightString;
-    _leftValue = widget.leftValue;
-    _rightValue = widget.rightValue;
-    _onValueChange = widget.onValueChange;
     super.initState();
+    _selected = widget.selected;
   }
 
   @override
   Widget build(BuildContext context) {
-    _appConfig = AppConfig(context);
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: _appConfig.getHeight()*0.7),
-      child: Row(
-        children: [
-          Text(
-            _title,
-            style: TextStyle(
-              color: _appConfig.getTheme().secondaryHeaderColor,
-              fontWeight: fontWeightOfLabelsOfTextField,
-              fontSize: fontSizeOfLablesOfTextField,
-            ),
-          ),
-          SizedBox(width: 8),
-          SegmentedButton<T>(
-            segments: <ButtonSegment<T>>[
-              ButtonSegment(value: _leftValue, label: Text(_leftString)),
-              ButtonSegment(value: _rightValue, label: Text(_rightString))
-            ],
-            selected: _selected,
-            onSelectionChanged: (newValue) {
-                    if (widget.isEnable) {
-                      setState(() {
-                      _selected = newValue!;
-                    });
-                    if (_onValueChange != null) {
-                      _onValueChange!(_selected);
-                    }
-                    }
-                  },
-            showSelectedIcon: false,
-            style: SegmentedButton.styleFrom(
-          overlayColor: Colors.transparent,
-              // colore di fondo “normale”
-          backgroundColor: _appConfig.getTheme().scaffoldBackgroundColor,
-          // colore di fondo quando selezionato
-          selectedBackgroundColor: widget.isEnable ? _appConfig.getTheme().primaryColor :  _appConfig.getTheme().splashColor,
-          
-          // colore del testo “normale”
-          foregroundColor: _appConfig.getTheme().primaryColor,
-          // colore del testo quando selezionato
-          selectedForegroundColor: _appConfig.getTheme().scaffoldBackgroundColor,
-          // bordo e forma
-          side: BorderSide(
-            width: thicknessOfBordersEnabledButtonsAndTextFormField,
-            color: widget.isEnable ? _appConfig.getTheme().primaryColor : _appConfig.getTheme().disabledColor
-          ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadiusOfSegementedButton)),
-          // padding interno
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
-          // stile del testo (se vuoi applicarlo in modo uniforme)
-          textStyle: const TextStyle(fontSize: fontSizeOfTextAndFormField, fontWeight: FontWeight.w300),
+    final AppConfig appConfig = AppConfig(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.title.isNotEmpty)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: SizedBox(
+              width: appConfig.getWidth() * 79,
+              child: Text(
+                widget.title,
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  color: appConfig.getTheme().secondaryHeaderColor,
+                  fontWeight: FontWeight.w500,
+                  fontSize: appConfig.getHeight() * 1.8,
+                ),
+              ),
             ),
           )
-        ],
+        else
+          const SizedBox(),
+        SizedBox(
+          height: widget.title.isNotEmpty ? 10 : 0,
+        ),
+
+        SizedBox(
+          height: widget.height,
+          width: widget.width,
+          child: Row(
+            children: [
+              // LEFT
+              Expanded(
+                child: _buildSegment(
+                  value: widget.leftValue,
+                  label: widget.leftText,
+                  isFirst: true,
+                  isSelected: _selected == widget.leftValue,
+                  theme: appConfig.getTheme(),
+                ),
+              ),
+              // RIGHT
+              Expanded(
+                child: _buildSegment(
+                  value: widget.rightValue,
+                  label: widget.rightText,
+                  isFirst: false,
+                  isSelected: _selected == widget.rightValue,
+                  theme: appConfig.getTheme(),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSegment({
+    required T value,
+    required String label,
+    required bool isFirst,
+    required bool isSelected,
+    required ThemeData theme,
+  }) {
+    final borderSide = BorderSide(
+      width: 0.5,
+      color: widget.isEnabled
+          ? theme.secondaryHeaderColor
+          : theme.disabledColor,
+    );
+
+    // bordo centrale metà spessore
+    final centerBorderSide = borderSide.copyWith(width: borderSide.width / 2);
+
+    return Material(
+      color: isSelected
+          ? (widget.isEnabled ? theme.secondaryHeaderColor : Colors.grey.shade500)
+          : theme.scaffoldBackgroundColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.horizontal(
+          left: isFirst ? Radius.circular(widget.borderRadius) : Radius.zero,
+          right: !isFirst ? Radius.circular(widget.borderRadius) : Radius.zero,
+        ),
+        side: BorderSide.none,
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.horizontal(
+          left: isFirst ? Radius.circular(widget.borderRadius) : Radius.zero,
+          right: !isFirst ? Radius.circular(widget.borderRadius) : Radius.zero,
+        ),
+        onTap: widget.isEnabled
+            ? () {
+          setState(() {
+            _selected = value;
+          });
+          widget.onValueChange(value);
+        }
+            : null,
+        child: Container(
+          height: widget.height,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.horizontal(
+              left: isFirst ? Radius.circular(widget.borderRadius) : Radius
+                  .zero,
+              right: !isFirst ? Radius.circular(widget.borderRadius) : Radius
+                  .zero,
+            ),
+            border: Border(
+              left: isFirst ? borderSide : centerBorderSide,
+              right: !isFirst ? borderSide : centerBorderSide,
+              top: borderSide,
+              bottom: borderSide,
+            ),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            label,
+            style: TextStyle(
+              color: isSelected
+                  ? theme.scaffoldBackgroundColor
+                  : theme.secondaryHeaderColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
       ),
     );
   }
 }
+

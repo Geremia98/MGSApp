@@ -3,6 +3,7 @@ import 'package:mgs_app2/screens/main_screens/all_events_screen.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
+import 'package:mgs_app2/widgets/button.dart';
 
 import '../../models/event_model.dart';
 
@@ -36,18 +37,13 @@ class MyPersonalHomeRow extends StatelessWidget {
         children: [
           Text(
             titolo,
-            style: TextStyle(
-              fontSize: width * 0.05,
-              fontWeight: FontWeight.bold,
-            ),
+            style: textStyleTitle(context),
           ),
           Row(
             children: [
               Text(
                 'Vedi tutti',
-                style: TextStyle(
-                  fontSize: width * 0.041,
-                ),
+                style: textStyleTextField(context),
               ),
               SizedBox(
                 width: width * 0.02,
@@ -71,13 +67,13 @@ class MyPersonalHomeRow extends StatelessWidget {
                         width * 0.02), // Bordi arrotondati
                     border: getCustomBorder(
                       appConfig: appConfig,
-                      width: width * smallRoutingButtonBorderThickness,
+                      width: 0.8,
                     ),
                   ),
                   child: Icon(
                     Icons.arrow_forward_rounded,
-                    // Icona simile a quella mostrata
-                    size: width * 0.05, // Dimensione dell'icona
+                    size: 15,
+                    color: appConfig.getTheme().secondaryHeaderColor,
                   ),
                 ),
               ),

@@ -30,6 +30,8 @@ class RegistrationController {
   String password = '';
   String confirmPassword = '';
 
+  bool isBoss = false;
+
 
 
   void setName(String? name) {
@@ -80,7 +82,7 @@ class RegistrationController {
   String? setEmail(String? email) {
     if (email == null || !isEmailStringValid(email)) {
       //TODO change error messages
-      return 'Email in formato non valido';
+      return 'Email non valida';
     }
 
     this.email = email.trim();
@@ -88,11 +90,18 @@ class RegistrationController {
   }
 
   String? setIBAN(String? iban) {
-    if (iban == null) {
-      return null;
+
+    this.IBAN = iban ?? '';
+
+    return isIbanValid(iban);
+  }
+
+  String? isIbanValid(String? value) {
+    if (value == null) {
+      return 'Fornire un IBAN valido';
     }
 
-    final cleaned = iban.replaceAll(' ', '').toUpperCase();
+    final cleaned = value.replaceAll(' ', '').toUpperCase();
 
     // Regex generale: 2 lettere, 2 cifre, resto lettere/numeri
     final regex = RegExp(r'^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$');
@@ -106,6 +115,7 @@ class RegistrationController {
     }
 
     return 'IBAN in formato non valido';
+
   }
 
   bool isEmailStringValid(String email) {
@@ -125,7 +135,7 @@ class RegistrationController {
     password = pass ?? '';
 
     if (password.isEmpty) {
-      return 'Password is not valid';
+      return 'Password non valida';
     }
 
     return null;
@@ -135,11 +145,11 @@ class RegistrationController {
     confirmPassword = pass ?? '';
 
     if (confirmPassword.isEmpty) {
-      return 'Password is not valid';
+      return 'Password non valida';
     }
 
     if (password != confirmPassword) {
-      return 'Password doens\'t match';
+      return 'Le password non corrispondono';
     }
 
     return null;
@@ -220,7 +230,7 @@ class RegistrationController {
       GlobalKey<ScaffoldState> scaffoldKey) {
     final SnackBarStyle snackBar = SnackBarStyle(context, scaffoldKey);
 
-    snackBar.showSnackBar(error);
+    snackBar.showSnackBar(error, bottomPadding: 60,);
   }
 
   void _navigateToWrapper(BuildContext context) {

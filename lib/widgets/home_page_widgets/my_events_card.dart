@@ -7,6 +7,8 @@ import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
 import 'package:mgs_app2/utilities/utils.dart';
+import 'package:mgs_app2/widgets/button.dart';
+import 'package:shimmer/shimmer.dart';
 
 class MyEventsCard extends StatelessWidget {
   const MyEventsCard({
@@ -17,26 +19,41 @@ class MyEventsCard extends StatelessWidget {
     required this.appConfig,
     required this.onPop,
     this.functionCaller,
+    required this.isLoading,
   });
 
   final double height;
   final double width;
-  final EventModel event;
+  final EventModel? event;
   final AppConfig appConfig;
   final void Function(bool) onPop;
   final FirebaseFunctionCaller? functionCaller;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Shimmer.fromColors(
+          baseColor: shimmerColorBase,
+          highlightColor: shimmerColorHighlight,
+          child: buildWidget(context));
+    }
+
+    return buildWidget(context);
+  }
+
+  Widget buildWidget(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-
+        if (event == null) {
+          return;
+        }
         final result = await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => Material(
               child: EventScreen(
-                event: event,
+                event: event!,
                 functionCaller: functionCaller,
               ),
             ),
@@ -51,49 +68,54 @@ class MyEventsCard extends StatelessWidget {
         onPop(false);
       },
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: height * 0.005),
-        padding: EdgeInsets.symmetric(
-            horizontal: width * 0.025, vertical: width * 0.025),
+        margin: EdgeInsets.symmetric(vertical: 3),
+        padding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
-          border: getCustomBorder(
+          /*border: getCustomBorder(
             appConfig: appConfig,
-            width: width * smallMyEventsCardBorderThickness,
-          ),
+            width: 0.5,
+          ),*/
         ),
         child: Row(
           children: [
             Container(
               height: width * 0.2,
               width: width * 0.2,
+              decoration: BoxDecoration(
+                color: appConfig.getTheme().scaffoldBackgroundColor,
+                borderRadius: BorderRadius.all(Radius.circular(width * 0.01)),
+              ),
               margin: EdgeInsets.only(right: width * 0.04),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(width * 0.01)),
-                child: event.image == null || event.image!.downloadUrl == null
-                    ? Image.asset(
-                        'assets/images/party.png',
-                        fit: BoxFit.cover,
-                      )
-                    : CachedNetworkImage(
-                        imageUrl: event.image!.downloadUrl!,
-                        fit: BoxFit.cover,
-                        memCacheWidth: 600,
-                        memCacheHeight: 400,
-                        placeholder: (context, url) => ColorFiltered(
-                          colorFilter: const ColorFilter.mode(
-                            Colors.grey,
-                            BlendMode.saturation,
-                          ),
-                          child: Image.asset(
+                child: event == null
+                    ? SizedBox()
+                    : event!.image == null || event!.image!.downloadUrl == null
+                        ? Image.asset(
                             'assets/images/party.png',
                             fit: BoxFit.cover,
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: event!.image!.downloadUrl!,
+                            fit: BoxFit.cover,
+                            memCacheWidth: 600,
+                            memCacheHeight: 400,
+                            placeholder: (context, url) => ColorFiltered(
+                              colorFilter: const ColorFilter.mode(
+                                Colors.grey,
+                                BlendMode.saturation,
+                              ),
+                              child: Image.asset(
+                                'assets/images/party.png',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Image.asset(
+                              'assets/images/party.png',
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
-                        errorWidget: (context, url, error) => Image.asset(
-                          'assets/images/party.png',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
               ),
             ),
             Expanded(
@@ -102,15 +124,20 @@ class MyEventsCard extends StatelessWidget {
                 children: [
                   Container(
                     margin: EdgeInsets.only(bottom: height * 0.007),
-                    child: Text(
-                      event.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: width * 0.04,
-                      ),
-                    ),
+                    child: event == null
+                        ? Container(
+                            width: 200,
+                            height: 16,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(3),
+                              color:
+                                  appConfig.getTheme().scaffoldBackgroundColor,
+                            ),
+                          )
+                        : Text(event == null ? '' : event!.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: textStyleEventCardTitle(context)),
                   ),
                   Row(
                     children: [
@@ -119,22 +146,33 @@ class MyEventsCard extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.only(right: width * 0.02),
                           child: Icon(
-                            size: width * 0.035,
+                            size: 14,
                             Icons.place_outlined,
                           ),
                         ),
                       ),
-                      Expanded(
-                        child: Text(
-                          event.location,
+                      event == null
+                            ? Container(
+                          width: 150,
+                          height: 13,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(3),
+                            color:
+                            appConfig.getTheme().scaffoldBackgroundColor,
+                          ),
+                        )
+                            : Expanded(
+                        child:  Text(
+                          event == null ? '' : event!.location,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: width * 0.035,
-                          ),
+                          style: textStyleEventCardSubtitle(context),
                         ),
                       ),
                     ],
+                  ),
+                  SizedBox(
+                    height: event == null ? 10 : 3,
                   ),
                   Row(
                     children: [
@@ -143,17 +181,27 @@ class MyEventsCard extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.only(right: width * 0.02),
                           child: Icon(
-                            size: width * 0.035,
+                            size: 14,
                             Icons.calendar_today_outlined,
                           ),
                         ),
                       ),
-                      Expanded(
+                      event == null
+                          ? Container(
+                        width: 120,
+                        height: 13,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(3),
+                          color:
+                          appConfig.getTheme().scaffoldBackgroundColor,
+                        ),
+                      )
+                          : Expanded(
                         child: Text(
-                          formatDateToDayMonth(event.start),
-                          style: TextStyle(
-                            fontSize: width * 0.035,
-                          ),
+                          event == null
+                              ? ''
+                              : formatDateToDayMonth(event!.start),
+                          style: textStyleEventCardSubtitle(context),
                         ),
                       ),
                     ],

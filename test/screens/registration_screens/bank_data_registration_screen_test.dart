@@ -232,7 +232,7 @@ void main() {
       }
     });
 
-    testWidgets('next button is always enabled', (WidgetTester tester) async {
+    testWidgets('next button is disabled initially', (WidgetTester tester) async {
       final originalOnError = FlutterError.onError;
       FlutterError.onError = (details) {
         if (!details.toString().contains('overflowed') && 
@@ -249,8 +249,8 @@ void main() {
         );
 
         final button = tester.widget<MySquaredIconButton>(find.byType(MySquaredIconButton));
-        // Button should be enabled (bank data is optional/skippable)
-        expect(button.isEnable, isTrue);
+        // Button should be disabled initially (requires both IBAN and bank holder)
+        expect(button.isEnable, isFalse);
       } finally {
         FlutterError.onError = originalOnError;
       }
@@ -296,7 +296,7 @@ void main() {
       }
     });
 
-    testWidgets('next button exists and is tappable', (WidgetTester tester) async {
+    testWidgets('next button exists and becomes enabled with valid data', (WidgetTester tester) async {
       final originalOnError = FlutterError.onError;
       FlutterError.onError = (details) {
         if (!details.toString().contains('overflowed') && 
@@ -313,11 +313,23 @@ void main() {
           ),
         );
 
-        // Check that button exists and is tappable
+        // Check that button exists
         expect(find.byType(MySquaredIconButton), findsOneWidget);
         final button = tester.widget<MySquaredIconButton>(find.byType(MySquaredIconButton));
-        expect(button.isEnable, isTrue);
         expect(button.onTap, isNotNull);
+
+        // Fill in valid data to enable button
+        final bankHolderField = find.widgetWithText(TextFormField, 'Nome intestatario');
+        await tester.enterText(bankHolderField, 'Mario Rossi');
+        await tester.pump();
+        
+        final ibanField = find.widgetWithText(TextFormField, 'IBAN');
+        await tester.enterText(ibanField, 'IT60X0542811101000000123456');
+        await tester.pumpAndSettle();
+
+        // Now button should be enabled
+        final updatedButton = tester.widget<MySquaredIconButton>(find.byType(MySquaredIconButton));
+        expect(updatedButton.isEnable, isTrue);
         
         await tester.binding.setSurfaceSize(null);
       } finally {
@@ -435,7 +447,7 @@ void main() {
       }
     });
 
-    testWidgets('form validation works with IBAN validator', (WidgetTester tester) async {
+    testWidgets('button remains disabled with invalid IBAN', (WidgetTester tester) async {
       final originalOnError = FlutterError.onError;
       FlutterError.onError = (details) {
         if (!details.toString().contains('overflowed') && 
@@ -452,18 +464,19 @@ void main() {
           ),
         );
 
+        // Fill in bank holder
+        final bankHolderField = find.widgetWithText(TextFormField, 'Nome intestatario');
+        await tester.enterText(bankHolderField, 'Mario Rossi');
+        await tester.pump();
+
         // Enter invalid IBAN
         final ibanField = find.widgetWithText(TextFormField, 'IBAN');
         await tester.enterText(ibanField, 'INVALID_IBAN');
-        await tester.pump();
-
-        // Try to navigate (should trigger validation)
-        await tester.tap(find.byType(MySquaredIconButton));
         await tester.pumpAndSettle();
 
-        // Should show validation error and not navigate
-        expect(find.text('IBAN in formato non valido'), findsOneWidget);
-        expect(find.byType(BankDataRegistrationScreen), findsOneWidget);
+        // Button should remain disabled due to invalid IBAN
+        final button = tester.widget<MySquaredIconButton>(find.byType(MySquaredIconButton));
+        expect(button.isEnable, isFalse);
         
         await tester.binding.setSurfaceSize(null);
       } finally {

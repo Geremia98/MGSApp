@@ -14,7 +14,7 @@ import '../../test_helpers.dart';
   HttpsCallableResult,
   User,
 ])
-import 'function_handler_test.mocks.dart';
+import 'function_handler_test_backup.mocks.dart';
 
 void main() {
   group('FunctionHandler', () {

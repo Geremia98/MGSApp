@@ -229,6 +229,16 @@ class MockEventFirestore extends _i1.Mock implements _i11.EventFirestore {
       ) as _i9.Future<List<_i12.EventModel>>);
 
   @override
+  _i9.Future<void> deleteEvent(_i12.EventModel? event) => (super.noSuchMethod(
+        Invocation.method(
+          #deleteEvent,
+          [event],
+        ),
+        returnValue: _i9.Future<void>.value(),
+        returnValueForMissingStub: _i9.Future<void>.value(),
+      ) as _i9.Future<void>);
+
+  @override
   _i9.Future<List<String>> retrieveParticipantsUid(String? eventId) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -240,13 +250,18 @@ class MockEventFirestore extends _i1.Mock implements _i11.EventFirestore {
       ) as _i9.Future<List<String>>);
 
   @override
-  _i9.Future<List<_i12.EventModel>> retrievePersonalEvents(
-          {bool? onlyFuture = false}) =>
+  _i9.Future<List<_i12.EventModel>> retrievePersonalEvents({
+    bool? onlyFuture = false,
+    bool? justCreatedByMe = false,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
           #retrievePersonalEvents,
           [],
-          {#onlyFuture: onlyFuture},
+          {
+            #onlyFuture: onlyFuture,
+            #justCreatedByMe: justCreatedByMe,
+          },
         ),
         returnValue:
             _i9.Future<List<_i12.EventModel>>.value(<_i12.EventModel>[]),
@@ -286,6 +301,42 @@ class MockEventFirestore extends _i1.Mock implements _i11.EventFirestore {
           ),
         )),
       ) as _i9.Future<String>);
+
+  @override
+  _i9.Future<String> editEvent(
+    _i12.EventModel? event,
+    String? id,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #editEvent,
+          [
+            event,
+            id,
+          ],
+        ),
+        returnValue: _i9.Future<String>.value(_i13.dummyValue<String>(
+          this,
+          Invocation.method(
+            #editEvent,
+            [
+              event,
+              id,
+            ],
+          ),
+        )),
+        returnValueForMissingStub:
+            _i9.Future<String>.value(_i13.dummyValue<String>(
+          this,
+          Invocation.method(
+            #editEvent,
+            [
+              event,
+              id,
+            ],
+          ),
+        )),
+      ) as _i9.Future<String>);
 }
 
 /// A class which mocks [FirebaseFunctionCaller].
@@ -305,6 +356,31 @@ class MockFirebaseFunctionCaller extends _i1.Mock
           Invocation.getter(#handler),
         ),
       ) as _i3.FunctionHandler);
+
+  @override
+  _i9.Future<_i4.FunctionResponse> isBossCodeValid(String? code) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #isBossCodeValid,
+          [code],
+        ),
+        returnValue:
+            _i9.Future<_i4.FunctionResponse>.value(_FakeFunctionResponse_2(
+          this,
+          Invocation.method(
+            #isBossCodeValid,
+            [code],
+          ),
+        )),
+        returnValueForMissingStub:
+            _i9.Future<_i4.FunctionResponse>.value(_FakeFunctionResponse_2(
+          this,
+          Invocation.method(
+            #isBossCodeValid,
+            [code],
+          ),
+        )),
+      ) as _i9.Future<_i4.FunctionResponse>);
 
   @override
   _i9.Future<_i4.FunctionResponse> sendReport(
@@ -650,6 +726,28 @@ class MockFirebaseAuthService extends _i1.Mock
         returnValue: _i9.Future<dynamic>.value(),
         returnValueForMissingStub: _i9.Future<dynamic>.value(),
       ) as _i9.Future<dynamic>);
+
+  @override
+  String translateFirebaseAuthError(String? error) => (super.noSuchMethod(
+        Invocation.method(
+          #translateFirebaseAuthError,
+          [error],
+        ),
+        returnValue: _i13.dummyValue<String>(
+          this,
+          Invocation.method(
+            #translateFirebaseAuthError,
+            [error],
+          ),
+        ),
+        returnValueForMissingStub: _i13.dummyValue<String>(
+          this,
+          Invocation.method(
+            #translateFirebaseAuthError,
+            [error],
+          ),
+        ),
+      ) as String);
 
   @override
   _i9.Future<dynamic> sendPasswordResetEmail(String? email) =>

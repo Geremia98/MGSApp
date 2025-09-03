@@ -27,7 +27,7 @@ const double personalPageProfilePicDimension = 26;
 const double personalePageProfilePicBorderRadius = 5;
 
 //My Widgets
-const double thicknessOfBordersEnabledButtonsAndTextFormField = 0.1;
+const double thicknessOfBordersEnabledButtonsAndTextFormField = 0.5;
 const double thicknessOfBordersWhenOnFocus = 0.4;
 const double borderRadiusOfSegementedButton = 20;
 const double fontSizeOfTextAndFormField = 16;

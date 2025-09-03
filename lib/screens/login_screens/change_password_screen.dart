@@ -6,17 +6,19 @@ import 'package:mgs_app2/widgets/button.dart';
 import 'package:mgs_app2/widgets/snackbar.dart';
 import 'package:mgs_app2/widgets/text_field.dart';
 
+import '../../utilities/constants_dimensions.dart';
 import '../../widgets/back_button_app_bar.dart';
+import '../../widgets/buttons.dart';
 import '../../widgets/font.dart';
 
-class ChangeEmailScreen extends StatefulWidget {
-  const ChangeEmailScreen({super.key});
+class ChangePasswordScreen extends StatefulWidget {
+  const ChangePasswordScreen({super.key});
 
   @override
-  State<ChangeEmailScreen> createState() => _ChangeEmailScreenState();
+  State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
 }
 
-class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
+class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool isLoading = false;
@@ -25,77 +27,61 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
   @override
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
-
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: appConfig.getTheme().scaffoldBackgroundColor,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: appConfig.getWidth() * 5),
-          child: SizedBox(
-            height: appConfig.getHeight() * 100,
-            width: appConfig.getWidth() * 100,
-            child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  BackButtonAppBar(
-                    iconData: Icons.arrow_back_rounded,
-                    appConfig: appConfig,
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  SizedBox(
-                    height: appConfig.getHeight() * 5,
-                  ),
-                  Center(
-                    child: Text(
-                      'Reimposta password',
-                      style: TextStyle(
-                        fontSize: fontSizeTitle,
-                        fontWeight: FontWeight.w700,
-                        height: 1.2,
-                        color: appConfig.getTheme().secondaryHeaderColor,
-                      ),
+      body: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.symmetric(
+          horizontal: appConfig.getWidth() * horizontalPadding,
+          vertical: appConfig.getHeight() * verticalPadding,
+        ),
+        child: SizedBox(
+          height: appConfig.getHeight() * 100,
+          width: appConfig.getWidth() * 100,
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                GoBackButton(
+                  icon: Icons.arrow_back_rounded,
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  appConfig: appConfig,
+                  title: 'Modifica password',
+                ),
+                SizedBox(
+                  height: appConfig.getHeight() * 5,
+                ),
+                Center(
+                  child: Text(
+                    'Inserisci la tua nuova password. E\' possibile, per motivi di sicurezza, venga richiesto di rieffettuare il login prima di poterla modificare.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: appConfig.getWidth() * 3.5,
+                      fontWeight: FontWeight.w500,
+                      color: appConfig.getTheme().secondaryHeaderColor,
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Center(
-                    child: Text(
-                      'Inserisci la tua nuova password. E\' possibile, per motivi di sicurezza, venga richiesto di rieffettuare il login prima di poterla modificare ',
-                      style: TextStyle(
-                        fontSize: fontSizeSubtitle,
-                        fontWeight: FontWeight.w500,
-                        color: appConfig.getTheme().secondaryHeaderColor,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: appConfig.getWidth() * 5),
-                    child: buildTextField(
-                      appConfig,
-                      hintText: 'Password',
-                      onChanged: onPassChange,
-                      validator: onPassChange,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  ButtonText(
-                    text: 'Modifica',
-                    onTap: changePassword,
-                    isLoading: isLoading,
-                  ),
-                ],
-              ),
+                ),
+                SizedBox(
+                  height: appConfig.getHeight() * 5,
+                ),
+                buildTextField(
+                  appConfig,
+                  hintText: 'Password',
+                  onChanged: onPassChange,
+                  validator: onPassChange,
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+                ButtonText(
+                  text: 'Modifica',
+                  onTap: changePassword,
+                  isLoading: isLoading,
+                ),
+              ],
             ),
           ),
         ),
@@ -104,7 +90,6 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
   }
 
   Future<void> changePassword() async {
-
     if (!formKey.currentState!.validate()) {
       return;
     }
@@ -124,7 +109,6 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
     });
 
     if (result is String) {
-
       snackBarStyle.showSnackBar(result);
       Navigator.of(context).pop();
 
@@ -132,7 +116,6 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
     }
 
     Navigator.of(context).pop();
-
   }
 
   String? onPassChange(String? pass) {
@@ -143,5 +126,4 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
     this.pass = pass;
     return null;
   }
-
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/main_screens/personal_screen.dart';
 import 'package:mgs_app2/services/firebase/firebase_storage.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/my_profile_pic.dart';
 
@@ -22,18 +21,19 @@ class SortOfAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         GestureDetector(
-          onTap: () => {
-            globalKey.currentState!.openDrawer()
-          },
+          onTap: () => {globalKey.currentState!.openDrawer()},
           child: Container(
-            padding: EdgeInsets.all(appConfig.getWidth() * 1.2),
+            height: 45,
+            width: 45,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(
                   appConfig.getWidth() * 1.8), // Bordi arrotondati
               border: getCustomBorder(
-                width: appConfig.getWidth() * bigRoutingButtonBorderThickness,
+                width: 0.5,
                 appConfig: appConfig,
               ),
             ),
@@ -43,20 +43,16 @@ class SortOfAppBar extends StatelessWidget {
             ),
           ),
         ),
-        const Expanded(
-            child: SizedBox(
-          width: 10,
-        )),
         GestureDetector(
           onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const PersonalScreen()),
-              ),
+            context,
+            MaterialPageRoute(builder: (context) => const PersonalScreen()),
+          ),
           child: MyProfilePicture(
             appConfig: appConfig,
-            borderThickness: homeScreenProfilePicBorderThickness,
-            borderRadius: homeScreenProfilePicBorderRadius,
-            dimension: homeScreenProfilePicDimension,
+            borderThickness: 0.5,
+            borderRadius: appConfig.getWidth() * 1.8,
+            dimension: 45,
             storageService: storageService,
           ),
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/registration_screens/registration_controller.dart';
 import 'package:mgs_app2/screens/registration_screens/registration_screen2.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
+import 'package:mgs_app2/widgets/title.dart';
 import '../../widgets/font.dart';
 
 class OptionalRegistrationScreen2 extends StatelessWidget {
@@ -14,14 +15,16 @@ class OptionalRegistrationScreen2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
       body: SafeArea(
         child: Container(
           height: appConfig.getHeight() * 100,
-          padding: EdgeInsets.only(right: appConfig.getWidth() * 10, left: appConfig.getWidth() * 10, top: appConfig.getHeight()*5 ),
+          padding: EdgeInsets.only(
+              right: appConfig.getWidth() * 10,
+              left: appConfig.getWidth() * 10,
+              top: appConfig.getHeight() * 5),
           child: Stack(
             children: [
               Column(
@@ -47,12 +50,8 @@ class OptionalRegistrationScreen2 extends StatelessWidget {
                         child: Text(
                           'In questi casi gravi, l\'unica cosa da fare è affidarsi alla Parola di Dio...',
                           textAlign: TextAlign.right,
-                          style: TextStyle(
-                            fontSize: appConfig.getWidth()*7,
-                            fontWeight: FontWeight.w700,
-                            height: 1.2,
-                            color: appConfig.getTheme().secondaryHeaderColor,
-                          ),
+                          style: textStyleTitle(context),
+                          maxLines: 4,
                         ),
                       ),
                       SizedBox(
@@ -61,28 +60,20 @@ class OptionalRegistrationScreen2 extends StatelessWidget {
                       Column(
                         children: [
                           Text(
-                            '\'\'Io non guardo ciò che guarda l\'uomo.\nL\'uomo guarda l\'apparenza,\nDio guarda il cuore,,',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontSize: appConfig.getWidth()*4,
-                              fontWeight: FontWeight.w500,
-                              color:
-                                  appConfig.getTheme().secondaryHeaderColor,
+                              '\'\'Io non guardo ciò che guarda l\'uomo.\nL\'uomo guarda l\'apparenza,\nDio guarda il cuore,,',
+                              textAlign: TextAlign.left,
+                              style: textStyleSubtitle(context)),
+                          SizedBox(height: 10),
+                          SizedBox(
+                            width: appConfig.getWidth() * 100,
+                            child: Text(
+                              '1 Sam 16,7',
+                              textAlign: TextAlign.end,
+                              style: textStyleSubtitle(context).copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                          SizedBox(height: 10),
-                  SizedBox(
-                    width: appConfig.getWidth() * 100,
-                    child: Text(
-                      '1 Sam 16,7',
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                        fontSize: appConfig.getWidth()*3.5,
-                        fontWeight: FontWeight.bold,
-                        color: appConfig.getTheme().secondaryHeaderColor,
-                      ),
-                    ),
-                  ),
                         ],
                       ),
                     ],
@@ -99,8 +90,8 @@ class OptionalRegistrationScreen2 extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) => RegistrationScreen2(
-                              controller: controller,
-                            )),
+                                  controller: controller,
+                                )),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -113,7 +104,8 @@ class OptionalRegistrationScreen2 extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: EdgeInsets.only(
-                          left: appConfig.getWidth() * 5, right: appConfig.getWidth() * 5),
+                          left: appConfig.getWidth() * 5,
+                          right: appConfig.getWidth() * 5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [

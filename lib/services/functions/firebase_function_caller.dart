@@ -6,12 +6,21 @@ class FirebaseFunctionCaller {
   final _joinEventFunctionReference = 'joinEvent';
   final _leaveEventFunctionReference = 'leaveEvent';
   final _sendReportFunctionReference = 'sendReport';
+  final _isBossCodeValidFunctionReference = 'isBossCodeValid';
 
   final FunctionHandler handler = FunctionHandler();
 
-  Future<FunctionResponse> sendReport(
-      String section,
-      String text) {
+  Future<FunctionResponse> isBossCodeValid(String code) {
+    return handler.callFunction(
+      _isBossCodeValidFunctionReference,
+      {
+        'code': code,
+      },
+      needsAuthentication: false,
+    );
+  }
+
+  Future<FunctionResponse> sendReport(String section, String text) {
     return handler.callFunction(_sendReportFunctionReference, {
       'section': section,
       'text': text,
@@ -29,9 +38,9 @@ class FirebaseFunctionCaller {
   }
 
   Future<FunctionResponse> leaveEvent(
-      String eventId, {
-        String paymentMethodId = '',
-      }) {
+    String eventId, {
+    String paymentMethodId = '',
+  }) {
     return handler.callFunction(_leaveEventFunctionReference, {
       'eventId': eventId,
     });

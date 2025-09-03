@@ -3,13 +3,18 @@ import 'package:mgs_app2/main.dart';
 import 'package:mgs_app2/models/event_model.dart';
 import 'package:mgs_app2/models/user_model.dart';
 import 'package:mgs_app2/screens/add_event/add_event_screen.dart';
+import 'package:mgs_app2/screens/main_screens/all_events_screen.dart';
 import 'package:mgs_app2/screens/main_screens/faq_screen.dart';
 import 'package:mgs_app2/screens/report_bug/report_bug_category_screen.dart';
 import 'package:mgs_app2/screens/main_screens/personal_screen.dart';
 import 'package:mgs_app2/services/firebase/auth.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
+import 'package:mgs_app2/widgets/button.dart';
 import 'package:mgs_app2/wrapper.dart';
+
+import '../../models/event_firestore.dart';
+import '../../screens/manage_events/manage_events_screen.dart';
 
 class HomePageDrawer extends StatelessWidget {
   const HomePageDrawer({
@@ -17,10 +22,12 @@ class HomePageDrawer extends StatelessWidget {
     required this.height,
     required this.width,
     required this.onEventCreation,
+    required this.onEventsChange,
     required this.appConfig,
   });
 
   final void Function(EventModel?) onEventCreation;
+  final VoidCallback onEventsChange;
   final double height;
   final double width;
   final AppConfig appConfig;
@@ -50,14 +57,15 @@ class HomePageDrawer extends StatelessWidget {
             ),
             Divider(
               height: height * 0.06,
-              thickness: width * 0.001,
+              thickness: 1,
+              color: appConfig.getTheme().highlightColor,
             ),
             ItemForMenu(
               appConfig: appConfig,
               height: height,
               width: width,
               icon: Icons.person_3_rounded,
-              title: 'Info personali',
+              title: 'Profilo',
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const PersonalScreen()),
@@ -82,6 +90,30 @@ class HomePageDrawer extends StatelessWidget {
                       onEventCreation(value);
                     }
                   }),
+            if (UserModel.bossCode.isNotEmpty)
+              ItemForMenu(
+                  appConfig: appConfig,
+                  height: height,
+                  width: width,
+                  icon: Icons.dashboard,
+                  title: 'Gestisci eventi',
+                  onTap: () async {
+                    Object? value = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AllEventsScreen(
+                          futureEvents: EventFirestore()
+                              .retrievePersonalEvents(justCreatedByMe: true),
+                          titolo: 'Gestisci eventi',
+                          isManage: true,
+                        ),
+                      ),
+                    );
+
+                    if (value is bool && value == true) {
+                      onEventsChange();
+                    }
+                  }),
             ItemForMenu(
               appConfig: appConfig,
               height: height,
@@ -90,7 +122,8 @@ class HomePageDrawer extends StatelessWidget {
               title: 'Segnala un bug',
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ReportBugCategoryScreen()),
+                MaterialPageRoute(
+                    builder: (context) => const ReportBugCategoryScreen()),
               ),
             ),
             ItemForMenu(
@@ -140,23 +173,23 @@ class HomePageDrawer extends StatelessWidget {
                 Text(
                   BrightnessManager().brightness == Brightness.light
                       ? 'Tema scuro'
-                      : 'Tema chiaro', //provider.isLight ? 'Night Mode' : 'Day Mode',
-                  style: TextStyle(
-                    fontSize: width * 0.04,
-                  ),
+                      : 'Tema chiaro',
+                  //provider.isLight ? 'Night Mode' : 'Day Mode',
+                  style: textStyleSubtitle(context),
                 ),
               ],
             ),
             Divider(
               height: height * 0.06,
-              thickness: width * 0.001,
+              thickness: 1,
+              color: appConfig.getTheme().highlightColor,
             ),
             ItemForMenu(
               appConfig: appConfig,
               height: height,
               width: width,
               icon: Icons.logout_rounded,
-              title: 'Log out',
+              title: 'Esci',
               onTap: () => logout(context),
             ),
           ],
@@ -214,11 +247,11 @@ class ItemForMenu extends StatelessWidget {
                       BorderRadius.circular(width * 0.02), // Bordi arrotondati
                   border: getCustomBorder(
                     appConfig: appConfig,
-                    width: width * 0.0005,
+                    width: 0.5,
                   ),
                 ),
                 child: Icon(
-                  size: width * 0.06,
+                  size: 24,
                   icon, // Dimensione dell'icona
                 ),
               ),
@@ -226,10 +259,8 @@ class ItemForMenu extends StatelessWidget {
           ),
           Text(
             title,
-            style: TextStyle(
-              fontSize: isTitle ? width * 0.05 : width * 0.04,
-              fontWeight: isTitle ? FontWeight.bold : FontWeight.normal,
-            ),
+            style:
+                isTitle ? textStyleTitle(context) : textStyleSubtitle(context),
           ),
         ],
       ),

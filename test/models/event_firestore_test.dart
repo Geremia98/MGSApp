@@ -34,6 +34,21 @@ void main() {
       );
       // Mock the static uid field on UserModel for the duration of the tests
       UserModel.uid = uid;
+      
+      // Add events created by other users for retrieveEvents test
+      // (retrieveEvents excludes user-created events)
+      await fakeDb.collection('events').doc('e_other1').set({
+        'start': Timestamp.fromDate(DateTime.now().add(const Duration(days: 5))),
+        'creationDate': Timestamp.fromDate(DateTime.now()),
+        'creatorUid': 'other_user_1',
+        'title': 'Event 1',
+      });
+      await fakeDb.collection('events').doc('e_other2').set({
+        'start': Timestamp.fromDate(DateTime.now().subtract(const Duration(days: 1))),
+        'creationDate': Timestamp.fromDate(DateTime.now().subtract(const Duration(days: 2))),
+        'creatorUid': 'other_user_2', 
+        'title': 'Past Event',
+      });
     });
 
     group('retrieveEvents', () {
@@ -49,8 +64,8 @@ void main() {
         expect(events.length, 2);
         expect(events[0].title, 'Event 1');
         expect(events[1].title, 'Past Event');
-        verify(mockStorageService.getEventBannerImage('e1')).called(1);
-        verify(mockStorageService.getEventBannerImage('e2')).called(1);
+        verify(mockStorageService.getEventBannerImage('e_other1')).called(1);
+        verify(mockStorageService.getEventBannerImage('e_other2')).called(1);
       });
 
       test('returns empty list on error', () async {

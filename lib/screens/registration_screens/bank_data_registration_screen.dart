@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/registration_screens/registration_controller.dart';
 import 'package:mgs_app2/screens/registration_screens/registration_screen4.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
+import 'package:mgs_app2/widgets/title.dart';
 
 import '../../widgets/back_button_app_bar.dart';
 import '../../widgets/font.dart';
@@ -29,11 +30,23 @@ class _BankDataRegistrationScreenState
   late RegistrationController controller;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  bool isEnable = false;
+
   @override
   void initState() {
     super.initState();
 
     controller = widget.controller;
+    isEnable = controller.isIbanValid(controller.IBAN) == null && controller.bankHolder.isNotEmpty;
+
+  }
+
+  void setEnable() {
+
+    setState(() {
+      isEnable = controller.isIbanValid(controller.IBAN) == null && controller.bankHolder.isNotEmpty;
+
+    });
   }
 
   @override
@@ -80,12 +93,8 @@ class _BankDataRegistrationScreenState
                       child: Text(
                         'Qualche informazione in più',
                         textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: fontSizeTitle,
-                          fontWeight: FontWeight.w700,
-                          height: 1.2,
-                          color: appConfig.getTheme().secondaryHeaderColor,
-                        ),
+                        style: textStyleTitle(context),
+                        maxLines: 2,
                       ),
                     ),
                     const SizedBox(
@@ -95,11 +104,8 @@ class _BankDataRegistrationScreenState
                       child: Text(
                         'Qui è dove manderemo i soldi dei biglietti venduti per il tuo evento.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: appConfig.getWidth() * 3.5,
-                          fontWeight: FontWeight.w500,
-                          color: appConfig.getTheme().secondaryHeaderColor,
-                        ),
+                        style: textStyleSubtitle(context),
+                        maxLines: 3,
                       ),
                     ),
                     const SizedBox(
@@ -113,20 +119,26 @@ class _BankDataRegistrationScreenState
                             appConfig,
                             initialValue: controller.bankHolder,
                             hintText: 'Nome intestatario',
-                            onChanged: (value) =>
-                                controller.setBankHolder(value),
+                            onChanged: (value) {
+                              controller.setBankHolder(value);
+                              setEnable();
+                            }
                           ),
                           SizedBox(
-                            height: 10,
+                            height: 20,
                           ),
                           buildMyTextFormField(
                             appConfig,
                             initialValue: controller.IBAN,
                             hintText: 'IBAN',
-                            validator: (value) => controller.setIBAN(value),
+                            //validator: (value) => controller.setIBAN(value),
+                            onChanged: (value) {
+                              controller.setIBAN(value);
+                              setEnable();
+                            }
                           ),
                           SizedBox(
-                            height: 10,
+                            height: 20,
                           ),
                           SelectorStyle<String>(
                             const {
@@ -168,7 +180,7 @@ class _BankDataRegistrationScreenState
                               )),
                     );
                   },
-                  isEnable: true, //Settato a true perchè puo essere skippable
+                  isEnable: isEnable, //Settato a true perchè puo essere skippable
                 ),
               ),
             ],
