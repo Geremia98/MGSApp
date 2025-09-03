@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mgs_app2/screens/registration_screens/registration_screen3.dart';
 import 'package:mgs_app2/screens/registration_screens/registration_controller.dart';
 import 'package:mgs_app2/screens/registration_screens/bank_data_registration_screen.dart';
-import 'package:mgs_app2/screens/registration_screens/registration_scren4.dart';
+import 'package:mgs_app2/screens/registration_screens/registration_screen4.dart';
 import 'package:mgs_app2/widgets/back_button_app_bar.dart';
 import 'package:mgs_app2/widgets/personal_page_widgets/my_squared_icon_button.dart';
 import 'package:mgs_app2/widgets/selector.dart';
