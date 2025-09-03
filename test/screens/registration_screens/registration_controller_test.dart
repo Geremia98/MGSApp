@@ -178,24 +178,24 @@ void main() {
 
       test('setEmail should reject emails with whitespace and not set email', () {
         final result = controller.setEmail('  test@example.com  ');
-        expect(result, equals('Email in formato non valido'));
+        expect(result, equals('Email non valida'));
         // Email should NOT be set if validation fails
         expect(controller.email, equals(''));
       });
 
       test('setEmail with invalid email should return error message', () {
         final result = controller.setEmail('invalid-email');
-        expect(result, equals('Email in formato non valido'));
+        expect(result, equals('Email non valida'));
       });
 
       test('setEmail with null should return error message', () {
         final result = controller.setEmail(null);
-        expect(result, equals('Email in formato non valido'));
+        expect(result, equals('Email non valida'));
       });
 
       test('setEmail with empty string should return error message', () {
         final result = controller.setEmail('');
-        expect(result, equals('Email in formato non valido'));
+        expect(result, equals('Email non valida'));
       });
 
       test('isEmailStringValid should validate emails correctly', () {
@@ -220,12 +220,12 @@ void main() {
 
       test('setPassword with empty string should return error message', () {
         final result = controller.setPassword('');
-        expect(result, equals('Password is not valid'));
+        expect(result, equals('Password non valida'));
       });
 
       test('setPassword with null should return error message', () {
         final result = controller.setPassword(null);
-        expect(result, equals('Password is not valid'));
+        expect(result, equals('Password non valida'));
       });
     });
 
@@ -240,20 +240,20 @@ void main() {
       test('setConfirmPassword with non-matching password should return error', () {
         controller.setPassword('password123');
         final result = controller.setConfirmPassword('differentPassword');
-        expect(result, equals('Password doens\'t match'));
+        expect(result, equals('Le password non corrispondono'));
         expect(controller.confirmPassword, equals('differentPassword'));
       });
 
       test('setConfirmPassword with empty string should return error', () {
         controller.setPassword('password123');
         final result = controller.setConfirmPassword('');
-        expect(result, equals('Password is not valid'));
+        expect(result, equals('Password non valida'));
       });
 
       test('setConfirmPassword with null should return error', () {
         controller.setPassword('password123');
         final result = controller.setConfirmPassword(null);
-        expect(result, equals('Password is not valid'));
+        expect(result, equals('Password non valida'));
       });
     });
 
@@ -269,9 +269,9 @@ void main() {
         expect(result, isNull);
       });
 
-      test('setIBAN with null should return null', () {
+      test('setIBAN with null should return error', () {
         final result = controller.setIBAN(null);
-        expect(result, isNull);
+        expect(result, equals('Fornire un IBAN valido'));
       });
 
       test('setIBAN with too short IBAN should return error', () {
@@ -392,7 +392,7 @@ void main() {
         
         // Confirm password should now not match
         result = controller.setConfirmPassword('myPassword123');
-        expect(result, equals('Password doens\'t match'));
+        expect(result, equals('Le password non corrispondono'));
       });
     });
 

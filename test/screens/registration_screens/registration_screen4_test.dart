@@ -62,7 +62,7 @@ void main() {
 
         expect(find.byType(BackButtonAppBar), findsOneWidget);
         expect(find.byType(CircleAvatar), findsOneWidget);
-        expect(find.text('Ultimo step ...\nmail e password'), findsOneWidget);
+        expect(find.text('Ultimo step ...\nemail e password'), findsOneWidget);
         expect(find.text('(Yep, le tue credenziali)'), findsOneWidget);
         expect(find.byType(Form), findsOneWidget);
         expect(find.byType(MyBigAsyncButton), findsOneWidget);
@@ -258,7 +258,7 @@ void main() {
         // Invalid email should return error message
         String? invalidResult = controller.setEmail('invalid-email');
         expect(invalidResult, isNotNull);
-        expect(invalidResult, contains('Email in formato non valido'));
+        expect(invalidResult, contains('Email non valida'));
       } finally {
         FlutterError.onError = originalOnError;
       }
@@ -537,7 +537,7 @@ void main() {
         expect(find.byType(CircleAvatar), findsOneWidget);
         
         // Check for main text elements
-        expect(find.text('Ultimo step ...\nmail e password'), findsOneWidget);
+        expect(find.text('Ultimo step ...\nemail e password'), findsOneWidget);
         expect(find.text('(Yep, le tue credenziali)'), findsOneWidget);
         
         await tester.binding.setSurfaceSize(null);

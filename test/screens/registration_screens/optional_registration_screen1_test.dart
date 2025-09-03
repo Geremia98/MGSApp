@@ -62,7 +62,7 @@ void main() {
         );
 
         expect(find.byType(CircleAvatar), findsOneWidget);
-        expect(find.text('Mario,\ndevi superarla questa\ncosa dell\'età, su...'), findsOneWidget);
+        expect(find.text('Mario,devi superarla \nquesta cosa\n dell\'età, su...'), findsOneWidget);
         expect(find.text('Che poi potrebbe andare peggio.\nPensa a chi è pelato...'), findsOneWidget);
         expect(find.byType(FilledButton), findsNWidgets(2));
         
@@ -91,7 +91,7 @@ void main() {
 
         // Check for personalized text with the user's name
         expect(find.textContaining('Mario'), findsOneWidget);
-        expect(find.text('Mario,\ndevi superarla questa\ncosa dell\'età, su...'), findsOneWidget);
+        expect(find.text('Mario,devi superarla \nquesta cosa\n dell\'età, su...'), findsOneWidget);
         
         await tester.binding.setSurfaceSize(null);
       } finally {
@@ -293,7 +293,7 @@ void main() {
 
         // Should show Luigi instead of Mario
         expect(find.textContaining('Luigi'), findsOneWidget);
-        expect(find.text('Luigi,\ndevi superarla questa\ncosa dell\'età, su...'), findsOneWidget);
+        expect(find.text('Luigi,devi superarla \nquesta cosa\n dell\'età, su...'), findsOneWidget);
         expect(find.textContaining('Mario'), findsNothing);
         
         await tester.binding.setSurfaceSize(null);
@@ -354,7 +354,7 @@ void main() {
         );
 
         // Check for main text elements
-        expect(find.text('Mario,\ndevi superarla questa\ncosa dell\'età, su...'), findsOneWidget);
+        expect(find.text('Mario,devi superarla \nquesta cosa\n dell\'età, su...'), findsOneWidget);
         expect(find.text('Che poi potrebbe andare peggio.\nPensa a chi è pelato...'), findsOneWidget);
         
         // Verify layout elements are present
@@ -391,7 +391,7 @@ void main() {
 
         // Should still render without crashing
         expect(find.byType(OptionalRegistrationScreen1), findsOneWidget);
-        expect(find.text(',\ndevi superarla questa\ncosa dell\'età, su...'), findsOneWidget);
+        expect(find.text(',devi superarla \nquesta cosa\n dell\'età, su...'), findsOneWidget);
         
         await tester.binding.setSurfaceSize(null);
       } finally {
