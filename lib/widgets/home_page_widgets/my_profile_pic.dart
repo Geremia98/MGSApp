@@ -14,16 +14,18 @@ class MyProfilePicture extends StatelessWidget {
     required this.borderRadius,
     required this.borderThickness,
     required this.dimension,
+    this.storageService,
   });
 
   final AppConfig appConfig;
   final double dimension;
   final double borderThickness;
   final double borderRadius;
+  final FirebaseStorageService? storageService;
 
   @override
   Widget build(BuildContext context) {
-    final FirebaseStorageService storageService = FirebaseStorageService();
+    final FirebaseStorageService storage = storageService ?? FirebaseStorageService();
 
     return Container(
       width: dimension,
@@ -49,17 +51,16 @@ class MyProfilePicture extends StatelessWidget {
         child: UserModel.profilePic == null ||
             UserModel.profilePic!.downloadUrl == null
             ? FutureBuilder(
-            future: storageService.getUserProfileImage(UserModel.uid),
-            builder:
-                (BuildContext context, AsyncSnapshot<ImageModel?> snap) {
-              if (snap.connectionState != ConnectionState.done ||
-                  snap.data == null) {
-                print(UserModel.uid);
-                return Image.asset(
-                  'assets/images/male.jpg',
-                  fit: BoxFit.cover,
-                );
-              }
+                future: storage.getUserProfileImage(UserModel.uid),
+                builder:
+                    (BuildContext context, AsyncSnapshot<ImageModel?> snap) {
+                  if (snap.connectionState != ConnectionState.done || snap.data == null) {
+                    print(UserModel.uid);
+                    return Image.asset(
+                      'assets/images/male.jpg',
+                      fit: BoxFit.cover,
+                    );
+                  }
 
               UserModel.profilePic = snap.data;
 

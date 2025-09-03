@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/models/user_firestore.dart';
 import 'package:mgs_app2/screens/registration_screens/registration_controller.dart';
-import 'package:mgs_app2/screens/registration_screens/registration_scren4.dart';
+import 'package:mgs_app2/screens/registration_screens/registration_screen4.dart';
 import 'package:mgs_app2/services/functions/firebase_function_caller.dart';
 import 'package:mgs_app2/services/functions/function_response.dart';
 import 'package:mgs_app2/services/functions/response_type.dart';
