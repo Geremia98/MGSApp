@@ -140,7 +140,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   future: eventFirestore.retrievePersonalEvents(),
                   builder: (BuildContext context,
                       AsyncSnapshot<List<EventModel>> snap) {
-
                     if (snap.connectionState == ConnectionState.done &&
                         (snap.data == null || snap.data!.isEmpty)) {
                       return SizedBox(
@@ -156,12 +155,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: height * 0.4,
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
-                        itemCount: snap.connectionState != ConnectionState.done && personalEvents.isEmpty
-                            ? 2
-                            : math.min(personalEvents.length, 3),
+                        itemCount:
+                            snap.connectionState != ConnectionState.done &&
+                                    personalEvents.isEmpty
+                                ? 2
+                                : math.min(personalEvents.length, 3),
                         itemBuilder: (BuildContext context, int index) {
                           EventModel? event =
-                              snap.connectionState != ConnectionState.done && personalEvents.isEmpty
+                              snap.connectionState != ConnectionState.done &&
+                                      personalEvents.isEmpty
                                   ? null
                                   : personalEvents[index];
                           return TweenAnimationBuilder<double>(
@@ -180,8 +182,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               width: width,
                               event: event,
                               onPop: needsRefreshEvents,
-                              isLoading:
-                                  snap.connectionState != ConnectionState.done && personalEvents.isEmpty,
+                              isLoading: snap.connectionState !=
+                                      ConnectionState.done &&
+                                  personalEvents.isEmpty,
                             ),
                           );
                         },

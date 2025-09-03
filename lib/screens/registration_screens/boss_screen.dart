@@ -176,7 +176,7 @@ class _BossRegistrationScreenState extends State<BossRegistrationScreen> {
                                     )),
                           );
                         },
-                        isEnabled: false,
+                        isEnabled: isEnabled,
                       ),
                     SizedBox(
                       height: 20,

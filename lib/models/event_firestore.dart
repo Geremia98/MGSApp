@@ -89,6 +89,12 @@ class EventFirestore {
           .get();
 
       for (QueryDocumentSnapshot doc in snap.docs) {
+
+        //Non metto gli eventi creati da lui nei consigliati
+        if ((doc.data() as Map<String, dynamic>)[firestoreEventCreatorUid] == UserModel.uid) {
+          continue;
+        }
+
         ImageModel? image = await _storage.getEventBannerImage(doc.id);
         List<String> participants = await retrieveParticipantsUid(doc.id);
 

@@ -97,6 +97,7 @@ class _ParticipantBubblesState extends State<ParticipantBubbles> {
                   ),
                 );
               }
+
               return Container(
                 height: 25,
                 width: 25,

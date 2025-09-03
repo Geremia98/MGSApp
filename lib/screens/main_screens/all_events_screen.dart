@@ -105,11 +105,11 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
                       return Center(child: Text('Errore durante il caricamente degli eventi'));
                     }
 
-                    if (!snap.hasData || snap.data!.isEmpty) {
+                    if (snap.connectionState == ConnectionState.done && (!snap.hasData || snap.data!.isEmpty)) {
                       return Center(child: Text('Nessun evento trovato'));
                     }
 
-                    final allEvents = snap.data!;
+                    final allEvents = snap.data ?? [];
 
                     print("setted");
 
