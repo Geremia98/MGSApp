@@ -26,7 +26,10 @@ import '../../widgets/font.dart';
 import '../../wrapper.dart';
 
 class PersonalScreen extends StatefulWidget {
-  const PersonalScreen({super.key});
+  final FirebaseAuthService? authService;
+  final PackageInfo? packageInfo;
+  
+  const PersonalScreen({super.key, this.authService, this.packageInfo});
 
   @override
   PersonalScreenState createState() => PersonalScreenState();
@@ -56,11 +59,16 @@ class PersonalScreenState extends State<PersonalScreen> {
     _selectedBoss = {UserModel.bossCode.isNotEmpty};
     _selectedUserGender = {UserModel.gender};
     _isModifyOptionEnable = false;
-    PackageInfo.fromPlatform().then((info) {
-      setState(() {
-        _packageInfo = info;
+    
+    if (widget.packageInfo != null) {
+      _packageInfo = widget.packageInfo;
+    } else {
+      PackageInfo.fromPlatform().then((info) {
+        setState(() {
+          _packageInfo = info;
+        });
       });
-    });
+    }
   }
 
   void updateUserInfo() {
@@ -276,7 +284,7 @@ class PersonalScreenState extends State<PersonalScreen> {
                             appConfig.getTheme().secondaryHeaderColor,
                             () async {
                               final FirebaseAuthService authService =
-                                  FirebaseAuthService();
+                                  widget.authService ?? FirebaseAuthService();
                               await authService.signOut(context);
                               Navigator.of(context).push(
                                 MaterialPageRoute(
