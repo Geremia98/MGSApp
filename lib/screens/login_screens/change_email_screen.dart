@@ -31,61 +31,61 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
     return Scaffold(
       key: scaffoldKey,
       body: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.symmetric(
-          horizontal: appConfig.getWidth() * horizontalPadding,
-          vertical: appConfig.getHeight() * verticalPadding,
-        ),
-        child: SizedBox(
-            height: appConfig.getHeight() * 100,
-            width: appConfig.getWidth() * 100,
-            child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  GoBackButton(
-                    icon: Icons.arrow_back_rounded,
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    appConfig: appConfig,
-                    title: 'Modifica email',
-                  ),
-                  SizedBox(
-                    height: appConfig.getHeight() * 5,
-                  ),
-                  Center(
-                    child: Text(
-                      'Inserisci la tua nuova email. Verrà inviata una mail di conferma per completare la richiesta.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: appConfig.getWidth() * 3.5,
-                        fontWeight: FontWeight.w500,
-                        color: appConfig.getTheme().secondaryHeaderColor,
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.symmetric(
+            horizontal: appConfig.getWidth() * horizontalPadding,
+            vertical: appConfig.getHeight() * verticalPadding,
+          ),
+          child: SizedBox(
+              height: appConfig.getHeight() * 100,
+              width: appConfig.getWidth() * 100,
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    GoBackButton(
+                      icon: Icons.arrow_back_rounded,
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      appConfig: appConfig,
+                      title: 'Modifica email',
+                    ),
+                    SizedBox(
+                      height: appConfig.getHeight() * 5,
+                    ),
+                    Center(
+                      child: Text(
+                        'Inserisci la tua nuova email. Verrà inviata una mail di conferma per completare la richiesta.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: appConfig.getWidth() * 3.5,
+                          fontWeight: FontWeight.w500,
+                          color: appConfig.getTheme().secondaryHeaderColor,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: appConfig.getHeight() * 5,
-                  ),
-                  buildTextField(
-                      appConfig,
-                      hintText: 'Email',
-                      onChanged: onEmailChange,
-                      validator: onEmailChange,
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  ButtonText(
-                    text: 'Modifica',
-                    onTap: changeEmail,
-                    isLoading: isLoading,
-                  ),
-                ],
+                    SizedBox(
+                      height: appConfig.getHeight() * 5,
+                    ),
+                    buildTextField(
+                        appConfig,
+                        hintText: 'Email',
+                        onChanged: onEmailChange,
+                        validator: onEmailChange,
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    ButtonText(
+                      text: 'Modifica',
+                      onTap: changeEmail,
+                      isLoading: isLoading,
+                    ),
+                  ],
+                ),
               ),
-            ),
-        ),
+          ),
       ),
     );
   }
