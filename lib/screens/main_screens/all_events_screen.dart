@@ -19,9 +19,11 @@ class AllEventsScreen extends StatefulWidget {
   final String titolo;
   final bool isManage;
   final Future<List<EventModel>> futureEvents;
+  final EventFirestore? eventFirestore;
+  final FavoritesService? favoritesService;
 
   const AllEventsScreen(
-      {super.key, required this.futureEvents, this.isManage = false, required this.titolo});
+      {super.key, required this.futureEvents, this.isManage = false, required this.titolo, this.eventFirestore, this.favoritesService});
 
   @override
   State<AllEventsScreen> createState() => _AllEventsScreenState();
@@ -261,6 +263,8 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
                       event: event,
                       scaffoldKey: scaffoldKey,
                       onEventChange: onEventChange,
+                      eventFirestore: widget.eventFirestore,
+                      favoritesService: widget.favoritesService,
                     ),
                   );
                 },
@@ -296,6 +300,8 @@ class MyEventCard extends StatefulWidget {
     required this.event,
     required this.scaffoldKey,
     required this.onEventChange,
+    this.eventFirestore,
+    this.favoritesService,
   });
 
   final bool isManage;
@@ -314,6 +320,8 @@ class MyEventCard extends StatefulWidget {
   final EventModel event;
   final GlobalKey<ScaffoldState> scaffoldKey;
   final void Function(String id, EventModel?) onEventChange;
+  final EventFirestore? eventFirestore;
+  final FavoritesService? favoritesService;
 
   @override
   State<MyEventCard> createState() => _MyEventCardState();
@@ -547,6 +555,7 @@ class _MyEventCardState extends State<MyEventCard>
                                     eventId: widget.eventId,
                                     isLike: widget.isLike,
                                     onFavouriteChange: widget.onFavouriteChange,
+                                    favoritesService: widget.favoritesService,
                                   ),
                                 )
                               ],
@@ -593,7 +602,7 @@ class _MyEventCardState extends State<MyEventCard>
 
           Navigator.of(context).pop();
 
-          final EventFirestore eventFirestore = EventFirestore();
+          final EventFirestore eventFirestore = widget.eventFirestore ?? EventFirestore();
           eventFirestore.deleteEvent(widget.event);
 
           snackBarStyle.showSnackBar('Evento eliminato');
@@ -627,16 +636,18 @@ class LikeButton extends StatelessWidget {
     required this.eventId,
     required this.isLike,
     required this.onFavouriteChange,
+    this.favoritesService,
   });
 
   final double width;
   final String eventId;
   final bool isLike;
   final void Function(String, bool) onFavouriteChange;
+  final FavoritesService? favoritesService;
 
   @override
   Widget build(BuildContext context) {
-    final FavoritesService favoritesService = FavoritesService();
+    final FavoritesService favoritesService = this.favoritesService ?? FavoritesService();
     final AppConfig appConfig = AppConfig(context);
 
     return IconButton(
