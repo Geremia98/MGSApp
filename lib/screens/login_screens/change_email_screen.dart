@@ -12,7 +12,9 @@ import '../../widgets/buttons.dart';
 import '../../widgets/font.dart';
 
 class ChangeEmailScreen extends StatefulWidget {
-  const ChangeEmailScreen({super.key});
+  final FirebaseAuthService? authService;
+  
+  const ChangeEmailScreen({super.key, this.authService});
 
   @override
   State<ChangeEmailScreen> createState() => _ChangeEmailScreenState();
@@ -96,7 +98,7 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
       return;
     }
 
-    FirebaseAuthService authService = FirebaseAuthService();
+    FirebaseAuthService authService = widget.authService ?? FirebaseAuthService();
 
     setState(() {
       isLoading = true;

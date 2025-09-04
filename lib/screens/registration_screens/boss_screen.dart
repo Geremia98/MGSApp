@@ -20,9 +20,11 @@ import 'bank_data_registration_screen.dart';
 
 class BossRegistrationScreen extends StatefulWidget {
   final RegistrationController controller;
+  final FirebaseFunctionCaller? functionCaller;
 
   const BossRegistrationScreen({
     required this.controller,
+    this.functionCaller,
     super.key,
   });
 
@@ -146,7 +148,7 @@ class _BossRegistrationScreenState extends State<BossRegistrationScreen> {
                           });
 
                           FirebaseFunctionCaller caller =
-                              FirebaseFunctionCaller();
+                              widget.functionCaller ?? FirebaseFunctionCaller();
 
                           FunctionResponse response =
                               await caller.isBossCodeValid(p1);

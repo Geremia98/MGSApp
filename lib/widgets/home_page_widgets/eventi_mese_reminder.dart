@@ -10,6 +10,10 @@ import '../../models/event_model.dart';
 import '../../screens/main_screens/all_events_screen.dart';
 
 class EventiDelMeseReminder extends StatefulWidget {
+  final EventFirestore? eventFirestore;
+
+  const EventiDelMeseReminder({super.key, this.eventFirestore});
+
   @override
   State<StatefulWidget> createState() => _EventiDelMeseReminder();
 }
@@ -20,7 +24,7 @@ class _EventiDelMeseReminder extends State<EventiDelMeseReminder> {
   @override
   void initState() {
     super.initState();
-    final EventFirestore eventFirestore = EventFirestore();
+    final EventFirestore eventFirestore = widget.eventFirestore ?? EventFirestore();
 
     retrieveJoinedEvents =
         eventFirestore.retrievePersonalEvents(onlyFuture: true);

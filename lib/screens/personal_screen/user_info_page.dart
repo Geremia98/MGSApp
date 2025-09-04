@@ -13,7 +13,9 @@ import '../../utilities/constants_dimensions.dart';
 import '../../widgets/buttons.dart';
 
 class UserInfoPage extends StatefulWidget {
-  const UserInfoPage({super.key});
+  final UserFirestore? userFirestore;
+  
+  const UserInfoPage({super.key, this.userFirestore});
 
   @override
   State<UserInfoPage> createState() => _UserInfoPageState();
@@ -223,7 +225,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                           isLoading = true;
                         });
 
-                        final UserFirestore userFirestore = UserFirestore();
+                        final UserFirestore userFirestore = widget.userFirestore ?? UserFirestore();
 
                         await userFirestore.updateUserInfo(name: name, surname: surname, birth: birth ?? DateTime(2000), gender: gender);
 
