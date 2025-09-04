@@ -12,7 +12,9 @@ import '../../widgets/buttons.dart';
 import '../../widgets/font.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
-  const ChangePasswordScreen({super.key});
+  final FirebaseAuthService? authService;
+  
+  const ChangePasswordScreen({super.key, this.authService});
 
   @override
   State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
@@ -94,7 +96,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       return;
     }
 
-    FirebaseAuthService authService = FirebaseAuthService();
+    FirebaseAuthService authService = widget.authService ?? FirebaseAuthService();
 
     setState(() {
       isLoading = true;
