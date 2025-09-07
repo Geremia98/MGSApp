@@ -1,21 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/models/user_model.dart';
+import 'package:mgs_app2/screens/login_screens/change_email_screen.dart';
+import 'package:mgs_app2/screens/login_screens/change_password_screen.dart';
+import 'package:mgs_app2/screens/main_screens/faq_screen.dart';
+import 'package:mgs_app2/screens/personal_screen/user_boss_page.dart';
+import 'package:mgs_app2/screens/personal_screen/user_group_page.dart';
+import 'package:mgs_app2/screens/personal_screen/user_info_page.dart';
 import 'package:mgs_app2/screens/registration_screens/registration_controller.dart';
+import 'package:mgs_app2/screens/report_bug/report_bug_category_screen.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/utilities/constants_strings.dart';
 import 'package:mgs_app2/utilities/my_colors.dart';
+import 'package:mgs_app2/widgets/button.dart';
 import 'package:mgs_app2/widgets/buttons.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/my_profile_pic.dart';
 import 'package:mgs_app2/widgets/personal_page_widgets/my_big_async_button.dart';
 import 'package:mgs_app2/widgets/personal_page_widgets/my_squared_icon_button.dart';
 import 'package:mgs_app2/widgets/personal_page_widgets/selector_for_personal_screen.dart';
-import 'package:mgs_app2/widgets/personal_page_widgets/text_form_field_for_personal_screen.dart';
 import 'package:mgs_app2/widgets/registration_screens_widgets/my_date_picker.dart';
-import 'package:mgs_app2/widgets/registration_screens_widgets/my_segmented_button.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
+import '../../services/firebase/auth.dart';
+import '../../widgets/font.dart';
+import '../../wrapper.dart';
 
 class PersonalScreen extends StatefulWidget {
-  const PersonalScreen({super.key});
+  final FirebaseAuthService? authService;
+  final PackageInfo? packageInfo;
+  
+  const PersonalScreen({super.key, this.authService, this.packageInfo});
 
   @override
   PersonalScreenState createState() => PersonalScreenState();
@@ -26,9 +40,12 @@ class PersonalScreenState extends State<PersonalScreen> {
   late bool _isModifyOptionEnable;
   late Set<bool> _selectedBoss;
   late Set<UserGender> _selectedUserGender;
+  PackageInfo? _packageInfo;
 
   @override
   void initState() {
+    super.initState();
+
     controller.setName(UserModel.name);
     controller.setSurname(UserModel.surname);
     controller.setGender(UserModel.gender);
@@ -42,7 +59,16 @@ class PersonalScreenState extends State<PersonalScreen> {
     _selectedBoss = {UserModel.bossCode.isNotEmpty};
     _selectedUserGender = {UserModel.gender};
     _isModifyOptionEnable = false;
-    super.initState();
+    
+    if (widget.packageInfo != null) {
+      _packageInfo = widget.packageInfo;
+    } else {
+      PackageInfo.fromPlatform().then((info) {
+        setState(() {
+          _packageInfo = info;
+        });
+      });
+    }
   }
 
   void updateUserInfo() {
@@ -72,219 +98,303 @@ class PersonalScreenState extends State<PersonalScreen> {
     final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
-      body: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.symmetric(
-          horizontal: appConfig.getWidth() * horizontalPadding,
-          vertical: appConfig.getHeight() * verticalPadding,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(bottom: appConfig.getHeight() * paddingUnderTheMainUppperBar),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
+      body: SafeArea(
+        bottom: false,
+        child: SizedBox(
+          height: AppConfig(context).getHeight() * 100,
+          width: AppConfig(context).getWidth() * 100,
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: EdgeInsets.symmetric(
+                  horizontal: appConfig.getWidth() * horizontalPadding,
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      bottom:
+                          appConfig.getHeight() * paddingUnderTheMainUppperBar),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
                       GoBackButton(
                         icon: Icons.arrow_back_rounded,
                         onTap: () {
                           Navigator.pop(context);
                         },
                         appConfig: appConfig,
+                        title: 'Profilo',
                       ),
-                      MySquaredIconButton(
-                        activeColor: appConfig.getTheme().primaryColor,
-                        disabledColor: appConfig.getTheme().splashColor,
-                        icon: Icons.edit_rounded,
-                        isEnable: !_isModifyOptionEnable,
-                        onTap: () {
-                          setState(() {
-                            _isModifyOptionEnable = !_isModifyOptionEnable;
-                          });
-                        },
+                      SizedBox(
+                        height: 20,
                       ),
-                    ],
-                  ),
-                  MyProfilePicture(
-                    appConfig: appConfig,
-                    borderRadius: personalePageProfilePicBorderRadius,
-                    borderThickness: personaPageProfilePicBorderThickness,
-                    dimension: personalPageProfilePicDimension,
-                  ),
-                  Column(
-                    children: [
-                      MySquaredIconButton(
-                        activeColor: Theme.of(context)
-                            .extension<CustomColors>()!
-                            .enabledCheckSquaredButton,
-                        disabledColor: Theme.of(context)
-                            .extension<CustomColors>()!
-                            .disabledCheckSquaredButton,
-                        icon: Icons.check_rounded,
-                        isEnable: _isModifyOptionEnable,
-                        onTap: () {
-                          setState(() {
-                            updateUserInfo();
-                            _isModifyOptionEnable = !_isModifyOptionEnable;
-                          });
-                        },
-                      ),
-                      MySquaredIconButton(
-                        activeColor: Theme.of(context)
-                            .extension<CustomColors>()!
-                            .enabledUndoSquaredButton,
-                        disabledColor: Theme.of(context)
-                            .extension<CustomColors>()!
-                            .disabledUndoSquaredButton,
-                        icon: Icons.close_rounded,
-                        isEnable: _isModifyOptionEnable,
-                        onTap: () {
-                          ricostruisciWidgetConValoriIniziali(context);
-                        },
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: appConfig.getWidth() * additionalPaddingForTheForm,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          MyProfilePicture(
+                            appConfig: appConfig,
+                            borderRadius: 100,
+                            borderThickness: 0,
+                            dimension: 100,
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Ciao,  ',
+                                      style: textStyleEventCardTitle(context)
+                                          .copyWith(
+                                              fontWeight: FontWeight.w500),
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          '${UserModel.name} ${UserModel.surname}',
+                                      style: textStyleEventCardTitle(context),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              if (UserModel.bossCode.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 5),
+                                  child: Icon(
+                                    Icons.verified_outlined,
+                                    size: 17,
+                                    color: appConfig
+                                        .getTheme()
+                                        .secondaryHeaderColor,
+                                  ),
+                                )
+                            ],
+                          ),
+                          SizedBox(
+                            height: appConfig.getHeight() * 5,
+                          ),
+                          _buildRowFor(
+                            Icons.person_2_outlined,
+                            'Anagrafica account',
+                            appConfig.getTheme().secondaryHeaderColor,
+                            () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const UserInfoPage()),
+                              );
 
-                  buildMyTextFormField(
-                    appConfig,
-                    textCapitalization: TextCapitalization.sentences,
-                    hintText: 'Inserisci il nome',
-                    labelText: 'Nome: ',
-                    initialValue: controller.name,
-                    enabled: _isModifyOptionEnable,
-                    onChanged: (value) {
-                      controller.setName(value);
-                    },
+                              setState(() {});
+                            },
+                          ),
+                          _buildRowFor(
+                            Icons.home_outlined,
+                            'Gruppo account',
+                            appConfig.getTheme().secondaryHeaderColor,
+                            () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const UserGroupPage()),
+                              );
+
+                              setState(() {});
+                            },
+                          ),
+                          if (UserModel.bossCode.isEmpty)
+                            _buildRowFor(
+                              Icons.verified_outlined,
+                              'Diventa Boss',
+                              appConfig.getTheme().secondaryHeaderColor,
+                              () async {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const UserBossPage()),
+                                );
+
+                                setState(() {});
+                              },
+                            ),
+                          _buildRowFor(
+                            Icons.email_outlined,
+                            'Modifica email',
+                            appConfig.getTheme().secondaryHeaderColor,
+                            () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ChangeEmailScreen()),
+                              );
+                            },
+                          ),
+                          _buildRowFor(
+                            Icons.lock_outline_rounded,
+                            'Modifica password',
+                            appConfig.getTheme().secondaryHeaderColor,
+                            () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ChangePasswordScreen()),
+                              );
+                            },
+                          ),
+                          SizedBox(
+                            height: appConfig.getHeight() * 5,
+                          ),
+                          _buildRowFor(
+                            Icons.bug_report_outlined,
+                            'Segnala bug',
+                            appConfig.getTheme().secondaryHeaderColor,
+                            () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ReportBugCategoryScreen()),
+                              );
+                            },
+                          ),
+                          _buildRowFor(
+                            Icons.question_mark_outlined,
+                            'FAQ',
+                            appConfig.getTheme().secondaryHeaderColor,
+                            () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const FAQScreen()),
+                              );
+                            },
+                          ),
+                          _buildRowFor(
+                            Icons.logout,
+                            'Esci',
+                            appConfig.getTheme().secondaryHeaderColor,
+                            () async {
+                              final FirebaseAuthService authService =
+                                  widget.authService ?? FirebaseAuthService();
+                              await authService.signOut(context);
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const Wrapper(),
+                                ),
+                              );
+                            },
+                            // logoutPanel,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  buildMyTextFormField(
-                    appConfig,
-                    textCapitalization: TextCapitalization.sentences,
-                    hintText: 'Inserisci il cognome',
-                    labelText: 'Cognome: ',
-                    initialValue: controller.surname,
-                    enabled: _isModifyOptionEnable,
-                    onChanged: (value) {
-                      controller.setSurname(value);
-                    },
-                  ),
-                  buildMyTextFormField(
-                    appConfig,
-                    textCapitalization: TextCapitalization.sentences,
-                    hintText: 'Inserisci il numero di telefono',
-                    labelText: 'Cellulare: ',
-                    initialValue: '3881113429',
-                    enabled: _isModifyOptionEnable,
-                  ),
-                  MySegmentedButton(
-                    leftString: 'Maschio',
-                    rightString: 'Femmina',
-                    selected: _selectedUserGender,
-                    onValueChange: (value) {
-                      setState(() {
-                        _selectedUserGender = value;
-                      });
-                    },
-                    title: 'Sesso: ',
-                    leftValue: UserGender.male,
-                    rightValue: UserGender.female,
-                    isEnable: _isModifyOptionEnable,
-                  ),
-                  SizedBox(
-                    height: appConfig.getHeight() * 0.5,
-                  ),
-                  MyDatePicker(
-                    title: 'Data di nascita: ',
-                    birthday: controller.birthDate,
-                    isEnable: _isModifyOptionEnable,
-                    onPressed: () async {
-                      final DateTime? dateNascita = await showDatePicker(
-                        context: context,
-                        firstDate: DateTime(1960),
-                        lastDate: DateTime(2014),
-                      );
-                      if (dateNascita != null) {
-                        setState(() {
-                          controller.setBirthday(dateNascita);
-                        });
-                      }
-                    },
-                  ),
-                  controller.country.isEmpty ? SizedBox() : SelectorForPersonalScreen(
-                    isEnable: _isModifyOptionEnable,
-                    constantDropDownCountryList,
-                    controller.country,
-                    onValueChange: (String value) =>
-                        controller.setCountry(value),
-                    title: 'Paese: ',
-                  ),
-                  controller.ispettoria.isEmpty ? SizedBox() : SelectorForPersonalScreen(
-                    isEnable: _isModifyOptionEnable,
-                    constantDropDownIspettoriaList,
-                    controller.ispettoria,
-                    onValueChange: (String value) =>
-                        {controller.setIspettoria(value)},
-                    title: 'Ispettoria: ',
-                  ),
-                  controller.group.isEmpty ? SizedBox() : SelectorForPersonalScreen(
-                    isEnable: _isModifyOptionEnable,
-                    constantDropDownGroupList,
-                    controller.group,
-                    onValueChange: (String value) =>
-                        controller.setGroup(value),
-                    title: 'Gruppo: ',
-                  ),
-                  MySegmentedButton(
-                    isEnable: _isModifyOptionEnable,
-                    leftString: 'Si',
-                    rightString: 'No',
-                    leftValue: true,
-                    rightValue: false,
-                    selected: _selectedBoss,
-                    onValueChange: (value) {
-                      setState(() {
-                        _selectedBoss = value;
-                      });
-                    },
-                    title: 'Boss? ',
-                  ),
-                  controller.bossCode.isNotEmpty || _selectedBoss.first == true
-                      ? buildMyTextFormField(
-                          obscureText: true,
-                          appConfig,
-                          onChanged: (value) {
-                            controller.setBossCode(value);
-                          },
-                          textCapitalization: TextCapitalization.sentences,
-                          hintText: '',
-                          labelText: 'Codice del Boss: ',
-                          initialValue: controller.bossCode,
-                          enabled: _isModifyOptionEnable,
-                        )
-                      : const SizedBox(),
-                      MyBigAsyncButton(
-                        appConfig: appConfig, 
-                        onPressedAsync: () async {},
-                        buttonText: 'Cambia la password',
-                      )
-                ],
+                ),
               ),
+              Positioned(
+                bottom: 10,
+                left: 0,
+                right: 0,
+                child: _buildBottomAppVersion(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRowFor(
+      IconData iconData, String text, Color color, void Function()? onTap) {
+    final AppConfig appConfig = AppConfig(context);
+
+    return Container(
+      color: Colors.transparent,
+      width: appConfig.getWidth() * 100,
+      child: Material(
+        color: appConfig.getTheme().scaffoldBackgroundColor,
+        child: InkWell(
+          onTap: onTap,
+          splashColor: Colors.grey.withOpacity(0.1),
+          focusColor: Colors.grey.withOpacity(0.1),
+          highlightColor: Colors.grey.withOpacity(0.1),
+          hoverColor: Colors.grey.withOpacity(0.1),
+          child: Padding(
+            padding: EdgeInsets.only(
+                bottom: appConfig.getHeight(), top: appConfig.getHeight()),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          iconData,
+                          color: appConfig.getTheme().secondaryHeaderColor,
+                          size: 22,
+                        ),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Container(
+                          width: appConfig.getWidth() * 50,
+                          child: Text(
+                            text,
+                            maxLines: 1,
+                            style: textStyleTextField(context),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Icon(
+                        Icons.navigate_next,
+                        color: text == 'Esci'
+                            ? appConfig.getTheme().scaffoldBackgroundColor
+                            : appConfig.getTheme().secondaryHeaderColor,
+                        size: 18,
+                      ),
+                    )
+                  ],
+                ),
+              ],
             ),
-          ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomAppVersion() {
+    final AppConfig appConfig = AppConfig(context);
+
+    return SizedBox(
+      height: appConfig.getHeight() * 15,
+      width: appConfig.getWidth() * 100,
+      child: Padding(
+        padding: EdgeInsets.only(top: appConfig.getHeight() * 10),
+        child: Text(
+          "v${_packageInfo?.version} (${_packageInfo?.buildNumber})",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.grey,
+            fontWeight: FontWeight.w500,
+            fontSize: 13,
+          ),
         ),
       ),
     );

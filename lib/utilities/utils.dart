@@ -14,7 +14,9 @@ String formatDateFromDateTime(DateTime? dateTime) {
     return 'xx/xx/xx';
   }
 
-  return '${dateTime.day} / ${dateTime.month} / ${dateTime.year}';
+  Intl.defaultLocale = 'it_IT';
+
+  return DateFormat('d MMMM yyyy').format(dateTime);
 }
 
 String formatTimeFromTimeOfDay(TimeOfDay? time) {

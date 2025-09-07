@@ -213,7 +213,7 @@ void main() {
     });
 
     group('getErrorMessage method', () {
-      test('returns error code as string for error response', () {
+      test('returns error message as string for error response', () {
         final response = FunctionResponse(ResponseType.error, {
           'code': 404,
           'message': 'Not found'
@@ -221,7 +221,7 @@ void main() {
         
         final result = response.getErrorMessage();
         
-        expect(result, equals('404'));
+        expect(result, equals('Not found'));
       });
 
       test('returns empty string for success response', () {
@@ -234,7 +234,7 @@ void main() {
         expect(result, equals(''));
       });
 
-      test('handles string error codes', () {
+      test('handles string error messages', () {
         final response = FunctionResponse(ResponseType.error, {
           'code': 'VALIDATION_ERROR',
           'message': 'Invalid input'
@@ -242,10 +242,10 @@ void main() {
         
         final result = response.getErrorMessage();
         
-        expect(result, equals('VALIDATION_ERROR'));
+        expect(result, equals('Invalid input'));
       });
 
-      test('handles numeric error codes', () {
+      test('handles numeric error messages', () {
         final response = FunctionResponse(ResponseType.error, {
           'code': 500,
           'message': 'Server error'
@@ -253,13 +253,13 @@ void main() {
         
         final result = response.getErrorMessage();
         
-        expect(result, equals('500'));
+        expect(result, equals('Server error'));
       });
 
-      test('handles null error code', () {
+      test('handles null error message', () {
         final response = FunctionResponse(ResponseType.error, {
-          'code': null,
-          'message': 'Error message'
+          'code': 400,
+          'message': null
         });
         
         final result = response.getErrorMessage();
@@ -275,9 +275,9 @@ void main() {
         expect(() => response.getSuccessResponse(), throwsA(isA<TypeError>()));
       });
 
-      test('handles missing code in error response', () {
+      test('handles missing message in error response', () {
         final response = FunctionResponse(ResponseType.error, {
-          'message': 'Error without code'
+          'code': 500
         });
         
         final result = response.getErrorMessage();

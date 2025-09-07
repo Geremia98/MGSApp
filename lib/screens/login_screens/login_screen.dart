@@ -134,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             'Password dimenticata?',
                             style: textStyleSubtitle(context).copyWith(
                                 color: appConfig.getTheme().primaryColor,
-                            fontWeight: FontWeight.w600),
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
                       ),
@@ -187,9 +187,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           Text(
                             'Non hai ancora un account?',
-                            style: TextStyle(
-                              fontSize: fontSizeBig,
-                              color: appConfig.getTheme().secondaryHeaderColor,
+                            style: textStyleSubtitle(context).copyWith(
+                              fontWeight: FontWeight.w600,
+
                             ),
                           ),
                           SizedBox(
@@ -205,17 +205,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               )
                             },
-                            child: Text(
-                              'Registrati',
-                              style: TextStyle(
-                                fontSize: fontSizeBig,
-                                decoration: TextDecoration.underline,
-                                fontWeight: FontWeight.w600,
-                                color: appConfig.getTheme().primaryColor,
-                                decorationColor:
-                                    appConfig.getTheme().primaryColor,
-                              ),
-                            ),
+                            child: Text('Registrati',
+                                style: textStyleSubtitle(context).copyWith(
+                                  decoration: TextDecoration.underline,
+                                  fontWeight: FontWeight.bold,
+                                  decorationColor:
+                                      appConfig.getTheme().secondaryHeaderColor,
+                                )),
                           )
                         ],
                       ),

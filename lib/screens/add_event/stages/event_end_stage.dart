@@ -53,6 +53,15 @@ class _TitleStageState extends State<EventEndStage> {
     super.initState();
 
     controller = widget.controller;
+    if (controller.startDate != null && controller.endTime != null && controller.startTime != null && controller.endTime != null) {
+
+      final DateTime startDateTime = DateTime(controller.startDate!.year, controller.startDate!.month, controller.startDate!.day, controller.startTime!.hour, controller.startTime!.minute);
+      final DateTime endDateTime = DateTime(controller.endDate!.year, controller.endDate!.month, controller.endDate!.day, controller.endTime!.hour, controller.endTime!.minute);
+
+      controller.setCurrentStageValid( startDateTime.isBefore(endDateTime));
+      return;
+    }
+
     controller.setCurrentStageValid(false);
   }
 

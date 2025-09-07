@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/registration_screens/bank_data_registration_screen.dart';
+import 'package:mgs_app2/screens/registration_screens/boss_screen.dart';
 import 'package:mgs_app2/screens/registration_screens/registration_controller.dart';
 import 'package:mgs_app2/screens/registration_screens/registration_screen4.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
@@ -12,6 +13,7 @@ import 'package:mgs_app2/widgets/selector.dart';
 
 import '../../utilities/constants_strings.dart';
 import '../../widgets/font.dart';
+import '../../widgets/title.dart';
 
 class RegistrationScreen3 extends StatefulWidget {
   final RegistrationController controller;
@@ -28,7 +30,6 @@ class RegistrationScreen3 extends StatefulWidget {
 class _RegistrationScreen3State extends State<RegistrationScreen3> {
   late RegistrationController controller;
   late bool _isDisabled;
-  late Set<bool> _selectedBoss;
 
   TextEditingController textFieldValue = TextEditingController();
 
@@ -37,17 +38,15 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
     super.initState();
     _isDisabled = true;
     controller = widget.controller;
+    isNextStepAvailable();
 
-    _selectedBoss = {true};
+
   }
 
   void isNextStepAvailable() {
     if (controller.country.isNotEmpty &&
             controller.ispettoria.isNotEmpty &&
-            controller.group.isNotEmpty &&
-            _selectedBoss.first == false
-        ? true
-        : controller.bossCode.isNotEmpty) {
+            controller.group.isNotEmpty) {
       setState(() {
         _isDisabled = false;
       });
@@ -102,12 +101,7 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                       child: Text(
                         'A quale gruppo\n   appartieni?',
                         textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: fontSizeTitle,
-                          fontWeight: FontWeight.w700,
-                          height: 1.2,
-                          color: appConfig.getTheme().secondaryHeaderColor,
-                        ),
+                        style: textStyleTitle(context)
                       ),
                     ),
                     const SizedBox(
@@ -117,11 +111,7 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                       child: Text(
                         '(No, non quello sanguigno)',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: appConfig.getWidth() * 3.5,
-                          fontWeight: FontWeight.w500,
-                          color: appConfig.getTheme().secondaryHeaderColor,
-                        ),
+                        style: textStyleSubtitle(context)
                       ),
                     ),
                     const SizedBox(
@@ -153,21 +143,21 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                           controller.setGroup(value),
                       title: 'Gruppo: ',
                     ),
-                    SizedBox(height: 20),
-                    MySegmentedButton(
-                      isEnable: true,
-                      leftString: 'Si',
-                      rightString: 'No',
+                    /*SizedBox(height: 20),
+                    MyCustomSegmentedButton(
+                      isEnabled: true,
+                      leftText: 'Si',
+                      rightText: 'No',
                       leftValue: true,
                       rightValue: false,
                       selected: _selectedBoss,
                       onValueChange: (value) {
                         setState(() {
-                          _selectedBoss = value;
+                          _selectedBoss = {value as bool};
                           isNextStepAvailable();
                         });
                       },
-                      title: 'Boss? ',
+                      //title: 'Boss? ',
                     ),
                     controller.bossCode.isNotEmpty ||
                             _selectedBoss.first == true
@@ -184,7 +174,7 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                             initialValue: controller.bossCode,
                             enabled: true,
                           )
-                        : const SizedBox(),
+                        : const SizedBox(),*/
                   ],
                 ),
               ),
@@ -197,7 +187,7 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                       icon: Icons.arrow_forward_rounded,
                       isEnable: !_isDisabled,
                       onTap: () {
-                        if (_selectedBoss.first == true) {
+                       /* if (_selectedBoss.first == true) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -207,12 +197,12 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                                     )),
                           );
                           return;
-                        }
+                        }*/
 
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => RegistrationScreen4(
+                              builder: (context) => BossRegistrationScreen(
                                     controller: controller,
                                   )),
                         );

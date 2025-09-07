@@ -89,6 +89,12 @@ class EventFirestore {
           .get();
 
       for (QueryDocumentSnapshot doc in snap.docs) {
+
+        //Non metto gli eventi creati da lui nei consigliati
+        if ((doc.data() as Map<String, dynamic>)[firestoreEventCreatorUid] == UserModel.uid) {
+          continue;
+        }
+
         ImageModel? image = await _storage.getEventBannerImage(doc.id);
         List<String> participants = await retrieveParticipantsUid(doc.id);
 
@@ -108,6 +114,24 @@ class EventFirestore {
     }
   }
 
+
+  Future<void> deleteEvent(EventModel event) async {
+
+    try {
+
+      if (event.creatorUid != event.creatorUid) {
+        return;
+      }
+
+      await eventsCR.doc(event.id).delete();
+
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error while retrieving participants UID: $error');
+      }
+    }
+  }
+
   Future<List<String>> retrieveParticipantsUid(String eventId) async {
     try {
       final participantsRef = eventsCR.doc(eventId).collection('participants');
@@ -124,6 +148,7 @@ class EventFirestore {
 
   Future<List<EventModel>> retrievePersonalEvents({
     bool onlyFuture = false,
+    bool justCreatedByMe = false,
   }) async {
     List<EventModel> events = [];
 
@@ -157,8 +182,11 @@ class EventFirestore {
             doc.id, doc.data() as Map<String, dynamic>, image, participants, isFavourite));
       }
 
-      final joinedEvents = await retrieveUserJoinedEvents(onlyFuture: onlyFuture);
-      events.addAll(joinedEvents);
+      if (!justCreatedByMe) {
+        final joinedEvents = await retrieveUserJoinedEvents(
+            onlyFuture: onlyFuture);
+        events.addAll(joinedEvents);
+      }
 
       // Remove duplicates
       final uniqueIds = <String>{};
@@ -210,6 +238,24 @@ class EventFirestore {
       }
 
       return ref.id;
+    } catch (error) {
+      if (kDebugMode) {
+        print('error while fetching events: $error');
+      }
+      return '';
+    }
+  }
+
+  Future<String> editEvent(EventModel event, String id) async {
+    try {
+      eventsCR.doc(id).set(event.toPayload());
+
+      //Aggiungo questo controllo perchè se l'immagine non è stata caricata allora ho solo il downloadURL
+      if (event.image != null && event.image!.image != null) {
+        await _storage.storeEventBannerImage(id, event.image!);
+      }
+
+      return id;
     } catch (error) {
       if (kDebugMode) {
         print('error while fetching events: $error');

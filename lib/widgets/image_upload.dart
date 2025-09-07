@@ -14,7 +14,6 @@ enum ImageType {
   eventBanner,
 }
 
-
 BoxDecoration profilePictureDecoration(BuildContext context) {
   final AppConfig appConfig = AppConfig(context);
   return BoxDecoration(
@@ -32,8 +31,6 @@ BoxDecoration eventBannerImageDecoration(BuildContext context) {
     boxShadow: boxShadowCard,*/
   );
 }
-
-
 
 class ImageUploadCard extends StatefulWidget {
   final void Function(ImageModel? image)? onImagePicked;
@@ -108,8 +105,8 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
     return GestureDetector(
       onTap: getImage,
       child: croppedImage == null || !keepLatestImageShown
-            ? buildAddImage()
-            : buildImage(),
+          ? buildAddImage()
+          : buildImage(),
     );
   }
 
@@ -129,13 +126,13 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
       case ImageType.profilePicture:
         {
           imageCropped =
-          await service.openImageCropperProfilePicture(image, context);
+              await service.openImageCropperProfilePicture(image, context);
           break;
         }
       case ImageType.eventBanner:
         {
           imageCropped =
-          await service.openImageCropperEventBanner(image, context);
+              await service.openImageCropperEventBanner(image, context);
           break;
         }
     }
@@ -147,16 +144,15 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
       return;
     }
 
-    String? mimeType = lookupMimeType(image!.path, headerBytes: await image.readAsBytes());
+    String? mimeType =
+        lookupMimeType(image!.path, headerBytes: await image.readAsBytes());
     setState(() {
-
       this.image = image;
       croppedImage = ImageModel(
         image: imageCropped!,
         path: image!.path,
         extension: mimeType,
       );
-
     });
 
     if (onImagePicked != null) {
@@ -166,36 +162,36 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
 
   Widget buildAddImage() {
     return DottedBorder(
-          borderType: BorderType.RRect,
-          radius: Radius.circular(imageType == ImageType.profilePicture ? 10000 : 20),
-          dashPattern: [10, 10],
-          color: Colors.grey.withOpacity(0.2),
-          strokeWidth: 2.5,
-          child: Container(
-            width: width,
-            height: height,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
+      borderType: BorderType.RRect,
+      radius:
+          Radius.circular(imageType == ImageType.profilePicture ? 10000 : 20),
+      dashPattern: [10, 10],
+      color: Colors.grey.withOpacity(0.2),
+      strokeWidth: 2.5,
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: height * 0.2,
+              height: height * 0.2,
+              decoration: BoxDecoration(
+                color: appConfig.getTheme().primaryColor,
+                borderRadius: BorderRadius.all(Radius.circular(width * 0.2)),
+              ),
+              child: Icon(
+                Icons.add,
+                color: appConfig.getTheme().scaffoldBackgroundColor,
+              ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: height * 0.2,
-                  height: height * 0.2,
-                  decoration: BoxDecoration(
-                    color: appConfig.getTheme().primaryColor,
-                    borderRadius:
-                    BorderRadius.all(Radius.circular(width * 0.2)),
-                  ),
-                  child: Icon(
-                    Icons.add,
-                    color: appConfig.getTheme().scaffoldBackgroundColor,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -227,10 +223,15 @@ class _ImageUploadCardState extends State<ImageUploadCard> {
         // Adjust the border radius as needed
         child: Stack(
           children: [
-            Image.memory(
-              croppedImage!.image!,
-              fit: BoxFit.cover,
-            ),
+            croppedImage!.image == null && croppedImage!.downloadUrl != null
+                ? Image.network(
+                    croppedImage!.downloadUrl!,
+                    fit: BoxFit.cover,
+                  )
+                : Image.memory(
+                    croppedImage!.image!,
+                    fit: BoxFit.cover,
+                  ),
             Positioned.fill(
               child: Icon(
                 Icons.edit,

@@ -31,6 +31,7 @@ void main() {
                 event: event,
                 appConfig: appConfig,
                 onPop: onPop ?? (_) {},
+                isLoading: false,
               );
             },
           ),
@@ -291,6 +292,7 @@ void main() {
                 event: event,
                 appConfig: appConfig,
                 onPop: (_) {},
+                isLoading: false,
               );
             },
           ),

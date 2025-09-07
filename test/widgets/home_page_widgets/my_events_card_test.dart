@@ -30,7 +30,7 @@ void main() {
                   event: event,
                   height: 200,
                   width: 300,
-                  onPop: (value) {},
+                  onPop: (value) {}, isLoading: false,
                 ),
               );
             }

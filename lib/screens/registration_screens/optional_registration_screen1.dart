@@ -5,6 +5,7 @@ import 'package:mgs_app2/screens/registration_screens/registration_screen2.dart'
 import 'package:mgs_app2/utilities/app_config.dart';
 
 import '../../widgets/font.dart';
+import '../../widgets/title.dart';
 
 class OptionalRegistrationScreen1 extends StatelessWidget {
 
@@ -49,14 +50,10 @@ class OptionalRegistrationScreen1 extends StatelessWidget {
                       ),
                       Center(
                         child: Text(
-                          '${controller.name},\ndevi superarla questa\ncosa dell\'età, su...',
+                          '${controller.name},devi superarla \nquesta cosa\n dell\'età, su...',
                           textAlign: TextAlign.right,
-                          style: TextStyle(
-                            fontSize: appConfig.getWidth()*7,
-                            fontWeight: FontWeight.w700,
-                            height: 1.2,
-                            color: appConfig.getTheme().secondaryHeaderColor,
-                          ),
+                          maxLines: 4,
+                          style: textStyleTitle(context)
                         ),
                       ),
                       SizedBox(
@@ -67,12 +64,7 @@ class OptionalRegistrationScreen1 extends StatelessWidget {
                           Text(
                             'Che poi potrebbe andare peggio.\nPensa a chi è pelato...',
                             textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontSize: appConfig.getWidth()*4,
-                              fontWeight: FontWeight.w500,
-                              color:
-                                  appConfig.getTheme().secondaryHeaderColor,
-                            ),
+                            style: textStyleSubtitle(context)
                           ),
                           SizedBox(height: 30),
                           FilledButton(
