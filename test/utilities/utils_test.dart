@@ -18,7 +18,7 @@ void main() {
 
       test('formatDateFromDateTime formats date correctly', () {
         final date = DateTime(2024, 7, 20);
-        expect(formatDateFromDateTime(date), '20 / 7 / 2024');
+        expect(formatDateFromDateTime(date), '20 luglio 2024');
       });
 
       test('formatTimeFromTimeOfDay formats time correctly', () {

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:mgs_app2/screens/main_screens/home_screen.dart';
 import 'package:mgs_app2/models/user_model.dart';
 import 'package:mgs_app2/models/event_model.dart';
@@ -794,8 +795,8 @@ void main() {
         // Initial pump to build the widget tree
         await tester.pump(const Duration(milliseconds: 16));
         
-        // Verify FutureBuilders are present (showing loading indicators initially)
-        expect(find.byType(CupertinoActivityIndicator), findsAtLeastNWidgets(1));
+        // Verify FutureBuilders are present (showing shimmer loading effects initially)
+        expect(find.byType(Shimmer), findsAtLeastNWidgets(1));
         
         // Verify basic structure exists
         expect(find.byType(SafeArea), findsOneWidget);
@@ -943,8 +944,8 @@ void main() {
         // Initial state should show loading indicators
         await tester.pump(const Duration(milliseconds: 16));
         
-        // Verify loading state is handled
-        expect(find.byType(CupertinoActivityIndicator), findsWidgets);
+        // Verify loading state is handled with shimmer effects
+        expect(find.byType(Shimmer), findsWidgets);
         
       } finally {
         FlutterError.onError = originalOnError;

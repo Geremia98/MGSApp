@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/my_profile_pic.dart';
@@ -73,7 +74,7 @@ void main() {
     
     await tester.pumpAndSettle();
 
-    // The widget will show the network image.
-    expect(find.byType(Image), findsOneWidget);
+    // The widget will show the network image via CachedNetworkImage.
+    expect(find.byType(CachedNetworkImage), findsOneWidget);
   });
 }
