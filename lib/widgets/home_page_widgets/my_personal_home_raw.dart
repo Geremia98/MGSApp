@@ -25,7 +25,6 @@ class MyPersonalHomeRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       padding: EdgeInsets.only(
           top: height * 0.035,
@@ -55,7 +54,7 @@ class MyPersonalHomeRow extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => AllEventsScreen(
                               titolo: titolo,
-                          futureEvents: futureEvents,
+                              futureEvents: futureEvents,
                             )),
                   ),
                 },
@@ -64,7 +63,8 @@ class MyPersonalHomeRow extends StatelessWidget {
                   decoration: BoxDecoration(
                     // Colore di sfondo
                     borderRadius: BorderRadius.circular(
-                        width * 0.02), // Bordi arrotondati
+                      10,
+                    ), // Bordi arrotondati
                     border: getCustomBorder(
                       appConfig: appConfig,
                       width: 0.8,
@@ -72,7 +72,7 @@ class MyPersonalHomeRow extends StatelessWidget {
                   ),
                   child: Icon(
                     Icons.arrow_forward_rounded,
-                    size: 15,
+                    size: appConfig.isTablet() ? 25 : 15,
                     color: appConfig.getTheme().secondaryHeaderColor,
                   ),
                 ),

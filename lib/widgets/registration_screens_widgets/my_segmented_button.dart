@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
+import 'package:mgs_app2/widgets/button.dart';
 
 import '../../utilities/constants_dimensions.dart';
 
@@ -166,7 +167,7 @@ class _MyCustomSegmentedButtonState<T>
           alignment: Alignment.center,
           child: Text(
             label,
-            style: TextStyle(
+            style: textStyleTextField(context).copyWith(
               color: isSelected
                   ? theme.scaffoldBackgroundColor
                   : theme.secondaryHeaderColor,

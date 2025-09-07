@@ -61,16 +61,16 @@ class MyConsigliatiCard extends StatelessWidget {
       },
       child: Container(
         constraints:
-            BoxConstraints(maxHeight: height * 0.4, maxWidth: width * 0.7),
+            BoxConstraints(maxHeight: appConfig.isTablet() ? 500 : height * 0.4, maxWidth: appConfig.isTablet() ? 400 : width * 0.7),
         padding: EdgeInsets.only(right: 15),
         child: Card(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
+            borderRadius: BorderRadius.circular(20),
           ),
           child: Stack(children: [
             Positioned.fill(
               child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
+                borderRadius: BorderRadius.circular(20),
                 child: event == null
                     ? SizedBox()
                     : event!.image == null || event!.image!.downloadUrl == null
@@ -84,7 +84,7 @@ class MyConsigliatiCard extends StatelessWidget {
                               imageUrl: event!.image!.downloadUrl!,
                               fit: BoxFit.cover,
                               memCacheWidth: 600,
-                              memCacheHeight: 400,
+                              memCacheHeight: 600,
                               placeholder: (context, url) => ColorFiltered(
                                 colorFilter: const ColorFilter.mode(
                                   Colors.grey,

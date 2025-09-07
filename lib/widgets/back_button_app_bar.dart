@@ -22,7 +22,7 @@ class BackButtonAppBar extends StatelessWidget {
         GestureDetector(
           onTap: onTap,
           child: Container(
-            padding: EdgeInsets.all(appConfig.getWidth() * 1.2),
+            padding: EdgeInsets.all(15),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(
                   appConfig.getWidth() * 1.8), // Bordi arrotondati
@@ -33,7 +33,7 @@ class BackButtonAppBar extends StatelessWidget {
             ),
             child: Icon(
               iconData, // Icona simile a quella mostrata
-              size: appConfig.getWidth() * 7, // Dimensione dell'icona
+              size: appConfig.isTablet() ? 40 : 25, // Dimensione dell'icona
             ),
           ),
         ),

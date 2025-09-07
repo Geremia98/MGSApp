@@ -54,7 +54,7 @@ TextStyle textStyleTitle(BuildContext context) {
   final AppConfig appConfig = AppConfig(context);
   return TextStyle(
     color: appConfig.getTheme().secondaryHeaderColor,
-    fontSize: fontSizeTitle,
+    fontSize: responsiveFontSize(context, fontSizeTitle),
     fontWeight: FontWeight.w600,
     overflow: TextOverflow.ellipsis,
   );
@@ -64,7 +64,7 @@ TextStyle textStyleSection(BuildContext context) {
   final AppConfig appConfig = AppConfig(context);
   return TextStyle(
     color: appConfig.getTheme().secondaryHeaderColor,
-    fontSize: fontSizeAppBar,
+    fontSize: responsiveFontSize(context, fontSizeAppBar),
     fontWeight: FontWeight.w600,
     overflow: TextOverflow.ellipsis,
   );
@@ -74,7 +74,7 @@ TextStyle textStyleSubtitle(BuildContext context) {
   final AppConfig appConfig = AppConfig(context);
   return TextStyle(
     color: appConfig.getTheme().primaryColor,
-    fontSize: fontSizeSubtitle,
+    fontSize: responsiveFontSize(context, fontSizeSubtitle),
     fontWeight: FontWeight.w500,
     overflow: TextOverflow.ellipsis,
   );

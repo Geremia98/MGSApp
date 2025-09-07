@@ -64,13 +64,17 @@ class _EventiDelMeseReminder extends State<EventiDelMeseReminder> {
               ),
             },
             child: Container(
-              margin: EdgeInsets.only(top: 25),
+              margin: EdgeInsets.only(
+                top: appConfig.isTablet() ? 0 : 25,
+                left:0,
+                right: 0,
+              ),
               padding: EdgeInsets.symmetric(
                 horizontal: 10,
                 vertical: 10,
               ),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(width * 0.02)),
+                borderRadius: BorderRadius.circular(20),
                 color: appConfig.getTheme().highlightColor,
                 boxShadow: [
                   BoxShadow(
@@ -86,8 +90,8 @@ class _EventiDelMeseReminder extends State<EventiDelMeseReminder> {
               child: Row(
                 children: [
                   Container(
-                    width: width * 0.15,
-                    height: width * 0.15,
+                    width: appConfig.isTablet() ? 70 : width * 0.15,
+                    height: appConfig.isTablet() ? 70 : width * 0.15,
                     decoration: BoxDecoration(
                       color: appConfig.getTheme().highlightColor,
                       image: const DecorationImage(
@@ -107,18 +111,26 @@ class _EventiDelMeseReminder extends State<EventiDelMeseReminder> {
                     child: RichText(
                       text: TextSpan(
                         text: snap.data!.length == 1 ? 'C\'è ' : 'Ci sono ',
-                        style: textStyleSubtitle(context)
-                            .copyWith(fontSize: (fontSizeBig - 1)),
+                        style: textStyleSubtitle(context).copyWith(
+                          fontSize: responsiveFontSize(
+                            context,
+                            fontSizeBig - 1,
+                          ),
+                        ),
                         children: <TextSpan>[
                           TextSpan(
                             text:
                                 '${snap.data!.length} event${snap.data!.length == 1 ? 'o' : 'i'}',
                             style: textStyleSubtitle(context).copyWith(
                               fontWeight: FontWeight.bold,
-                              fontSize: (fontSizeBig - 1),
+                              fontSize: responsiveFontSize(
+                                context,
+                                fontSizeBig - 1,
+                              ),
                             ),
                           ),
-                          TextSpan(text: ' in calendario \nnei prossimi giorni!'),
+                          TextSpan(
+                              text: ' in calendario \nnei prossimi giorni!'),
                         ],
                       ),
                     ),

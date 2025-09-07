@@ -80,15 +80,15 @@ class MyEventsCard extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              height: width * 0.2,
-              width: width * 0.2,
+              height: appConfig.isTablet() ? 180 : width * 0.2,
+              width: appConfig.isTablet() ? 180 : width * 0.2,
               decoration: BoxDecoration(
                 color: appConfig.getTheme().scaffoldBackgroundColor,
-                borderRadius: BorderRadius.all(Radius.circular(width * 0.01)),
+                borderRadius: BorderRadius.circular(20),
               ),
-              margin: EdgeInsets.only(right: width * 0.04),
+              margin: EdgeInsets.only(right: 20),
               child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(width * 0.01)),
+                borderRadius: BorderRadius.circular(20),
                 child: event == null
                     ? SizedBox()
                     : event!.image == null || event!.image!.downloadUrl == null
@@ -100,7 +100,7 @@ class MyEventsCard extends StatelessWidget {
                             imageUrl: event!.image!.downloadUrl!,
                             fit: BoxFit.cover,
                             memCacheWidth: 600,
-                            memCacheHeight: 400,
+                            memCacheHeight: 600,
                             placeholder: (context, url) => ColorFiltered(
                               colorFilter: const ColorFilter.mode(
                                 Colors.grey,
@@ -121,6 +121,7 @@ class MyEventsCard extends StatelessWidget {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: appConfig.isTablet() ? MainAxisAlignment.center : MainAxisAlignment.start,
                 children: [
                   Container(
                     margin: EdgeInsets.only(bottom: height * 0.007),
@@ -146,7 +147,7 @@ class MyEventsCard extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.only(right: width * 0.02),
                           child: Icon(
-                            size: 14,
+                            size: appConfig.isTablet() ? 20 : 14,
                             Icons.place_outlined,
                           ),
                         ),
@@ -181,7 +182,7 @@ class MyEventsCard extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.only(right: width * 0.02),
                           child: Icon(
-                            size: 14,
+                            size: appConfig.isTablet() ? 20 : 14,
                             Icons.calendar_today_outlined,
                           ),
                         ),

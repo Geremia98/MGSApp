@@ -24,7 +24,7 @@ class MySquaredIconButton extends StatelessWidget {
       child: GestureDetector(
         onTap: isEnable ? onTap : null,
         child: Container(
-          padding: EdgeInsets.all(_appConfig.getWidth() * 1.5),
+          padding: EdgeInsets.all(15),
           decoration: BoxDecoration(
               color: isEnable ? activeColor : disabledColor,
               borderRadius: BorderRadius.circular(
@@ -32,7 +32,7 @@ class MySquaredIconButton extends StatelessWidget {
               border: Border.all(
                   color: _appConfig.getTheme().scaffoldBackgroundColor)),
           child: Icon(
-            size: _appConfig.getWidth() * 6.5,
+            size: _appConfig.isTablet() ? 40 : 25,
             icon,
             color: _appConfig
                 .getTheme()

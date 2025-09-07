@@ -11,6 +11,7 @@ import 'package:mgs_app2/services/firebase/auth.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
 import 'package:mgs_app2/widgets/button.dart';
+import 'package:mgs_app2/widgets/font.dart';
 import 'package:mgs_app2/wrapper.dart';
 
 import '../../models/event_firestore.dart';
@@ -36,7 +37,7 @@ class HomePageDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       backgroundColor: appConfig.getTheme().scaffoldBackgroundColor,
-      width: width * 0.7,
+      width: appConfig.isTablet() ? 500 : width * 0.7,
       child: Container(
         padding: EdgeInsets.only(
             top: height * 0.1, left: width * 0.08, right: width * 0.08),
@@ -137,47 +138,20 @@ class HomePageDrawer extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const FAQScreen()),
               ),
             ),
-            Row(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(
-                      right: width * 0.05,
-                      left: width * 0.01,
-                      top: height * 0.01,
-                      bottom: height * 0.01),
-                  child: GestureDetector(
-                    onTap: () => {
-                      BrightnessManager().toggleBrightness()
-                      //provider.toggleTheme()
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(width * 0.012),
-                      decoration: BoxDecoration(
-                        // Colore di sfondo
-                        borderRadius: BorderRadius.circular(
-                            width * 0.02), // Bordi arrotondati
-                        border: getCustomBorder(
-                          appConfig: appConfig,
-                          width: width * 0.0005,
-                        ),
-                      ),
-                      child: Icon(
-                        size: width * 0.06,
-                        BrightnessManager().brightness == Brightness.light
-                            ? Icons.dark_mode
-                            : Icons.sunny, // Dimensione dell'icona
-                      ),
-                    ),
-                  ),
-                ),
-                Text(
-                  BrightnessManager().brightness == Brightness.light
-                      ? 'Tema scuro'
-                      : 'Tema chiaro',
-                  //provider.isLight ? 'Night Mode' : 'Day Mode',
-                  style: textStyleSubtitle(context),
-                ),
-              ],
+            ItemForMenu(
+              appConfig: appConfig,
+              height: height,
+              width: width,
+              icon: BrightnessManager().brightness == Brightness.light
+                  ? Icons.dark_mode
+                  : Icons.sunny,
+              title: BrightnessManager().brightness == Brightness.light
+    ? 'Tema scuro'
+        : 'Tema chiaro',
+              onTap: () => {
+                BrightnessManager().toggleBrightness()
+                //provider.toggleTheme()
+              },
             ),
             Divider(
               height: height * 0.06,
@@ -244,14 +218,14 @@ class ItemForMenu extends StatelessWidget {
                 decoration: BoxDecoration(
                   // Colore di sfondo
                   borderRadius:
-                      BorderRadius.circular(width * 0.02), // Bordi arrotondati
+                      BorderRadius.circular(10), // Bordi arrotondati
                   border: getCustomBorder(
                     appConfig: appConfig,
                     width: 0.5,
                   ),
                 ),
                 child: Icon(
-                  size: 24,
+                  size: appConfig.isTablet() ? 34 : 24,
                   icon, // Dimensione dell'icona
                 ),
               ),
@@ -259,8 +233,16 @@ class ItemForMenu extends StatelessWidget {
           ),
           Text(
             title,
-            style:
-                isTitle ? textStyleTitle(context) : textStyleSubtitle(context),
+            style: isTitle
+                ? textStyleTitle(context)
+                : appConfig.isTablet()
+                    ? textStyleSubtitle(context).copyWith(
+                        fontSize: responsiveFontSize(
+                          context,
+                          fontSizeBig,
+                        ),
+                      )
+                    : textStyleSubtitle(context),
           ),
         ],
       ),
