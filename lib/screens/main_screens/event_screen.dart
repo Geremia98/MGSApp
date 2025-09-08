@@ -26,13 +26,12 @@ class EventScreen extends StatefulWidget {
   final EventFirestore? eventFirestore;
   final UserFirestore? userFirestore;
 
-  EventScreen({
-    required this.event, 
-    this.functionCaller,
-    this.eventFirestore,
-    this.userFirestore,
-    super.key
-  });
+  EventScreen(
+      {required this.event,
+      this.functionCaller,
+      this.eventFirestore,
+      this.userFirestore,
+      super.key});
 
   @override
   State<EventScreen> createState() => _EventScreenState();
@@ -126,7 +125,7 @@ class _EventScreenState extends State<EventScreen> {
                       child: Container(
                         padding: EdgeInsets.symmetric(
                           vertical: width * 0.02 + 2,
-                          horizontal: 25,
+                          horizontal: appConfig.isTablet() ? 60 : 25,
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(width * 0.02),
@@ -137,7 +136,7 @@ class _EventScreenState extends State<EventScreen> {
                           color: Color(0xFF388E3C),
                         ),
                         child: Text(
-                          'Iscritto',
+                          'Iscritto'.toUpperCase(),
                           style: textStyleEventCardTitle(context),
                         ),
                       ),
@@ -153,12 +152,13 @@ class _EventScreenState extends State<EventScreen> {
                 Navigator.pop(context, reloadAncestor),
               },
               child: Container(
-                padding: EdgeInsets.all(width * 0.02),
+                padding: EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   // Colore di sfondo
                   color: appConfig.getTheme().scaffoldBackgroundColor,
                   borderRadius:
-                      BorderRadius.circular(width * 0.02), // Bordi arrotondati
+                      BorderRadius.circular(appConfig.getWidth() * 1.8),
+                  // Bordi arrotondati
                   border: Border.all(
                     width: 0.5, // Larghezza del bordo
                     color: appConfig.getTheme().secondaryHeaderColor,
@@ -166,7 +166,8 @@ class _EventScreenState extends State<EventScreen> {
                 ),
                 child: Icon(
                   Icons.arrow_back_rounded, // Icona simile a quella mostrata
-                  size: 24.0, // Dimensione dell'icona
+
+                  size: appConfig.isTablet() ? 40 : 25, // Dimensione dell'icona
                   color: appConfig.getTheme().secondaryHeaderColor,
                 ),
               ),
@@ -211,11 +212,12 @@ class _EventScreenState extends State<EventScreen> {
                   );
                 },
                 child: Container(
-                  padding: EdgeInsets.all(width * 0.02),
+                  padding: EdgeInsets.all(15),
                   decoration: BoxDecoration(
                     // Colore di sfondo
                     color: appConfig.getTheme().scaffoldBackgroundColor,
-                    borderRadius: BorderRadius.circular(width * 0.02),
+                    borderRadius:
+                        BorderRadius.circular(appConfig.getWidth() * 1.8),
                     border: Border.all(
                       width: 0.5,
                       color: appConfig.getTheme().secondaryHeaderColor,
@@ -223,7 +225,8 @@ class _EventScreenState extends State<EventScreen> {
                   ),
                   child: Icon(
                     Icons.more_vert, // Icona simile a quella mostrata
-                    size: 24, // Dimensione dell'icona
+                    size: appConfig.isTablet() ? 40 : 25,
+                    // Dimensione dell'icona
                     color: appConfig.getTheme().secondaryHeaderColor,
                   ),
                 ),
@@ -276,7 +279,9 @@ class _EventScreenState extends State<EventScreen> {
                             event.title,
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
-                            style: textStyleTitle(context),
+                            style: appConfig.isTablet()
+                                ? textStyleTitle(context).copyWith(fontSize: 40)
+                                : textStyleTitle(context),
                           ),
                         ),
                         SizedBox(
@@ -291,17 +296,34 @@ class _EventScreenState extends State<EventScreen> {
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 8,
-                            style: textStyleSubtitle(context),
+                            style: appConfig.isTablet()
+                                ? textStyleSubtitle(context).copyWith(
+                                    fontSize: responsiveFontSize(
+                                      context,
+                                      fontSizeBig,
+                                    ),
+                                  )
+                                : textStyleSubtitle(context),
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(top: height * 0.05),
+                          margin: EdgeInsets.only(
+                            top: height * 0.05,
+                            left: appConfig.isTablet()
+                                ? appConfig.getWidth() * 10 - 70
+                                : 0,
+                            right: appConfig.isTablet()
+                                ? appConfig.getWidth() * 10 - 70
+                                : 0,
+                          ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
                               Container(
-                                width: width * 0.5,
+                                width: appConfig.isTablet()
+                                    ? width * 0.4
+                                    : width * 0.5,
                                 child: Column(
                                   children: [
                                     EventDetailBox(
@@ -328,7 +350,9 @@ class _EventScreenState extends State<EventScreen> {
                                 ),
                               ),
                               Container(
-                                width: width * 0.5,
+                                width: appConfig.isTablet()
+                                    ? width * 0.4
+                                    : width * 0.5,
                                 child: Column(
                                   children: [
                                     EventDetailBox(
@@ -362,8 +386,10 @@ class _EventScreenState extends State<EventScreen> {
                         event.creatorUid == UserModel.uid
                             ? Padding(
                                 padding: EdgeInsets.only(
-                                    left: appConfig.getWidth() * 5,
-                                    top: 30,
+                                    left: appConfig.isTablet()
+                                        ? appConfig.getWidth() * 10
+                                        : appConfig.getWidth() * 5,
+                                    top: appConfig.isTablet() ? 60 : 30,
                                     bottom: 30),
                                 child: GestureDetector(
                                   onTap: showParticipants,
@@ -375,14 +401,16 @@ class _EventScreenState extends State<EventScreen> {
                                       ),
                                       SizedBox(
                                         width: event.participants.isNotEmpty
-                                            ? 10
+                                            ? appConfig.isTablet()
+                                                ? 30
+                                                : 10
                                             : 0,
                                       ),
                                       Text('Mostra partecipanti',
                                           style:
                                               textStyleEventCardTitle(context)),
                                       SizedBox(
-                                        width: 7,
+                                        width: appConfig.isTablet() ? 15 : 7,
                                       ),
                                       Icon(
                                         Icons.arrow_forward,
@@ -415,8 +443,8 @@ class _EventScreenState extends State<EventScreen> {
                                     ],
                                   )
                                 : Padding(
-                                    padding: const EdgeInsets.only(
-                                      top: 50,
+                                    padding: EdgeInsets.only(
+                                      top: appConfig.isTablet() ? 100 : 50,
                                       bottom: 50,
                                     ),
                                     child: ButtonText(
@@ -489,7 +517,8 @@ class _EventScreenState extends State<EventScreen> {
           final SnackBarStyle snackBarStyle =
               SnackBarStyle(context, scaffoldKey);
           Navigator.of(context).pop();
-          final EventFirestore eventFirestore = widget.eventFirestore ?? EventFirestore();
+          final EventFirestore eventFirestore =
+              widget.eventFirestore ?? EventFirestore();
           eventFirestore.deleteEvent(event);
           snackBarStyle.showSnackBar('Evento eliminato');
           Navigator.of(context).pop();
@@ -539,7 +568,8 @@ class _EventScreenState extends State<EventScreen> {
   Future<void> leaveEvent() async {
     //TODO aggiungere una schermata "are you sure"
 
-    final FirebaseFunctionCaller caller = widget.functionCaller ?? FirebaseFunctionCaller();
+    final FirebaseFunctionCaller caller =
+        widget.functionCaller ?? FirebaseFunctionCaller();
     final SnackBarStyle snackBarStyle = SnackBarStyle(context, scaffoldKey);
     showDialog(
       context: context,
@@ -588,7 +618,8 @@ class _EventScreenState extends State<EventScreen> {
   }
 
   Future<void> joinEvent() async {
-    final FirebaseFunctionCaller caller = widget.functionCaller ?? FirebaseFunctionCaller();
+    final FirebaseFunctionCaller caller =
+        widget.functionCaller ?? FirebaseFunctionCaller();
     final SnackBarStyle snackBarStyle = SnackBarStyle(context, scaffoldKey);
 
     if (event.price == 0) {
@@ -682,6 +713,9 @@ class ConfirmEventDialog extends StatelessWidget {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       backgroundColor: appConfig.getTheme().scaffoldBackgroundColor,
+      insetPadding: appConfig.isTablet()
+          ? EdgeInsets.all(200)
+          : EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -691,27 +725,36 @@ class ConfirmEventDialog extends StatelessWidget {
             Center(
               child: Text(
                 title,
-                style: textStyleTitle(context),
+                style: appConfig.isTablet()
+                    ? textStyleTitle(context).copyWith(fontSize: 35)
+                    : textStyleTitle(context),
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: appConfig.isTablet() ? 30 : 10),
             Text(
               subtitle,
-              style: textStyleSubtitle(context),
+              style: appConfig.isTablet()
+                  ? textStyleSubtitle(context).copyWith(
+                      fontSize: responsiveFontSize(
+                        context,
+                        fontSizeBig,
+                      ),
+                    )
+                  : textStyleSubtitle(context),
             ),
             const SizedBox(height: 40),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ButtonText(
-                  fixedWidth: 130,
+                  fixedWidth: appConfig.isTablet() ? 200 : 130,
                   text: cancel,
                   onTap: onCancel,
                   color: appConfig.getTheme().highlightColor,
                   textColor: appConfig.getTheme().secondaryHeaderColor,
                 ),
                 ButtonText(
-                  fixedWidth: 130,
+                  fixedWidth: appConfig.isTablet() ? 200 : 130,
                   text: confirm,
                   color: Colors.red,
                   onTap: onCancel,
@@ -756,12 +799,12 @@ class EventDetailBox extends StatelessWidget {
         );
       },
       child: Container(
-        width: width * 0.5 - 30,
+        width: appConfig.isTablet() ? width * 0.4 : width * 0.5 - 30,
         decoration: BoxDecoration(
           color: appConfig.getTheme().highlightColor.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(10),
         ),
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(appConfig.isTablet() ? 20 : 10),
         child: Column(
           children: [
             Row(
@@ -771,12 +814,12 @@ class EventDetailBox extends StatelessWidget {
                 Container(
                   child: Icon(
                     icon,
-                    size: 22,
+                    size: appConfig.isTablet() ? 32 : 22,
                     color: appConfig.getTheme().secondaryHeaderColor,
                   ),
                 ),
                 SizedBox(
-                  width: 10,
+                  width: 20,
                 ),
                 Text(
                   title,
@@ -785,7 +828,7 @@ class EventDetailBox extends StatelessWidget {
               ],
             ),
             SizedBox(
-              height: 5,
+              height: 10,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -793,19 +836,23 @@ class EventDetailBox extends StatelessWidget {
                 Container(
                   child: Icon(
                     icon,
-                    size: 22,
+                    size: appConfig.isTablet() ? 32 : 22,
                     color: Colors.transparent,
                   ),
                 ),
                 SizedBox(
-                  width: 10,
+                  width: 20,
                 ),
                 SizedBox(
-                  width: width * 0.5 - 85,
-                  child: Text(subTitle,
-                      maxLines: 4,
-                      overflow: TextOverflow.ellipsis,
-                      style: textStyleEventCardSubtitle(context)),
+                  width: appConfig.isTablet()
+                      ? width * 0.4 - 92
+                      : width * 0.5 - 85,
+                  child: Text(
+                    subTitle,
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
+                    style: textStyleEventCardSubtitle(context),
+                  ),
                 ),
               ],
             )
@@ -841,6 +888,9 @@ class _ParticipantsEventDialogState extends State<ParticipantsEventDialog> {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       backgroundColor: appConfig.getTheme().scaffoldBackgroundColor,
+      insetPadding: appConfig.isTablet()
+          ? EdgeInsets.all(200)
+          : EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0),
       child: Container(
         height: appConfig.getHeight() * 60,
         width: appConfig.getWidth() * 90,
@@ -864,7 +914,7 @@ class _ParticipantsEventDialogState extends State<ParticipantsEventDialog> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: appConfig.isTablet() ? 40 : 20),
             Expanded(
               child: ListView.builder(
                 itemCount: widget.participants.length,
@@ -907,15 +957,15 @@ class _ParticipantsEventDialogState extends State<ParticipantsEventDialog> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      height: 40,
-                      width: 40,
+                      height: appConfig.isTablet() ? 70 : 40,
+                      width: appConfig.isTablet() ? 70 : 40,
                       decoration: BoxDecoration(shape: BoxShape.circle),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(1000),
                       ),
                     ),
                     SizedBox(
-                      width: 15,
+                      width: appConfig.isTablet() ? 30 : 15,
                     ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -961,8 +1011,8 @@ class _ParticipantsEventDialogState extends State<ParticipantsEventDialog> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  height: 40,
-                  width: 40,
+                  height: appConfig.isTablet() ? 70 : 40,
+                  width: appConfig.isTablet() ? 70 : 40,
                   decoration: BoxDecoration(shape: BoxShape.circle),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(1000),
@@ -975,7 +1025,7 @@ class _ParticipantsEventDialogState extends State<ParticipantsEventDialog> {
                   ),
                 ),
                 SizedBox(
-                  width: 15,
+                  width: appConfig.isTablet() ? 30 : 15,
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
