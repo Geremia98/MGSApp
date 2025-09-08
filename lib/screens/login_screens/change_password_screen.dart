@@ -116,6 +116,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     });
 
     if (result is String) {
+
       snackBarStyle.showSnackBar(result);
       Navigator.of(context).pop();
 
@@ -123,6 +124,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     }
 
     Navigator.of(context).pop();
+
   }
 
   String? onPassChange(String? pass) {
@@ -133,4 +135,5 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     this.pass = pass;
     return null;
   }
+
 }
