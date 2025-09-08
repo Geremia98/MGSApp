@@ -12,7 +12,9 @@ import '../../widgets/buttons.dart';
 import '../../widgets/font.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
-  const ChangePasswordScreen({super.key});
+  final FirebaseAuthService? authService;
+
+  const ChangePasswordScreen({super.key, this.authService});
 
   @override
   State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
@@ -27,6 +29,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
+
     return Scaffold(
       key: scaffoldKey,
       body: SingleChildScrollView(
@@ -94,7 +97,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       return;
     }
 
-    FirebaseAuthService authService = FirebaseAuthService();
+    FirebaseAuthService authService = widget.authService ?? FirebaseAuthService();
 
     setState(() {
       isLoading = true;
@@ -109,6 +112,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     });
 
     if (result is String) {
+
       snackBarStyle.showSnackBar(result);
       Navigator.of(context).pop();
 
@@ -116,6 +120,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     }
 
     Navigator.of(context).pop();
+
   }
 
   String? onPassChange(String? pass) {
@@ -126,4 +131,5 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     this.pass = pass;
     return null;
   }
+
 }

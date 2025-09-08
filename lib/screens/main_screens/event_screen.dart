@@ -23,8 +23,16 @@ import '../add_event/add_event_screen.dart';
 class EventScreen extends StatefulWidget {
   final EventModel event;
   final FirebaseFunctionCaller? functionCaller;
+  final EventFirestore? eventFirestore;
+  final UserFirestore? userFirestore;
 
-  EventScreen({required this.event, this.functionCaller, super.key});
+  EventScreen({
+    required this.event, 
+    this.functionCaller,
+    this.eventFirestore,
+    this.userFirestore,
+    super.key
+  });
 
   @override
   State<EventScreen> createState() => _EventScreenState();
@@ -456,6 +464,7 @@ class _EventScreenState extends State<EventScreen> {
       builder: (context) => ParticipantsEventDialog(
         onDeleteParticipant: onDeleteParticipant,
         participants: event.participants,
+        userFirestore: widget.userFirestore,
       ),
     );
   }
@@ -480,7 +489,7 @@ class _EventScreenState extends State<EventScreen> {
           final SnackBarStyle snackBarStyle =
               SnackBarStyle(context, scaffoldKey);
           Navigator.of(context).pop();
-          final EventFirestore eventFirestore = EventFirestore();
+          final EventFirestore eventFirestore = widget.eventFirestore ?? EventFirestore();
           eventFirestore.deleteEvent(event);
           snackBarStyle.showSnackBar('Evento eliminato');
           Navigator.of(context).pop();
@@ -810,11 +819,13 @@ class EventDetailBox extends StatelessWidget {
 class ParticipantsEventDialog extends StatefulWidget {
   final void Function(String) onDeleteParticipant;
   final List<String> participants;
+  final UserFirestore? userFirestore;
 
   const ParticipantsEventDialog({
     super.key,
     required this.onDeleteParticipant,
     required this.participants,
+    this.userFirestore,
   });
 
   @override
@@ -871,7 +882,7 @@ class _ParticipantsEventDialogState extends State<ParticipantsEventDialog> {
   }
 
   Widget buildParticipant(String uid, bool isLast) {
-    final UserFirestore userFirestore = UserFirestore();
+    final UserFirestore userFirestore = widget.userFirestore ?? UserFirestore();
     final AppConfig appConfig = AppConfig(context);
 
     return FutureBuilder(

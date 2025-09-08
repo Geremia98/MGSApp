@@ -11,7 +11,9 @@ import '../main_screens/all_events_screen.dart';
 import '../main_screens/event_screen.dart';
 
 class ManageEventsScreen extends StatefulWidget {
-  const ManageEventsScreen({super.key});
+  final EventFirestore? eventFirestore;
+
+  const ManageEventsScreen({super.key, this.eventFirestore});
 
   @override
   State<ManageEventsScreen> createState() => _ManageEventsScreenState();
@@ -25,7 +27,7 @@ class _ManageEventsScreenState extends State<ManageEventsScreen> {
   void initState() {
     super.initState();
 
-    final EventFirestore eventFirestore = EventFirestore();
+    final EventFirestore eventFirestore = widget.eventFirestore ?? EventFirestore();
 
     loadPersonalEvents =
         eventFirestore.retrievePersonalEvents(justCreatedByMe: true);

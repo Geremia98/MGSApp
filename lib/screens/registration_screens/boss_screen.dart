@@ -22,9 +22,11 @@ import 'bank_data_registration_screen.dart';
 
 class BossRegistrationScreen extends StatefulWidget {
   final RegistrationController controller;
+  final FirebaseFunctionCaller? functionCaller;
 
   const BossRegistrationScreen({
     required this.controller,
+    this.functionCaller,
     super.key,
   });
 
@@ -152,19 +154,19 @@ class _BossRegistrationScreenState extends State<BossRegistrationScreen> {
                                   isEnabled = false;
                                 });
 
-                                FirebaseFunctionCaller caller =
-                                    FirebaseFunctionCaller();
+                          FirebaseFunctionCaller caller =
+                              widget.functionCaller ?? FirebaseFunctionCaller();
 
-                                FunctionResponse response =
-                                    await caller.isBossCodeValid(p1);
+                          FunctionResponse response =
+                              await caller.isBossCodeValid(p1);
 
-                                print("qua");
+                          print("qua");
 
-                                if (response.getType() == ResponseType.error) {
-                                  final SnackBarStyle snackBar = SnackBarStyle(
-                                    context,
-                                    scaffoldKey,
-                                  );
+                          if (response.getType() == ResponseType.error) {
+                            final SnackBarStyle snackBar = SnackBarStyle(
+                              context,
+                              scaffoldKey,
+                            );
 
                                   snackBar
                                       .showSnackBar(response.getErrorMessage());
