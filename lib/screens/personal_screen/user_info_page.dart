@@ -14,7 +14,7 @@ import '../../widgets/buttons.dart';
 
 class UserInfoPage extends StatefulWidget {
   final UserFirestore? userFirestore;
-  
+
   const UserInfoPage({super.key, this.userFirestore});
 
   @override

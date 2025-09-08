@@ -13,6 +13,8 @@ import 'package:mgs_app2/widgets/registration_screens_widgets/my_segmented_butto
 import 'package:mgs_app2/widgets/text_field.dart';
 import 'package:mgs_app2/widgets/title.dart';
 
+import '../../utilities/constants_dimensions.dart';
+
 class RegistrationScreen1 extends StatefulWidget {
   final RegistrationController controller;
 
@@ -97,7 +99,8 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                     ),
                     Center(
                       child: CircleAvatar(
-                          radius: appConfig.getWidth() * 22,
+                          radius: appConfig.getWidth() *
+                              (appConfig.isTablet() ? 15 : 22),
                           backgroundColor:
                               const Color.fromARGB(255, 255, 221, 109),
                           child: Image.asset(
@@ -105,158 +108,195 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                             height: 190,
                           )),
                     ),
-                    Column(
-                      children: [
-                        SizedBox(
-                          height: appConfig.getHeight() * 2.5,
-                        ),
-                        Center(
-                          child: Text(
-                            'Prima dicci\n   un po\' di te...',
-                            style: textStyleTitle(context),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: appConfig.isTablet() ? appConfig.getWidth() * 10 : 0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: appConfig.getHeight() * 2.5,
                           ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Center(
-                          child: Text(
-                            '(Le tue informazioni sensibili andranno vendute al miglior offerente)',
-                            textAlign: TextAlign.start,
-                            style: textStyleSubtitle(context),
-                            maxLines: 2,
+                          Center(
+                            child: Text(
+                              'Prima dicci\n   un po\' di te...',
+                              style: textStyleTitle(context),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    buildMyTextFormField(
-                      appConfig,
-                      initialValue: controller.name,
-                      hintText: 'Nome',
-                      onChanged: (value) {
-                        controller.setName(value);
-                        calculateWetherEnablingTheButton();
-                      },
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    buildMyTextFormField(
-                      appConfig,
-                      initialValue: controller.surname,
-                      hintText: 'Cognome',
-                      onChanged: (value) {
-                        controller.setSurname(value);
-                        calculateWetherEnablingTheButton();
-                      },
-                    ),
-                    SizedBox(height: 20),
-                    MyCustomSegmentedButton<UserGender>(
-                      leftText: 'Maschio',
-                      rightText: 'Femmina',
-                      selected: controller.gender,
-                      onValueChange: (UserGender gender) {
-                        controller.gender = gender;
-                      },
-                      //title: 'Sesso',
-                      leftValue: UserGender.male,
-                      rightValue: UserGender.female,
-                      isEnabled: true,
-                    ),
-                    SizedBox(height: 20),
-                    MyDatePicker(
-                      title: '',
-                      birthday: controller.birthDate,
-                      isEnable: true,
-                      onPressed: () async {
-                        final DateTime? dateNascita = await showDatePicker(
-                          context: context,
-                          initialDate: controller.birthDate ?? DateTime(2000),
-                          firstDate: DateTime(1960),
-                          lastDate: DateTime(2014),
-                          builder: (BuildContext context, Widget? child) {
-                            return Theme(
-                              data: Theme.of(context).copyWith(
-                                dialogTheme: DialogThemeData(
-                                  backgroundColor: appConfig.getTheme().scaffoldBackgroundColor,
-                                  titleTextStyle: TextStyle(
-                                    color: appConfig.getTheme().secondaryHeaderColor,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  contentTextStyle: TextStyle(
-                                    color: appConfig.getTheme().secondaryHeaderColor,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                colorScheme: ColorScheme.light(
-                                  primary: appConfig.getTheme().highlightColor,
-                                  onPrimary: appConfig.getTheme().secondaryHeaderColor,
-                                  onSurface: appConfig.getTheme().secondaryHeaderColor,
-                                  surface: appConfig.getTheme().scaffoldBackgroundColor,
-                                ),
-                                inputDecorationTheme: InputDecorationTheme(
-                                  labelStyle: TextStyle(color: appConfig.getTheme().secondaryHeaderColor),
-                                  hintStyle: TextStyle(color: appConfig.getTheme().secondaryHeaderColor),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: appConfig.getTheme().secondaryHeaderColor),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: appConfig.getTheme().secondaryHeaderColor),
-                                  ),
-                                ),
-                                textButtonTheme: TextButtonThemeData(
-                                  style: TextButton.styleFrom(
-                                    foregroundColor: appConfig.getTheme().secondaryHeaderColor,
-                                  ),
-                                ),
-                              ),
-                              child: child!,
-                            );
-                          },
-                        );
-
-                        // Aggiorna lo stato qui, DOPO la selezione
-                        if (dateNascita != null) {
-                          setState(() {
-                            controller.setBirthday(dateNascita);
-                            calculateWetherEnablingTheButton();
-                          });
-                        }
-                      },
-                    ),
-
-                    SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Text(
-                          '(Ma nel cuore so di avere',
-                          style: textStyleSubtitle(context),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 10),
-                          width: 50,
-                          child: buildMyTextFormField(
-                            centerText: true,
+                          SizedBox(
+                            height: appConfig.isTablet() ? 30 : 20,
+                          ),
+                          Center(
+                            child: Text(
+                              '(Le tue informazioni sensibili andranno vendute al miglior offerente)',
+                              textAlign: TextAlign.start,
+                              style: textStyleSubtitle(context),
+                              maxLines: 2,
+                            ),
+                          ),
+                          SizedBox(
+                            height: appConfig.isTablet() ? 50 : 30,
+                          ),
+                          buildTextField(
                             appConfig,
-                            hintText: 'XX',
-                            textPadding: 2,
-                            maxLength: 3,
+                            initialValue: controller.name,
+                            hintText: 'Nome',
                             onChanged: (value) {
-                              _feelAge =
-                                  value!.isNotEmpty ? int.parse(value) : 0;
+                              controller.setName(value);
                               calculateWetherEnablingTheButton();
                             },
                           ),
-                        ),
-                        Text(
-                          'anni)',
-                          style: textStyleSubtitle(context),
-                        ),
-                      ],
+                          SizedBox(
+                            height: 20,
+                          ),
+                          buildTextField(
+                            appConfig,
+                            initialValue: controller.surname,
+                            hintText: 'Cognome',
+                            onChanged: (value) {
+                              controller.setSurname(value);
+                              calculateWetherEnablingTheButton();
+                            },
+                          ),
+                          SizedBox(height: 20),
+                          MyCustomSegmentedButton<UserGender>(
+                            leftText: 'Maschio',
+                            rightText: 'Femmina',
+                            height: appConfig.isTablet() ?  55 : heightTextFormFieldWithoutError,
+                            width: appConfig.isTablet() ? 350 : 200,
+                            selected: controller.gender,
+                            onValueChange: (UserGender gender) {
+                              controller.gender = gender;
+                            },
+                            //title: 'Sesso',
+                            leftValue: UserGender.male,
+                            rightValue: UserGender.female,
+                            isEnabled: true,
+                          ),
+                          SizedBox(height: 20),
+                          MyDatePicker(
+                            title: '',
+                            birthday: controller.birthDate,
+                            height: appConfig.isTablet() ?  55 : heightTextFormFieldWithoutError,
+                            width: appConfig.isTablet() ? 350 : 200,
+                            isEnable: true,
+                            onPressed: () async {
+                              final DateTime? dateNascita = await showDatePicker(
+                                context: context,
+                                initialDate:
+                                    controller.birthDate ?? DateTime(2000),
+                                firstDate: DateTime(1960),
+                                lastDate: DateTime(2014),
+                                builder: (BuildContext context, Widget? child) {
+                                  return Theme(
+                                    data: Theme.of(context).copyWith(
+                                      dialogTheme: DialogThemeData(
+                                        backgroundColor: appConfig
+                                            .getTheme()
+                                            .scaffoldBackgroundColor,
+                                        titleTextStyle: TextStyle(
+                                          color: appConfig
+                                              .getTheme()
+                                              .secondaryHeaderColor,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        contentTextStyle: TextStyle(
+                                          color: appConfig
+                                              .getTheme()
+                                              .secondaryHeaderColor,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      colorScheme: ColorScheme.light(
+                                        primary:
+                                            appConfig.getTheme().highlightColor,
+                                        onPrimary: appConfig
+                                            .getTheme()
+                                            .secondaryHeaderColor,
+                                        onSurface: appConfig
+                                            .getTheme()
+                                            .secondaryHeaderColor,
+                                        surface: appConfig
+                                            .getTheme()
+                                            .scaffoldBackgroundColor,
+                                      ),
+                                      inputDecorationTheme: InputDecorationTheme(
+                                        labelStyle: TextStyle(
+                                            color: appConfig
+                                                .getTheme()
+                                                .secondaryHeaderColor),
+                                        hintStyle: TextStyle(
+                                            color: appConfig
+                                                .getTheme()
+                                                .secondaryHeaderColor),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: appConfig
+                                                  .getTheme()
+                                                  .secondaryHeaderColor),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: appConfig
+                                                  .getTheme()
+                                                  .secondaryHeaderColor),
+                                        ),
+                                      ),
+                                      textButtonTheme: TextButtonThemeData(
+                                        style: TextButton.styleFrom(
+                                          foregroundColor: appConfig
+                                              .getTheme()
+                                              .secondaryHeaderColor,
+                                        ),
+                                      ),
+                                    ),
+                                    child: child!,
+                                  );
+                                },
+                              );
+
+                              // Aggiorna lo stato qui, DOPO la selezione
+                              if (dateNascita != null) {
+                                setState(() {
+                                  controller.setBirthday(dateNascita);
+                                  calculateWetherEnablingTheButton();
+                                });
+                              }
+                            },
+                          ),
+                          SizedBox(height: 20),
+                          Row(
+                            children: [
+                              Text(
+                                '(Ma nel cuore so di avere',
+                                style: textStyleSubtitle(context),
+                              ),
+                              Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                width: appConfig.isTablet() ? 70 : 50,
+                                child: buildTextField(
+                                  centerText: true,
+                                  appConfig,
+                                  hintText: 'XX',
+                                  textPadding: 2,
+                                  maxLength: 3,
+                                  onChanged: (value) {
+                                    _feelAge =
+                                        value!.isNotEmpty ? int.parse(value) : 0;
+                                    calculateWetherEnablingTheButton();
+                                  },
+                                ),
+                              ),
+                              Text(
+                                'anni)',
+                                style: textStyleSubtitle(context),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

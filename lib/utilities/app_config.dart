@@ -15,6 +15,9 @@ class AppConfig {
   Brightness getBrightness() => _brightness;
   BuildContext getContext() => _context;
 
+  bool isTablet() => _width * 100 > 600;
+
+
 
   AppConfig(BuildContext context) {
     final double w = MediaQuery.of(context).size.width;

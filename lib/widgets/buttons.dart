@@ -20,12 +20,11 @@ class GoBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final width = AppConfig(context).getWidth() * (title == null ? 15 : 100);
 
     return Container(
       width: width,
-      margin: EdgeInsets.symmetric(vertical: appConfig.getHeight() * 0),
+      margin: EdgeInsets.symmetric(vertical: appConfig.getHeight() * 3),
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -37,14 +36,14 @@ class GoBackButton extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(appConfig.getWidth() * 1.5),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(appConfig.getWidth() * 2),
+                  borderRadius: BorderRadius.circular(20),
                   border: getCustomBorder(
                     appConfig: appConfig,
                     width: 0.5,
                   ),
                 ),
                 child: Icon(
-                  size: appConfig.getWidth() * 6.5,
+                  size: appConfig.isTablet() ? 50 : 30,
                   icon,
                 ),
               ),
@@ -64,19 +63,18 @@ class GoBackButton extends StatelessWidget {
             },
             child: title != null
                 ? Text(
-              title!,
-              key: ValueKey(title),
-              style: TextStyle(
-                color: appConfig.getTheme().secondaryHeaderColor,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            )
+                    title!,
+                    key: ValueKey(title),
+                    style: TextStyle(
+                      color: appConfig.getTheme().secondaryHeaderColor,
+                      fontSize: appConfig.isTablet() ? 30 : 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
                 : const SizedBox.shrink(key: ValueKey('empty')),
           ),
         ],
       ),
     );
   }
-
 }

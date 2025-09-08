@@ -12,7 +12,7 @@ import '../main_screens/event_screen.dart';
 
 class ManageEventsScreen extends StatefulWidget {
   final EventFirestore? eventFirestore;
-  
+
   const ManageEventsScreen({super.key, this.eventFirestore});
 
   @override

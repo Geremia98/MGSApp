@@ -97,7 +97,7 @@ class ButtonText extends StatelessWidget {
     return GestureDetector(
       onTap: isLoading || !isEnabled ? null : onTap,
       child: Container(
-        height: 40,
+        height: appConfig.isTablet() ? 60 : 40,
         width: fixedWidth != -1 ? fixedWidth : null,
         padding: EdgeInsets.symmetric(
           horizontal: fixedWidth == -1 ? appConfig.getWidth() * 15 : 0,
@@ -244,7 +244,7 @@ BoxDecoration buttonTextDisabledDecoration(BuildContext context) {
 
 TextStyle textStyleButton(BuildContext context) {
   return TextStyle(
-    fontSize: fontSizeButton,
+    fontSize: responsiveFontSize(context, fontSizeButton,),
     fontWeight: FontWeight.bold,
     color: AppConfig(context)
         .getTheme()
@@ -254,7 +254,7 @@ TextStyle textStyleButton(BuildContext context) {
 
 TextStyle textStyleTitle(BuildContext context) {
   return TextStyle(
-    fontSize: fontSizeHuge,
+    fontSize: responsiveFontSize(context, fontSizeHuge,),
     fontWeight: FontWeight.w700,
     color: AppConfig(context)
         .getTheme()
@@ -264,7 +264,7 @@ TextStyle textStyleTitle(BuildContext context) {
 
 TextStyle textStyleSubtitle(BuildContext context) {
   return TextStyle(
-    fontSize: fontSizeMedium,
+    fontSize: responsiveFontSize(context, fontSizeMedium,),
     fontWeight: FontWeight.w500,
     color: AppConfig(context)
         .getTheme()
@@ -274,7 +274,7 @@ TextStyle textStyleSubtitle(BuildContext context) {
 
 TextStyle textStyleEventCardTitle(BuildContext context) {
   return TextStyle(
-    fontSize: fontSizeMedium,
+    fontSize: responsiveFontSize(context, AppConfig(context).isTablet() ? fontSizeBig : fontSizeMedium),
     fontWeight: FontWeight.w700,
     color: AppConfig(context)
         .getTheme()
@@ -284,7 +284,7 @@ TextStyle textStyleEventCardTitle(BuildContext context) {
 
 TextStyle textStyleEventCardSubtitle(BuildContext context) {
   return TextStyle(
-    fontSize: fontSizeMedium - 1,
+    fontSize: responsiveFontSize(context, AppConfig(context).isTablet() ? fontSizeBig - 1 : fontSizeMedium - 1),
     fontWeight: FontWeight.w500,
     color: AppConfig(context)
         .getTheme()
@@ -324,15 +324,15 @@ class PrimaryButton extends StatelessWidget {
   }
 }
 
-TextStyle textStyleFormError(BuildContext context) => const TextStyle(
+TextStyle textStyleFormError(BuildContext context) => TextStyle(
   color: Colors.red,
   fontWeight: FontWeight.w500,
-  fontSize: fontSizeMedium,
+  fontSize: responsiveFontSize(context, fontSizeMedium,),
 );
 
-TextStyle textStyleHint(BuildContext context) => const TextStyle(
+TextStyle textStyleHint(BuildContext context) => TextStyle(
   color: Colors.grey,
-  fontSize: fontSizeBig,
+  fontSize: responsiveFontSize(context, fontSizeBig,),
   fontWeight: FontWeight.w500,
   overflow: TextOverflow.ellipsis,
 );
@@ -341,5 +341,5 @@ TextStyle textStyleHint(BuildContext context) => const TextStyle(
 TextStyle textStyleTextField(BuildContext context) => TextStyle(
   color: AppConfig(context).getTheme().secondaryHeaderColor,
   fontWeight: FontWeight.w500,
-  fontSize: fontSizeMedium,
+  fontSize: responsiveFontSize(context, fontSizeMedium,),
 );

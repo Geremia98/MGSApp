@@ -9,6 +9,7 @@ import 'package:mgs_app2/services/functions/response_type.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/widgets/snackbar.dart';
 
+import '../../utilities/constants_dimensions.dart';
 import '../../widgets/back_button_app_bar.dart';
 import '../../widgets/font.dart';
 import '../../widgets/personal_page_widgets/my_squared_icon_button.dart';
@@ -16,6 +17,7 @@ import '../../widgets/personal_page_widgets/text_form_field_for_personal_screen.
 import '../../widgets/registration_screens_widgets/my_segmented_button.dart';
 import '../../widgets/selector.dart';
 import '../../widgets/text_field.dart';
+import '../../widgets/title.dart';
 import 'bank_data_registration_screen.dart';
 
 class BossRegistrationScreen extends StatefulWidget {
@@ -76,7 +78,8 @@ class _BossRegistrationScreenState extends State<BossRegistrationScreen> {
                     ),
                     Center(
                       child: CircleAvatar(
-                          radius: appConfig.getWidth() * 24,
+                          radius: appConfig.getWidth() *
+                              (appConfig.isTablet() ? 15 : 22),
                           backgroundColor:
                               const Color.fromARGB(255, 255, 221, 109),
                           child: Image.asset(
@@ -84,68 +87,72 @@ class _BossRegistrationScreenState extends State<BossRegistrationScreen> {
                             height: 190,
                           )),
                     ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Center(
-                      child: Text(
-                        'Sei tu il boss?',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: fontSizeTitle,
-                          fontWeight: FontWeight.w700,
-                          height: 1.2,
-                          color: appConfig.getTheme().secondaryHeaderColor,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Center(
-                      child: Text(
-                        'Se hai ricevuto o richiesto un codice per diventare il boss inseriscilo qui sotto.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: appConfig.getWidth() * 3.5,
-                          fontWeight: FontWeight.w500,
-                          color: appConfig.getTheme().secondaryHeaderColor,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Center(
-                      child: MyCustomSegmentedButton<bool>(
-                        leftText: 'No',
-                        rightText: 'Sì',
-                        selected: controller.isBoss,
-                        onValueChange: (isBoss) {
-                          setState(() {
-                            controller.isBoss = isBoss;
-                          });
-                        },
-                        //title: 'Sesso',
-                        leftValue: false,
-                        rightValue: true,
-                        isEnabled: isEnabled,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    if (controller.isBoss)
-                      CodeInputField(
-                        length: 6,
-                        initialValue: controller.bossCode,
-                        onCompleted: (String p1) async {
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: appConfig.isTablet()
+                              ? appConfig.getWidth() * 10
+                              : 0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: appConfig.getHeight() * 2.5,
+                          ),
+                          Center(
+                            child: Text(
+                              'Sei tu il boss?',
+                              textAlign: TextAlign.start,
+                              style: textStyleTitle(context),
+                            ),
+                          ),
+                          SizedBox(
+                            height: appConfig.isTablet() ? 30 : 20,
+                          ),
+                          Center(
+                            child: Text(
+                              'Se hai ricevuto o richiesto un codice per diventare il boss inseriscilo qui sotto.',
+                              textAlign: TextAlign.center,
+                              style: textStyleSubtitle(context),
+                              maxLines: 2,
+                            ),
+                          ),
+                          SizedBox(
+                            height: appConfig.isTablet() ? 50 : 30,
+                          ),
+                          Center(
+                            child: MyCustomSegmentedButton<bool>(
+                              leftText: 'No',
+                              rightText: 'Sì',
+                              height: appConfig.isTablet() ?  55 : heightTextFormFieldWithoutError,
+                              width: appConfig.isTablet() ? 350 : 200,
+                              selected: controller.isBoss,
+                              onValueChange: (isBoss) {
+                                setState(() {
+                                  controller.isBoss = isBoss;
+                                });
+                              },
+                              //title: 'Sesso',
+                              leftValue: false,
+                              rightValue: true,
+                              isEnabled: isEnabled,
+                            ),
+                          ),
+                          SizedBox(
+                            height: appConfig.isTablet() ? 80 : 20,
+                          ),
 
-                          print(p1);
+                          if (controller.isBoss)
+                            CodeInputField(
+                              length: 6,
+                              hasTitle: false,
+                              initialValue: controller.bossCode,
+                              onCompleted: (String p1) async {
+                                print(p1);
 
-                          setState(() {
-                            isEnabled = false;
-                          });
+                                setState(() {
+                                  isEnabled = false;
+                                });
 
                           FirebaseFunctionCaller caller =
                               widget.functionCaller ?? FirebaseFunctionCaller();
@@ -161,27 +168,31 @@ class _BossRegistrationScreenState extends State<BossRegistrationScreen> {
                               scaffoldKey,
                             );
 
-                            snackBar.showSnackBar(response.getErrorMessage());
-                            setState(() {
-                              isEnabled = true;
-                            });
-                            return;
-                          }
+                                  snackBar
+                                      .showSnackBar(response.getErrorMessage());
+                                  setState(() {
+                                    isEnabled = true;
+                                  });
+                                  return;
+                                }
 
-                          controller.bossCode = p1;
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    BankDataRegistrationScreen(
-                                      controller: controller,
-                                    )),
-                          );
-                        },
-                        isEnabled: isEnabled,
+                                controller.bossCode = p1;
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          BankDataRegistrationScreen(
+                                            controller: controller,
+                                          )),
+                                );
+                              },
+                              isEnabled: isEnabled,
+                            ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                        ],
                       ),
-                    SizedBox(
-                      height: 20,
                     ),
                   ],
                 ),

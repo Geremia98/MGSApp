@@ -37,15 +37,14 @@ class _BankDataRegistrationScreenState
     super.initState();
 
     controller = widget.controller;
-    isEnable = controller.isIbanValid(controller.IBAN) == null && controller.bankHolder.isNotEmpty;
-
+    isEnable = controller.isIbanValid(controller.IBAN) == null &&
+        controller.bankHolder.isNotEmpty;
   }
 
   void setEnable() {
-
     setState(() {
-      isEnable = controller.isIbanValid(controller.IBAN) == null && controller.bankHolder.isNotEmpty;
-
+      isEnable = controller.isIbanValid(controller.IBAN) == null &&
+          controller.bankHolder.isNotEmpty;
     });
   }
 
@@ -78,7 +77,8 @@ class _BankDataRegistrationScreenState
                     ),
                     Center(
                       child: CircleAvatar(
-                          radius: appConfig.getWidth() * 24,
+                          radius: appConfig.getWidth() *
+                              (appConfig.isTablet() ? 15 : 22),
                           backgroundColor:
                               const Color.fromARGB(255, 255, 221, 109),
                           child: Image.asset(
@@ -86,73 +86,81 @@ class _BankDataRegistrationScreenState
                             height: 190,
                           )),
                     ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Center(
-                      child: Text(
-                        'Qualche informazione in più',
-                        textAlign: TextAlign.start,
-                        style: textStyleTitle(context),
-                        maxLines: 2,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Center(
-                      child: Text(
-                        'Qui è dove manderemo i soldi dei biglietti venduti per il tuo evento.',
-                        textAlign: TextAlign.center,
-                        style: textStyleSubtitle(context),
-                        maxLines: 3,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Form(
-                      key: formKey,
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: appConfig.isTablet()
+                              ? appConfig.getWidth() * 10
+                              : 0),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          buildMyTextFormField(
-                            appConfig,
-                            initialValue: controller.bankHolder,
-                            hintText: 'Nome intestatario',
-                            onChanged: (value) {
-                              controller.setBankHolder(value);
-                              setEnable();
-                            }
+                          SizedBox(
+                            height: appConfig.getHeight() * 2.5,
+                          ),
+                          Center(
+                            child: Text(
+                              'Qualche informazione in più',
+                              textAlign: TextAlign.start,
+                              style: textStyleTitle(context),
+                              maxLines: 2,
+                            ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: appConfig.isTablet() ? 30 : 20,
                           ),
-                          buildMyTextFormField(
-                            appConfig,
-                            initialValue: controller.IBAN,
-                            hintText: 'IBAN',
-                            //validator: (value) => controller.setIBAN(value),
-                            onChanged: (value) {
-                              controller.setIBAN(value);
-                              setEnable();
-                            }
+                          Center(
+                            child: Text(
+                              'Qui è dove manderemo i soldi dei biglietti venduti per il tuo evento.',
+                              textAlign: TextAlign.center,
+                              style: textStyleSubtitle(context),
+                              maxLines: 3,
+                            ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: appConfig.isTablet() ? 50 : 30,
                           ),
-                          SelectorStyle<String>(
-                            const {
-                              'CHF': 'CHF - Swiss Franc',
-                              'DKK': 'DKK - Danish Krone',
-                              'EUR': 'EUR - Euro',
-                              'GBP': 'GBP - British Pound',
-                              'NOK': 'NOK - Norwegian Krone',
-                              'SEK': 'SEK - Swedish Krona',
-                              'USD': 'USD - US Dollar',
-                            },
-                            controller.currency,
-                            hintText: 'Seleziona la valuta',
-                            onValueChange: controller.setCurrency,
+                          Form(
+                            key: formKey,
+                            child: Column(
+                              children: [
+                                buildTextField(appConfig,
+                                    initialValue: controller.bankHolder,
+                                    hintText: 'Nome intestatario',
+                                    onChanged: (value) {
+                                  controller.setBankHolder(value);
+                                  setEnable();
+                                }),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                buildTextField(appConfig,
+                                    initialValue: controller.IBAN,
+                                    hintText: 'IBAN',
+                                    //validator: (value) => controller.setIBAN(value),
+                                    onChanged: (value) {
+                                  controller.setIBAN(value);
+                                  setEnable();
+                                }),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                SelectorStyle<String>(
+                                  const {
+                                    'CHF': 'CHF - Swiss Franc',
+                                    'DKK': 'DKK - Danish Krone',
+                                    'EUR': 'EUR - Euro',
+                                    'GBP': 'GBP - British Pound',
+                                    'NOK': 'NOK - Norwegian Krone',
+                                    'SEK': 'SEK - Swedish Krona',
+                                    'USD': 'USD - US Dollar',
+                                  },
+                                  controller.currency,
+                                  hintText: 'Seleziona la valuta',
+                                  onValueChange: controller.setCurrency,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -180,7 +188,8 @@ class _BankDataRegistrationScreenState
                               )),
                     );
                   },
-                  isEnable: isEnable, //Settato a true perchè puo essere skippable
+                  isEnable:
+                      isEnable, //Settato a true perchè puo essere skippable
                 ),
               ),
             ],

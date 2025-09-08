@@ -39,14 +39,12 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
     _isDisabled = true;
     controller = widget.controller;
     isNextStepAvailable();
-
-
   }
 
   void isNextStepAvailable() {
     if (controller.country.isNotEmpty &&
-            controller.ispettoria.isNotEmpty &&
-            controller.group.isNotEmpty) {
+        controller.ispettoria.isNotEmpty &&
+        controller.group.isNotEmpty) {
       setState(() {
         _isDisabled = false;
       });
@@ -86,7 +84,8 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                     ),
                     Center(
                       child: CircleAvatar(
-                          radius: appConfig.getWidth() * 24,
+                          radius: appConfig.getWidth() *
+                              (appConfig.isTablet() ? 15 : 22),
                           backgroundColor:
                               const Color.fromARGB(255, 255, 221, 109),
                           child: Image.asset(
@@ -94,87 +93,63 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                             height: 190,
                           )),
                     ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Center(
-                      child: Text(
-                        'A quale gruppo\n   appartieni?',
-                        textAlign: TextAlign.start,
-                        style: textStyleTitle(context)
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: appConfig.isTablet()
+                              ? appConfig.getWidth() * 10
+                              : 0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: appConfig.getHeight() * 2.5,
+                          ),
+                          Center(
+                            child: Text('A quale gruppo\n   appartieni?',
+                                textAlign: TextAlign.start,
+                                style: textStyleTitle(context)),
+                          ),
+                          SizedBox(
+                            height: appConfig.isTablet() ? 30 : 20,
+                          ),
+                          Center(
+                            child: Text('(No, non quello sanguigno)',
+                                textAlign: TextAlign.center,
+                                style: textStyleSubtitle(context)),
+                          ),
+                          SizedBox(
+                            height: appConfig.isTablet() ? 50 : 30,
+                          ),
+                          SelectorStyle(
+                            isEnable: true,
+                            constantDropDownCountryList,
+                            controller.country,
+                            onValueChange: (String value) =>
+                                controller.setCountry(value),
+                            title: 'Paese: ',
+                          ),
+                          SizedBox(height: 20),
+                          SelectorStyle(
+                            isEnable: true,
+                            constantDropDownIspettoriaList,
+                            controller.ispettoria,
+                            onValueChange: (String value) =>
+                                {controller.setIspettoria(value)},
+                            title: 'Ispettoria: ',
+                          ),
+                          SizedBox(height: 20),
+                          SelectorStyle(
+                            isEnable: true,
+                            constantDropDownGroupList,
+                            controller.group,
+                            onValueChange: (String value) =>
+                                controller.setGroup(value),
+                            title: 'Gruppo: ',
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Center(
-                      child: Text(
-                        '(No, non quello sanguigno)',
-                        textAlign: TextAlign.center,
-                        style: textStyleSubtitle(context)
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    SelectorStyle(
-                      isEnable: true,
-                      constantDropDownCountryList,
-                      controller.country,
-                      onValueChange: (String value) =>
-                          controller.setCountry(value),
-                      title: 'Paese: ',
-                    ),
-                    SizedBox(height: 20),
-                    SelectorStyle(
-                      isEnable: true,
-                      constantDropDownIspettoriaList,
-                      controller.ispettoria,
-                      onValueChange: (String value) =>
-                          {controller.setIspettoria(value)},
-                      title: 'Ispettoria: ',
-                    ),
-                    SizedBox(height: 20),
-                    SelectorStyle(
-                      isEnable: true,
-                      constantDropDownGroupList,
-                      controller.group,
-                      onValueChange: (String value) =>
-                          controller.setGroup(value),
-                      title: 'Gruppo: ',
-                    ),
-                    /*SizedBox(height: 20),
-                    MyCustomSegmentedButton(
-                      isEnabled: true,
-                      leftText: 'Si',
-                      rightText: 'No',
-                      leftValue: true,
-                      rightValue: false,
-                      selected: _selectedBoss,
-                      onValueChange: (value) {
-                        setState(() {
-                          _selectedBoss = {value as bool};
-                          isNextStepAvailable();
-                        });
-                      },
-                      //title: 'Boss? ',
-                    ),
-                    controller.bossCode.isNotEmpty ||
-                            _selectedBoss.first == true
-                        ? buildMyTextFormField(
-                            obscureText: true,
-                            appConfig,
-                            onChanged: (value) {
-                              controller.setBossCode(value);
-                              isNextStepAvailable();
-                            },
-                            textCapitalization: TextCapitalization.sentences,
-                            hintText: 'XXXXXX',
-                            labelText: 'Codice del Boss: ',
-                            initialValue: controller.bossCode,
-                            enabled: true,
-                          )
-                        : const SizedBox(),*/
                   ],
                 ),
               ),
@@ -187,7 +162,7 @@ class _RegistrationScreen3State extends State<RegistrationScreen3> {
                       icon: Icons.arrow_forward_rounded,
                       isEnable: !_isDisabled,
                       onTap: () {
-                       /* if (_selectedBoss.first == true) {
+                        /* if (_selectedBoss.first == true) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(

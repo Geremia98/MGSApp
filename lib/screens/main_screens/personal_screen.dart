@@ -28,7 +28,7 @@ import '../../wrapper.dart';
 class PersonalScreen extends StatefulWidget {
   final FirebaseAuthService? authService;
   final PackageInfo? packageInfo;
-  
+
   const PersonalScreen({super.key, this.authService, this.packageInfo});
 
   @override
@@ -59,7 +59,7 @@ class PersonalScreenState extends State<PersonalScreen> {
     _selectedBoss = {UserModel.bossCode.isNotEmpty};
     _selectedUserGender = {UserModel.gender};
     _isModifyOptionEnable = false;
-    
+
     if (widget.packageInfo != null) {
       _packageInfo = widget.packageInfo;
     } else {
@@ -137,10 +137,10 @@ class PersonalScreenState extends State<PersonalScreen> {
                             appConfig: appConfig,
                             borderRadius: 100,
                             borderThickness: 0,
-                            dimension: 100,
+                            dimension: appConfig.isTablet() ? 200 : 100,
                           ),
                           SizedBox(
-                            height: 15,
+                            height: appConfig.isTablet() ? 30 : 15,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -165,10 +165,10 @@ class PersonalScreenState extends State<PersonalScreen> {
                               ),
                               if (UserModel.bossCode.isNotEmpty)
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 5),
+                                  padding: EdgeInsets.only(left: appConfig.isTablet() ? 10 : 5),
                                   child: Icon(
                                     Icons.verified_outlined,
-                                    size: 17,
+                                    size: appConfig.isTablet() ? 26 : 17,
                                     color: appConfig
                                         .getTheme()
                                         .secondaryHeaderColor,
@@ -177,7 +177,7 @@ class PersonalScreenState extends State<PersonalScreen> {
                             ],
                           ),
                           SizedBox(
-                            height: appConfig.getHeight() * 5,
+                            height: appConfig.isTablet() ? appConfig.getHeight() * 10 : appConfig.getHeight() * 5,
                           ),
                           _buildRowFor(
                             Icons.person_2_outlined,
@@ -284,7 +284,7 @@ class PersonalScreenState extends State<PersonalScreen> {
                             appConfig.getTheme().secondaryHeaderColor,
                             () async {
                               final FirebaseAuthService authService =
-                                  widget.authService ?? FirebaseAuthService();
+                                  FirebaseAuthService();
                               await authService.signOut(context);
                               Navigator.of(context).push(
                                 MaterialPageRoute(
@@ -319,7 +319,7 @@ class PersonalScreenState extends State<PersonalScreen> {
 
     return Container(
       color: Colors.transparent,
-      width: appConfig.getWidth() * 100,
+      width: appConfig.isTablet() ? appConfig.getWidth() * 80 : appConfig.getWidth() * 100,
       child: Material(
         color: appConfig.getTheme().scaffoldBackgroundColor,
         child: InkWell(
@@ -344,17 +344,24 @@ class PersonalScreenState extends State<PersonalScreen> {
                         Icon(
                           iconData,
                           color: appConfig.getTheme().secondaryHeaderColor,
-                          size: 22,
+                          size: appConfig.isTablet() ? 32 : 22,
                         ),
                         SizedBox(
-                          width: 15,
+                          width: appConfig.isTablet() ? 30 : 15,
                         ),
                         Container(
                           width: appConfig.getWidth() * 50,
                           child: Text(
                             text,
                             maxLines: 1,
-                            style: textStyleTextField(context),
+                            style: appConfig.isTablet()
+                                ? textStyleTextField(context).copyWith(
+                                    fontSize: responsiveFontSize(
+                                      context,
+                                      fontSizeBig,
+                                    ),
+                                  )
+                                : textStyleTextField(context),
                           ),
                         ),
                       ],
@@ -366,7 +373,7 @@ class PersonalScreenState extends State<PersonalScreen> {
                         color: text == 'Esci'
                             ? appConfig.getTheme().scaffoldBackgroundColor
                             : appConfig.getTheme().secondaryHeaderColor,
-                        size: 18,
+                        size: appConfig.isTablet() ? 28 : 18,
                       ),
                     )
                   ],
@@ -393,7 +400,7 @@ class PersonalScreenState extends State<PersonalScreen> {
           style: TextStyle(
             color: Colors.grey,
             fontWeight: FontWeight.w500,
-            fontSize: 13,
+            fontSize: appConfig.isTablet() ? 20 : 13,
           ),
         ),
       ),

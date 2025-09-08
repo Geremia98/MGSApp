@@ -69,12 +69,16 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                SizedBox(
+                  height: appConfig.isTablet() ? 50 : 0,
+                ),
                 SortOfAppBar(
                   iconData: Icons.grid_view_rounded,
                   appConfig: appConfig,
                   globalKey: _globalKey,
                 ),
-                EventiDelMeseReminder(),
+                if (!appConfig.isTablet())
+                  EventiDelMeseReminder(),
                 MyPersonalHomeRow(
                   appConfig: appConfig,
                   width: width,
@@ -149,6 +153,54 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     if (snap.connectionState == ConnectionState.done) {
                       personalEvents = snap.data!;
+                    }
+
+                    if (appConfig.isTablet()) {
+                      return SizedBox(
+                        height: height * 0.4,
+                        child: GridView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: snap.connectionState != ConnectionState.done &&
+                              personalEvents.isEmpty
+                              ? 4
+                              : math.min(personalEvents.length, 4),
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,         // 2 item per riga
+                            mainAxisSpacing: 5,       // spazio verticale tra le righe
+                            crossAxisSpacing: 5,      // spazio orizzontale tra le colonne
+                            childAspectRatio: 5 / 2,   // proporzioni della card (puoi regolarlo)
+                          ),
+                          itemBuilder: (BuildContext context, int index) {
+                            EventModel? event =
+                            snap.connectionState != ConnectionState.done &&
+                                personalEvents.isEmpty
+                                ? null
+                                : personalEvents[index];
+
+                            return TweenAnimationBuilder<double>(
+                              tween: Tween(begin: 0.7, end: 1.0),
+                              duration: Duration(milliseconds: 300 + index * 100),
+                              curve: Curves.easeOutBack,
+                              builder: (context, value, child) {
+                                return Transform.scale(
+                                  scale: value,
+                                  child: child,
+                                );
+                              },
+                              child: MyEventsCard(
+                                appConfig: appConfig,
+                                height: height,
+                                width: width,
+                                event: event,
+                                onPop: needsRefreshEvents,
+                                isLoading: snap.connectionState != ConnectionState.done &&
+                                    personalEvents.isEmpty,
+                              ),
+                            );
+                          },
+                        ),
+                      );
+
                     }
 
                     return SizedBox(
