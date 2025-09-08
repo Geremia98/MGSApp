@@ -63,11 +63,7 @@ class _UserBossPageState extends State<UserBossPage> {
                 child: Text(
                   'Se hai ricevuto o richiesto un codice per diventare il boss inseriscilo qui sotto.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: appConfig.getWidth() * 3.5,
-                    fontWeight: FontWeight.w500,
-                    color: appConfig.getTheme().secondaryHeaderColor,
-                  ),
+                  style: textStyleTitle(context)
                 ),
               ),
               SizedBox(

@@ -77,6 +77,7 @@ class _EventScreenState extends State<EventScreen> {
           ),
           Container(
             height: height * 0.5 + _extraHeight,
+            width: width,
             child: event.image == null || event.image!.downloadUrl == null
                 ? Image.asset(
                     'assets/images/ballo.png',
@@ -788,6 +789,7 @@ class EventDetailBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
 
+
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.6, end: 1.0),
       duration: Duration(milliseconds: 300),
@@ -811,20 +813,29 @@ class EventDetailBox extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  child: Icon(
-                    icon,
-                    size: appConfig.isTablet() ? 32 : 22,
-                    color: appConfig.getTheme().secondaryHeaderColor,
+                ClipRect(
+                  child: SizedBox(
+                    width: appConfig.isTablet() ? 32 : 22,
+                    height: appConfig.isTablet() ? 32 : 22,
+                    child: Icon(
+                      icon,
+                      size: appConfig.isTablet() ? 32 : 22,
+                      color: appConfig.getTheme().secondaryHeaderColor,
+                    ),
                   ),
                 ),
                 SizedBox(
                   width: 20,
                 ),
+                SizedBox(
+                  width: appConfig.isTablet()
+                      ? width * 0.4 - 100
+                      : width * 0.5 - 85,
+                  child:
                 Text(
                   title,
                   style: textStyleEventCardTitle(context),
-                ),
+                ),),
               ],
             ),
             SizedBox(
@@ -845,7 +856,7 @@ class EventDetailBox extends StatelessWidget {
                 ),
                 SizedBox(
                   width: appConfig.isTablet()
-                      ? width * 0.4 - 92
+                      ? width * 0.4 - 100
                       : width * 0.5 - 85,
                   child: Text(
                     subTitle,

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mgs_app2/models/faq_couple.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_strings.dart';
+import 'package:mgs_app2/widgets/button.dart';
 import 'package:mgs_app2/widgets/buttons.dart';
+import 'package:mgs_app2/widgets/font.dart';
 
 class FAQScreen extends StatefulWidget {
   const FAQScreen({super.key});
@@ -12,8 +14,6 @@ class FAQScreen extends StatefulWidget {
 }
 
 class _FAQScreenState extends State<FAQScreen> {
-  
-
   @override
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
@@ -28,23 +28,15 @@ class _FAQScreenState extends State<FAQScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 GoBackButton(
-                    icon: Icons.arrow_back_rounded,
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    appConfig: appConfig),
-                Container(
-                  padding: EdgeInsets.only(
-                    top: appConfig.getHeight() * 3.5,
-                    bottom: appConfig.getHeight() * 1,
-                  ),
-                  child: Text(
-                    'FAQ',
-                    style: TextStyle(
-                      fontSize: appConfig.getWidth() * 7,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  icon: Icons.arrow_back_rounded,
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  appConfig: appConfig,
+                  title: 'FAQ',
+                ),
+                SizedBox(
+                  height: appConfig.isTablet() ? 60 : 30,
                 ),
                 const Expanded(
                     child: FAQList(
@@ -57,24 +49,17 @@ class _FAQScreenState extends State<FAQScreen> {
                   ),
                   child: Column(children: [
                     Center(
-                      child: Text(
-                        'Quello che cerchi non c\'è?',
-                        style: TextStyle(
-                          fontSize: appConfig.getWidth() * 4,
-                        ),
-                      ),
+                      child: Text('Quello che cerchi non c\'è?',
+                          style: textStyleSubtitle(context)),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        
-                      },
+                      onTap: () {},
                       child: Center(
                         child: Text(
                           'Mandaci una mail',
-                          style: TextStyle(
-                              fontSize: appConfig.getWidth() * 4,
-                              decoration: TextDecoration.underline,
-                              decorationColor: appConfig.getTheme().primaryColor
+                          style: textStyleSubtitle(context).copyWith(
+                            decoration: TextDecoration.underline,
+                            decorationColor: appConfig.getTheme().primaryColor,
                           ),
                         ),
                       ),
@@ -144,13 +129,12 @@ class _FAQItemWidgetState extends State<FAQItemWidget>
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      margin: EdgeInsets.symmetric(vertical: appConfig.isTablet() ? 10 : 8),
       decoration: BoxDecoration(
         color: appConfig.getTheme().highlightColor,
         border: Border.all(
-          color: appConfig.getTheme().primaryColor,
-          width: appConfig.getWidth()*0.05
-          ),
+            color: appConfig.getTheme().primaryColor,
+            width: appConfig.getWidth() * 0.05),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -165,10 +149,7 @@ class _FAQItemWidgetState extends State<FAQItemWidget>
                   Expanded(
                     child: Text(
                       widget.question,
-                      style: TextStyle(
-                          fontSize: appConfig.getWidth()*4,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      style: textStyleTitle(context),
                     ),
                   ),
                   // Icona di espansione animata
@@ -195,7 +176,7 @@ class _FAQItemWidgetState extends State<FAQItemWidget>
                 padding: const EdgeInsets.only(right: 14, left: 14, bottom: 14),
                 child: Text(
                   widget.answer,
-                  style: TextStyle(fontSize: appConfig.getWidth()*3.5, ),
+                  style: textStyleSubtitle(context)
                 ),
               ),
             ),

@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mgs_app2/models/image_model.dart';
 import 'package:mgs_app2/models/user_model.dart';
 import 'package:mgs_app2/screens/login_screens/change_email_screen.dart';
 import 'package:mgs_app2/screens/login_screens/change_password_screen.dart';
@@ -8,6 +11,7 @@ import 'package:mgs_app2/screens/personal_screen/user_group_page.dart';
 import 'package:mgs_app2/screens/personal_screen/user_info_page.dart';
 import 'package:mgs_app2/screens/registration_screens/registration_controller.dart';
 import 'package:mgs_app2/screens/report_bug/report_bug_category_screen.dart';
+import 'package:mgs_app2/services/firebase/firebase_storage.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/utilities/constants_strings.dart';
@@ -19,9 +23,11 @@ import 'package:mgs_app2/widgets/personal_page_widgets/my_big_async_button.dart'
 import 'package:mgs_app2/widgets/personal_page_widgets/my_squared_icon_button.dart';
 import 'package:mgs_app2/widgets/personal_page_widgets/selector_for_personal_screen.dart';
 import 'package:mgs_app2/widgets/registration_screens_widgets/my_date_picker.dart';
+import 'package:mime/mime.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../services/firebase/auth.dart';
+import '../../services/picker.dart';
 import '../../widgets/font.dart';
 import '../../wrapper.dart';
 
@@ -133,11 +139,50 @@ class PersonalScreenState extends State<PersonalScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          MyProfilePicture(
-                            appConfig: appConfig,
-                            borderRadius: 100,
-                            borderThickness: 0,
-                            dimension: appConfig.isTablet() ? 200 : 100,
+                          GestureDetector(
+                            onTap: () async {
+                              final ImagePickerService service = ImagePickerService();
+
+                              XFile? image = await service.getImageFromUser();
+
+                              if (image == null) {
+                                if (kDebugMode) {
+                                  print('picked image value is null');
+                                }
+                                return;
+                              }
+
+                              Uint8List? imageCropped = await service.openImageCropperProfilePicture(image, context);
+
+                              if (imageCropped == null) {
+                                if (kDebugMode) {
+                                  print('image cropper value is null');
+                                }
+                                return;
+                              }
+
+                              String? mimeType =
+                              lookupMimeType(image!.path, headerBytes: await image.readAsBytes());
+
+                              ImageModel? imageModel = ImageModel(
+                                image: imageCropped,
+                                path: image.path,
+                                extension: mimeType,
+                              );
+
+                              imageModel = await service.storeImage(imageModel);
+
+                              setState(() {
+                                UserModel.profilePic = imageModel;
+                              });
+
+                            },
+                            child: MyProfilePicture(
+                              appConfig: appConfig,
+                              borderRadius: 100,
+                              borderThickness: 0,
+                              dimension: appConfig.isTablet() ? 200 : 100,
+                            ),
                           ),
                           SizedBox(
                             height: appConfig.isTablet() ? 30 : 15,
@@ -165,7 +210,8 @@ class PersonalScreenState extends State<PersonalScreen> {
                               ),
                               if (UserModel.bossCode.isNotEmpty)
                                 Padding(
-                                  padding: EdgeInsets.only(left: appConfig.isTablet() ? 10 : 5),
+                                  padding: EdgeInsets.only(
+                                      left: appConfig.isTablet() ? 10 : 5),
                                   child: Icon(
                                     Icons.verified_outlined,
                                     size: appConfig.isTablet() ? 26 : 17,
@@ -177,7 +223,9 @@ class PersonalScreenState extends State<PersonalScreen> {
                             ],
                           ),
                           SizedBox(
-                            height: appConfig.isTablet() ? appConfig.getHeight() * 10 : appConfig.getHeight() * 5,
+                            height: appConfig.isTablet()
+                                ? appConfig.getHeight() * 10
+                                : appConfig.getHeight() * 5,
                           ),
                           _buildRowFor(
                             Icons.person_2_outlined,
@@ -319,7 +367,9 @@ class PersonalScreenState extends State<PersonalScreen> {
 
     return Container(
       color: Colors.transparent,
-      width: appConfig.isTablet() ? appConfig.getWidth() * 80 : appConfig.getWidth() * 100,
+      width: appConfig.isTablet()
+          ? appConfig.getWidth() * 80
+          : appConfig.getWidth() * 100,
       child: Material(
         color: appConfig.getTheme().scaffoldBackgroundColor,
         child: InkWell(
