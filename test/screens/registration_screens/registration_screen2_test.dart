@@ -279,7 +279,7 @@ void main() {
         expect(find.byType(SafeArea), findsOneWidget);
         expect(find.byType(Container), findsWidgets);
         expect(find.byType(Stack), findsWidgets);
-        expect(find.byType(Column), findsOneWidget);
+        expect(find.byType(Column), findsNWidgets(2));
         expect(find.byType(Positioned), findsWidgets);
       } finally {
         FlutterError.onError = originalOnError;

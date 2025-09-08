@@ -32,9 +32,7 @@ class _RegistrationScreen2State extends State<RegistrationScreen2> {
     super.initState();
     controller = widget.controller;
 
-    controller.profilePic == null
-        ? _isDisabled = true
-        : _isDisabled = false;
+    controller.profilePic == null ? _isDisabled = true : _isDisabled = false;
   }
 
   void calculateWetherEnablingTheButton() {
@@ -71,12 +69,10 @@ class _RegistrationScreen2State extends State<RegistrationScreen2> {
                       Navigator.pop(context);
                     },
                   ),
-                  SizedBox(
-                    height: appConfig.getHeight() * 4,
-                  ),
                   Center(
                     child: CircleAvatar(
-                        radius: appConfig.getWidth() * 25,
+                        radius: appConfig.getWidth() *
+                            (appConfig.isTablet() ? 15 : 22),
                         backgroundColor:
                             const Color.fromARGB(255, 255, 221, 109),
                         child: Padding(
@@ -87,34 +83,50 @@ class _RegistrationScreen2State extends State<RegistrationScreen2> {
                           ),
                         )),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Center(
-                    child: Text(
-                      '... 1, 2, 3 ...\nCHEEESE!',
-                      style: textStyleTitle(context),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: appConfig.isTablet()
+                            ? appConfig.getWidth() * 10
+                            : 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: appConfig.getHeight() * 2.5,
+                        ),
+                        Center(
+                          child: Text(
+                            '... 1, 2, 3 ...\nCHEEESE!',
+                            style: textStyleTitle(context),
+                          ),
+                        ),
+                        SizedBox(
+                          height: appConfig.isTablet() ? 30 : 20,
+                        ),
+                        Center(
+                          child: Text(
+                            '(Sarà la tua foto profilo)',
+                            textAlign: TextAlign.center,
+                            style: textStyleSubtitle(context),
+                          ),
+                        ),
+                        SizedBox(
+                          height: appConfig.isTablet() ? 80 : 50,
+                        ),
+                        Center(
+                          child: ImageUploadCard(
+                              width: appConfig.isTablet() ? 300 : appConfig.getWidth() * 50,
+                              height: appConfig.isTablet() ? 300 : appConfig.getWidth() * 50,
+                              imageType: ImageType.profilePicture,
+                              initialImage: controller.profilePic,
+                              onImagePicked: (value) {
+                                controller.setProfilePicture(value);
+                                calculateWetherEnablingTheButton();
+                              }),
+                        ),
+                      ],
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  Center(
-                    child: Text(
-                      '(Sarà la tua foto profilo)',
-                      textAlign: TextAlign.center,
-                      style: textStyleSubtitle(context),
-                    ),
-                  ),
-                  SizedBox(height: 50),
-                  Center(
-                    child: ImageUploadCard(
-                        width: appConfig.getWidth() * 50,
-                        height: appConfig.getWidth() * 50,
-                        imageType: ImageType.profilePicture,
-                        initialImage: controller.profilePic,
-                        onImagePicked: (value) {
-                          controller.setProfilePicture(value);
-                          calculateWetherEnablingTheButton();
-                        }),
                   ),
                   //buildAddNewImageButton(context, width * 0.5, width * 0.5, width * 0.5),
                 ],

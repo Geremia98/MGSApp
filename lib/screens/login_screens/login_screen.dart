@@ -3,9 +3,11 @@ import 'package:mgs_app2/screens/registration_screens/registration_controller.da
 import 'package:mgs_app2/screens/registration_screens/registration_screen1.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
+import 'package:mgs_app2/widgets/button.dart';
 import 'package:mgs_app2/widgets/font.dart';
 import 'package:mgs_app2/widgets/text_field.dart';
-import 'package:mgs_app2/widgets/title.dart';
+import 'package:mgs_app2/widgets/title.dart'
+    hide textStyleSubtitle, textStyleTitle;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -40,7 +42,8 @@ class _LoginScreenState extends State<LoginScreen> {
         bottom: false,
         child: Center(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+            padding: EdgeInsets.symmetric(
+                horizontal: appConfig.isTablet() ? width * 0.2 : width * 0.1),
             child: SingleChildScrollView(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
@@ -54,7 +57,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
                       CircleAvatar(
-                          radius: width * 0.2,
+                          radius:
+                              appConfig.isTablet() ? width * 0.15 : width * 0.2,
                           backgroundColor:
                               const Color.fromARGB(255, 162, 186, 228),
                           child: Padding(
@@ -67,33 +71,24 @@ class _LoginScreenState extends State<LoginScreen> {
                       Column(
                         children: [
                           SizedBox(
-                            height: height * 0.01,
+                            height: appConfig.isTablet() ? 50 : 20,
                           ),
                           Center(
                             child: Text(
                               'LOGIN',
-                              style: TextStyle(
-                                fontSize: fontSizeTitle,
-                                fontWeight: FontWeight.bold,
-                                color: appConfig.getTheme().primaryColor,
-                              ),
+                              style: textStyleTitle(context),
                             ),
                           ),
                           Center(
                             child: Text(
                               'Accedi al tuo account',
-                              style: TextStyle(
-                                  fontSize: fontSizeBig,
-                                  fontWeight: FontWeight.w500,
-                                  color: appConfig
-                                      .getTheme()
-                                      .secondaryHeaderColor),
+                              style: textStyleSubtitle(context),
                             ),
                           ),
                         ],
                       ),
                       SizedBox(
-                        height: 20,
+                        height: appConfig.isTablet() ? 50 : 20,
                       ),
                       Form(
                         key: formKey,
@@ -138,46 +133,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
-                      FilledButton(
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(
-                            appConfig.getTheme().primaryColor,
+                      SizedBox(height: appConfig.isTablet() ? 30 : 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ButtonText(
+                            fixedWidth: appConfig.isTablet() ? 350 : -1,
+                            text: 'Entra',
+                            onTap: () =>
+                                controller.signIn(formKey, context, scaffoldKey),
+                            isLoading: _isLoading,
                           ),
-                          shape: MaterialStatePropertyAll(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                        ),
-                        onPressed: _isLoading
-                            ? null
-                            : () => controller.signIn(
-                                formKey, context, scaffoldKey),
-                        child: _isLoading
-                            ? Center(
-                                child: Container(
-                                  margin: EdgeInsets.all(height * 0.01),
-                                  child: CircularProgressIndicator(
-                                    color: appConfig
-                                        .getTheme()
-                                        .secondaryHeaderColor,
-                                  ),
-                                ),
-                              )
-                            : Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text(
-                                  'Entra',
-                                  style: TextStyle(
-                                    fontSize: fontSizeButton,
-                                    fontWeight: FontWeight.w700,
-                                    color: appConfig
-                                        .getTheme()
-                                        .scaffoldBackgroundColor,
-                                  ),
-                                ),
-                              ),
+                        ],
                       ),
                       SizedBox(
                         height: height * 0.2,
@@ -189,7 +156,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             'Non hai ancora un account?',
                             style: textStyleSubtitle(context).copyWith(
                               fontWeight: FontWeight.w600,
-
                             ),
                           ),
                           SizedBox(

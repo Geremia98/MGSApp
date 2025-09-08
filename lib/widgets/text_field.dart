@@ -7,6 +7,7 @@ import '../utilities/app_config.dart';
 Widget buildTextField(
   AppConfig appConfig, {
   String labelText = '',
+  double textPadding = 15,
   TextInputType textInputType = TextInputType.text,
   IconData? icon,
   String hintText = '',
@@ -29,6 +30,7 @@ Widget buildTextField(
   int maxLength = 100,
   List<TextInputFormatter>? inputFormatters,
   FocusNode? focusNode,
+  bool centerText = false,
 }) {
   labelColor ??= Colors.grey;
   iconColor ??= Colors.grey;
@@ -59,6 +61,7 @@ Widget buildTextField(
         height: labelText.isNotEmpty ? 10 : 0,
       ),
       SizedBox(
+
         //height: maxLines == 1 ? showError ? appConfig.getHeight() * 8 : appConfig.getHeight() * 5 : appConfig.getHeight() * 15,
         child: TextFormField(
           focusNode: focusNode,
@@ -82,8 +85,11 @@ Widget buildTextField(
           inputFormatters: inputFormatters,
           textCapitalization: textCapitalization,
           cursorColor: appConfig.getTheme().primaryColor,
+          textAlign: centerText ? TextAlign.center : TextAlign.start,
+
           decoration: InputDecoration(
             fillColor: appConfig.getTheme().scaffoldBackgroundColor,
+
             //labelText: hintText,
             counterText: "",
             isDense: true,
@@ -100,9 +106,10 @@ Widget buildTextField(
             labelStyle: textStyleHint(appConfig.getContext()),
             hintStyle: textStyleHint(appConfig.getContext()),
             contentPadding: EdgeInsets.only(
-              top: appConfig.getHeight() * 3,
+              top: appConfig.getHeight() * (appConfig.isTablet() ? 2 : 3),
               bottom: appConfig.getHeight() * 0,
-              left: 15,
+              left: textPadding,
+              right: textPadding,
             ),
             prefixIcon: icon == null
                 ? null
@@ -113,7 +120,7 @@ Widget buildTextField(
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 color: appConfig.getTheme().primaryColor,
-                width: appConfig.getWidth()*0.1
+                width: 0.5,
               ),
               borderRadius: BorderRadius.circular(10),
             ),
@@ -140,26 +147,24 @@ Widget buildTextField(
   );
 }
 
-TextStyle textStyleFormError(BuildContext context) => const TextStyle(
-  color: Colors.red,
-  fontWeight: FontWeight.w500,
-  fontSize: fontSizeMedium,
-);
+TextStyle textStyleFormError(BuildContext context) => TextStyle(
+      color: Colors.red,
+      fontWeight: FontWeight.w500,
+      fontSize: responsiveFontSize(context, fontSizeMedium),
+    );
 
-TextStyle textStyleHint(BuildContext context) => const TextStyle(
-  color: Colors.grey,
-  fontSize: fontSizeBig,
-  fontWeight: FontWeight.w500,
-  overflow: TextOverflow.ellipsis,
-);
-
+TextStyle textStyleHint(BuildContext context) => TextStyle(
+      color: Colors.grey,
+      fontSize: responsiveFontSize(context, fontSizeBig),
+      fontWeight: FontWeight.w500,
+      overflow: TextOverflow.ellipsis,
+    );
 
 TextStyle textStyleTextField(BuildContext context) => TextStyle(
-  color: AppConfig(context).getTheme().secondaryHeaderColor,
-  fontWeight: FontWeight.w500,
-  fontSize: fontSizeMedium,
-);
-
+      color: AppConfig(context).getTheme().secondaryHeaderColor,
+      fontWeight: FontWeight.w500,
+      fontSize: responsiveFontSize(context, fontSizeMedium),
+    );
 
 class PrimaryTextField extends StatelessWidget {
   final TextEditingController controller;

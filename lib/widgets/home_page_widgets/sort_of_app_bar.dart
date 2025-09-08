@@ -5,6 +5,8 @@ import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/my_profile_pic.dart';
 
+import 'eventi_mese_reminder.dart';
+
 class SortOfAppBar extends StatelessWidget {
   const SortOfAppBar(
       {super.key,
@@ -27,11 +29,11 @@ class SortOfAppBar extends StatelessWidget {
         GestureDetector(
           onTap: () => {globalKey.currentState!.openDrawer()},
           child: Container(
-            height: 45,
-            width: 45,
+            height: appConfig.isTablet() ? 80 : 45,
+            width: appConfig.isTablet() ? 80 : 45,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(
-                  appConfig.getWidth() * 1.8), // Bordi arrotondati
+                  10), // Bordi arrotondati
               border: getCustomBorder(
                 width: 0.5,
                 appConfig: appConfig,
@@ -39,10 +41,12 @@ class SortOfAppBar extends StatelessWidget {
             ),
             child: Icon(
               iconData, // Icona simile a quella mostrata
-              size: appConfig.getWidth() * 8, // Dimensione dell'icona
+              size: appConfig.isTablet() ? 60 : appConfig.getWidth() * 8, // Dimensione dell'icona
             ),
           ),
         ),
+        if (appConfig.isTablet())
+          EventiDelMeseReminder(),
         GestureDetector(
           onTap: () => Navigator.push(
             context,
@@ -51,8 +55,8 @@ class SortOfAppBar extends StatelessWidget {
           child: MyProfilePicture(
             appConfig: appConfig,
             borderThickness: 0.5,
-            borderRadius: appConfig.getWidth() * 1.8,
-            dimension: 45,
+            borderRadius: 10,
+            dimension: appConfig.isTablet() ? 80 : 45,
             storageService: storageService,
           ),
         ),

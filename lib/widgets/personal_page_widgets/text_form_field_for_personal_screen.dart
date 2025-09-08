@@ -235,7 +235,7 @@ class _CodeInputFieldState extends State<CodeInputField> {
       children: [
         if (widget.hasTitle)
           SizedBox(
-            width: ((40 * widget.length) + (8 * widget.length)).toDouble(),
+            width: (((appConfig.isTablet() ? 40 : 60) * widget.length) + (8 * widget.length)).toDouble(),
             child: Text(
               'Codice Boss',
               textAlign: TextAlign.left,
@@ -254,8 +254,8 @@ class _CodeInputFieldState extends State<CodeInputField> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(widget.length, (index) {
             return Container(
-              width: 40, // più stretta
-              height: heightTextFormFieldWithoutError,
+              width: appConfig.isTablet() ? 60 : 40, // più stretta
+              height:  appConfig.isTablet() ? 60 : heightTextFormFieldWithoutError,
               margin:
                   EdgeInsets.symmetric(horizontal: widget.isEnabled ? 4 : 0),
               child: RawKeyboardListener(
@@ -272,7 +272,10 @@ class _CodeInputFieldState extends State<CodeInputField> {
                   cursorColor: appConfig.getTheme().secondaryHeaderColor,
                   maxLength: 1,
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.zero,
+                    contentPadding: !appConfig.isTablet() ? EdgeInsets.zero: EdgeInsets.only(
+                  top: appConfig.getHeight() * 2,
+                  bottom: appConfig.getHeight() * 0,
+                ),
                     counterText: "",
                     filled: true,
                     fillColor: appConfig.getTheme().scaffoldBackgroundColor,

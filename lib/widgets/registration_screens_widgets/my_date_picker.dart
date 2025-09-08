@@ -9,6 +9,7 @@ class MyDatePicker extends StatelessWidget {
   final DateTime? birthday;
   final String title;
   final bool isEnable;
+  final double width;
   final double height;
   final void Function() onPressed;
 
@@ -17,6 +18,7 @@ class MyDatePicker extends StatelessWidget {
       this.birthday,
       required this.isEnable,
       required this.onPressed,
+        this.width = 200,
       this.height = heightTextFormFieldWithoutError,
       super.key});
 
@@ -58,10 +60,10 @@ class MyDatePicker extends StatelessWidget {
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-              width: 200,
+              width: width,
               height: height,
               constraints: BoxConstraints(
-                maxWidth: 200,
+                maxWidth: width,
               ),
               decoration: BoxDecoration(
                 border: Border.all(

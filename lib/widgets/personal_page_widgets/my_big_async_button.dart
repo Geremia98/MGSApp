@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
+import 'package:mgs_app2/widgets/button.dart';
 import 'package:mgs_app2/widgets/font.dart';
 
 class MyBigAsyncButton extends StatefulWidget {
@@ -63,11 +64,7 @@ class _MyBigAsyncButtonState extends State<MyBigAsyncButton> {
             : Center(
                 child: Text(
                   widget.buttonText,
-                  style: TextStyle(
-                    fontSize: fontSizeButton,
-                    fontWeight: FontWeight.w700,
-                    color: widget.appConfig.getTheme().scaffoldBackgroundColor,
-                  ),
+                  style: textStyleButton(context)
                 ),
               ),
       ),

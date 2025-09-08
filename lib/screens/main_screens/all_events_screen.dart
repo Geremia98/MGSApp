@@ -7,6 +7,7 @@ import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
 import 'package:mgs_app2/widgets/button.dart';
 import 'package:mgs_app2/widgets/buttons.dart';
+import 'package:mgs_app2/widgets/font.dart';
 import 'package:mgs_app2/widgets/participant_bubbles.dart';
 import 'package:mgs_app2/widgets/snackbar.dart';
 
@@ -46,12 +47,11 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
   }
 
   void onScroll() {
-
     if (!mounted) return;
 
     double currentScroll = _scrollController.position.pixels;
 
-    if (currentScroll > 40 && !titleShowedInAppbar ) {
+    if (currentScroll > 40 && !titleShowedInAppbar) {
       setState(() {
         titleShowedInAppbar = true;
       });
@@ -78,8 +78,14 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
     final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
@@ -93,7 +99,9 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
             children: <Widget>[
               GoBackButton(
                 icon: Icons.arrow_back_rounded,
-                onTap: () => Navigator.pop(context, editedEvents.keys.isEmpty ? false : true),
+                onTap: () =>
+                    Navigator.pop(
+                        context, editedEvents.keys.isEmpty ? false : true),
                 appConfig: appConfig,
                 title: titleShowedInAppbar ? widget.titolo : '',
               ),
@@ -101,13 +109,14 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
                 child: FutureBuilder<List<EventModel>>(
                   future: futureEvents,
                   builder: (context, snap) {
-
-
                     if (snap.hasError) {
-                      return Center(child: Text('Errore durante il caricamente degli eventi'));
+                      return Center(
+                          child: Text(
+                              'Errore durante il caricamente degli eventi'));
                     }
 
-                    if (snap.connectionState == ConnectionState.done && (!snap.hasData || snap.data!.isEmpty)) {
+                    if (snap.connectionState == ConnectionState.done &&
+                        (!snap.hasData || snap.data!.isEmpty)) {
                       return Center(child: Text('Nessun evento trovato'));
                     }
 
@@ -174,7 +183,7 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
         return events.where((e) {
           final start = e.start!;
           return start
-                  .isAfter(startOfMonth.subtract(const Duration(seconds: 1))) &&
+              .isAfter(startOfMonth.subtract(const Duration(seconds: 1))) &&
               start.isBefore(startOfNextMonth);
         }).toList();
       default:
@@ -196,9 +205,17 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
 
   Widget buildPage(List<EventModel> events) {
     //TODO sarebbe da aggiungere shimmer anche qua
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
     Set<int> animatedIndexes = {};
+
+    final AppConfig appConfig = AppConfig(context);
 
     return CustomScrollView(
       controller: _scrollController,
@@ -216,58 +233,112 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
             height: height * 0.02,
           ),
         ),
-        if (!widget.isManage)SliverPersistentHeader(
-          pinned: true,
-          delegate: _SliverTabBarDelegate(
-            ButtonRow(
-              height: height,
-              width: width,
-              coloreBottonePremuto: ThemeData().highlightColor,
-              sortFilter: onFilter,
+        if (!widget.isManage)
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: _SliverTabBarDelegate(
+              ButtonRow(
+                height: height,
+                width: width,
+                coloreBottonePremuto: ThemeData().highlightColor,
+                sortFilter: onFilter,
+              ),
+              appConfig,
             ),
           ),
-        ),
-        SliverList(
+        appConfig.isTablet()
+            ? SliverGrid(
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: appConfig.getWidth() * 90,
+            // larghezza massima di una card
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
+            childAspectRatio: 0.75,
+          ),
           delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  final firstTime = !animatedIndexes.contains(index);
-                  if (firstTime) animatedIndexes.add(index);
-                  final event = events[index];
+              final firstTime = !animatedIndexes.contains(index);
+              if (firstTime) animatedIndexes.add(index);
+              final event = events[index];
 
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EventScreen(
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EventScreen(
                             event: event,
                           ),
-                        ),
-                      );
-                    },
-                    child: MyEventCard(
-                      triggerAnimation: firstTime,
-                      height: height,
-                      width: width,
-                      eventId: event.id,
-                      image: event.image,
-                      titolo: event.title,
-                      luogo: event.location,
-                      isLike: event.isFavourite,
-                      participants: event.participants,
-                      dataInizio:
-                      DateFormat('dd-MM-yyyy hh:mm').format(event.start!),
-                      onFavouriteChange: onFavouriteChange,
-                      index: index,
-                      isManage: widget.isManage,
-                      event: event,
-                      scaffoldKey: scaffoldKey,
-                      onEventChange: onEventChange,
-                      eventFirestore: widget.eventFirestore,
-                      favoritesService: widget.favoritesService,
                     ),
                   );
                 },
+                child: MyEventCard(
+                  triggerAnimation: firstTime,
+                  height: height,
+                  width: width,
+                  eventId: event.id,
+                  image: event.image,
+                  titolo: event.title,
+                  luogo: event.location,
+                  isLike: event.isFavourite,
+                  participants: event.participants,
+                  dataInizio:
+                  DateFormat('dd-MM-yyyy hh:mm').format(event.start!),
+                  onFavouriteChange: onFavouriteChange,
+                  index: index,
+                  isManage: widget.isManage,
+                  event: event,
+                  scaffoldKey: scaffoldKey,
+                  onEventChange: onEventChange,
+                ),
+              );
+            },
+            childCount: events.length,
+          ),
+        )
+            : SliverList(
+          delegate: SliverChildBuilderDelegate(
+                (context, index) {
+              final firstTime = !animatedIndexes.contains(index);
+              if (firstTime) animatedIndexes.add(index);
+              final event = events[index];
+
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EventScreen(
+                            event: event,
+                          ),
+                    ),
+                  );
+                },
+                child: MyEventCard(
+                  triggerAnimation: firstTime,
+                  height: height,
+                  width: width,
+                  eventId: event.id,
+                  image: event.image,
+                  titolo: event.title,
+                  luogo: event.location,
+                  isLike: event.isFavourite,
+                  participants: event.participants,
+                  dataInizio:
+                  DateFormat('dd-MM-yyyy hh:mm').format(event.start!),
+                  onFavouriteChange: onFavouriteChange,
+                  index: index,
+                  isManage: widget.isManage,
+                  event: event,
+                  scaffoldKey: scaffoldKey,
+                  onEventChange: onEventChange,
+                  eventFirestore: widget.eventFirestore,
+                  favoritesService: widget.favoritesService,
+                ),
+              );
+            },
             childCount: events.length,
           ),
         ),
@@ -367,21 +438,215 @@ class _MyEventCardState extends State<MyEventCard>
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
 
+    if (appConfig.isTablet()) {
+      return ScaleTransition(
+        scale: _scaleAnimation,
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // --- IMMAGINE + LIKE BUTTON IN OVERLAY ---
+              Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: widget.image == null ||
+                        widget.image!.downloadUrl == null
+                        ? Image.asset(
+                      'assets/images/ballo.png',
+                      height: widget.width * 0.3,
+                      width: widget.width * 0.50,
+                      fit: BoxFit.cover,
+                    )
+                        : CachedNetworkImage(
+                      imageUrl: widget.image!.downloadUrl!,
+                      height: widget.width * 0.3,
+                      width: widget.width * 0.50,
+                      fit: BoxFit.cover,
+                      memCacheWidth: 600,
+                      memCacheHeight: 400,
+                      placeholder: (context, url) =>
+                          ColorFiltered(
+                            colorFilter: const ColorFilter.mode(
+                              Colors.grey,
+                              BlendMode.saturation,
+                            ),
+                            child: Image.asset(
+                              'assets/images/ballo.png',
+                              height: widget.height * 0.25,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                      errorWidget: (context, url, error) =>
+                          Image.asset(
+                            'assets/images/ballo.png',
+                            height: widget.height * 0.25,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                    ),
+                  ),
+
+                  // Like button in overlay (solo se non è in modalità manage)
+                  if (!widget.isManage)
+                    Positioned(
+                      top: 10,
+                      right: 10,
+                      child: LikeButton(
+                        width: widget.width,
+                        eventId: widget.eventId,
+                        isLike: widget.isLike,
+                        onFavouriteChange: widget.onFavouriteChange,
+                      ),
+                    ),
+
+                  // Menu opzioni (solo se isManage)
+                  if (widget.isManage)
+                    Positioned(
+                      top: 10,
+                      right: 10,
+                      child: GestureDetector(
+                        onTap: () async {
+                          final RenderBox button =
+                          context.findRenderObject() as RenderBox;
+                          final RenderBox overlay = Overlay
+                              .of(context)
+                              .context
+                              .findRenderObject() as RenderBox;
+
+                          final Offset buttonPosition = button
+                              .localToGlobal(Offset.zero, ancestor: overlay);
+
+                          final RelativeRect position = RelativeRect.fromLTRB(
+                            overlay.size.width -
+                                (buttonPosition.dx + button.size.width),
+                            // distanza dal lato destro
+                            buttonPosition.dy, // distanza dall’alto
+                            buttonPosition.dx + button.size.width +
+                                appConfig.getWidth() * 50,
+                            // attaccato al bordo destro
+                            overlay.size.height -
+                                buttonPosition.dy -
+                                button.size.height, // distanza dal basso
+                          );
+
+                          showMenu<String>(
+                            context: context,
+                            color: appConfig
+                                .getTheme()
+                                .scaffoldBackgroundColor,
+                            position: position,
+                            items: [
+                              PopupMenuItem(
+                                height: kMinInteractiveDimension - 5,
+                                onTap: editEvent,
+                                value: 'edit',
+                                child: Text('Modifica',
+                                    style: textStyleTextField(context)),
+                              ),
+                              PopupMenuItem(
+                                height: kMinInteractiveDimension - 5,
+                                onTap: deleteEvent,
+                                value: 'delete',
+                                child: Text('Elimina',
+                                    style: textStyleTextField(context)
+                                        .copyWith(color: Colors.red)),
+                              ),
+                            ],
+                          );
+                        },
+                        child: Icon(
+                          Icons.more_vert,
+                          size: 40,
+                          color: appConfig
+                              .getTheme()
+                              .scaffoldBackgroundColor,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+
+              // --- TESTO + INFO ---
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.titolo,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: textStyleEventCardTitle(context).copyWith(
+                          fontSize: 25),
+                    ),
+                    const SizedBox(height: 6),
+
+                    Row(
+                      children: [
+                        const Icon(Icons.place_outlined, size: 22),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            widget.luogo,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: textStyleEventCardSubtitle(context).copyWith(
+                                fontSize: 22),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 4),
+
+                    Row(
+                      children: [
+                        const Icon(Icons.calendar_today_outlined, size: 22),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            widget.dataInizio,
+                            style: textStyleEventCardSubtitle(context).copyWith(
+                                fontSize: 22),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    // Partecipanti
+                    ParticipantBubbles(participants: widget.participants),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
     return ScaleTransition(
       scale: _scaleAnimation,
       child: Container(
-        //margin: EdgeInsets.symmetric(vertical: 8),
-        padding: EdgeInsets.only(
-          //horizontal: 0,
-          top: 20,
+        margin: EdgeInsets.symmetric(vertical: widget.height * 0.005),
+        padding: EdgeInsets.symmetric(
+          horizontal: widget.width * 0.025,
+          vertical: widget.width * 0.025,
         ),
         decoration: BoxDecoration(
-            /*borderRadius: BorderRadius.all(Radius.circular(widget.width * 0.02)),
-          border: getCustomBorder(
-            appConfig: appConfig,
-            width: 0.5,
-          ),*/
-            ),
+            /*borderRadius: BorderRadius.all(
+                Radius.circular(widget.width * 0.02)),
+            border: getCustomBorder(
+              appConfig: appConfig,
+              width: 0.5,
+            ), */
+        ),
         child: Stack(
           children: [
             if (widget.isManage)
@@ -390,24 +655,33 @@ class _MyEventCardState extends State<MyEventCard>
                 right: 0,
                 child: GestureDetector(
                   onTap: () async {
-                    final RenderBox button = context.findRenderObject() as RenderBox;
-                    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+                    final RenderBox button =
+                    context.findRenderObject() as RenderBox;
+                    final RenderBox overlay = Overlay
+                        .of(context)
+                        .context
+                        .findRenderObject() as RenderBox;
 
-                    final Offset buttonPosition = button.localToGlobal(Offset.zero, ancestor: overlay);
+                    final Offset buttonPosition =
+                    button.localToGlobal(Offset.zero, ancestor: overlay);
 
                     final RelativeRect position = RelativeRect.fromLTRB(
-                      overlay.size.width - (buttonPosition.dx + button.size.width), // distanza dal lato destro
+                      overlay.size.width -
+                          (buttonPosition.dx + button.size.width),
+                      // distanza dal lato destro
                       buttonPosition.dy, // distanza dall’alto
                       0, // attaccato al bordo destro
-                      overlay.size.height - buttonPosition.dy - button.size.height, // distanza dal basso
+                      overlay.size.height -
+                          buttonPosition.dy -
+                          button.size.height, // distanza dal basso
                     );
-
 
                     showMenu<String>(
                       context: context,
-                      color: appConfig.getTheme().scaffoldBackgroundColor,
+                      color: appConfig
+                          .getTheme()
+                          .scaffoldBackgroundColor,
                       position: position,
-
                       items: [
                         PopupMenuItem(
                           height: kMinInteractiveDimension - 5,
@@ -430,7 +704,9 @@ class _MyEventCardState extends State<MyEventCard>
                   child: Icon(
                     Icons.more_vert, // Icona simile a quella mostrata
                     size: 22, // Dimensione dell'icona
-                    color: appConfig.getTheme().secondaryHeaderColor,
+                    color: appConfig
+                        .getTheme()
+                        .secondaryHeaderColor,
                   ),
                 ),
               ),
@@ -443,34 +719,35 @@ class _MyEventCardState extends State<MyEventCard>
                       width: widget.width * 0.3,
                       margin: EdgeInsets.only(right: 15),
                       child: ClipRRect(
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(widget.width * 0.01)),
+                        borderRadius: BorderRadius.circular(20),
                         child: widget.image == null ||
-                                widget.image!.downloadUrl == null
+                            widget.image!.downloadUrl == null
                             ? Image.asset(
-                                'assets/images/ballo.png',
-                                fit: BoxFit.cover,
-                              )
+                          'assets/images/ballo.png',
+                          fit: BoxFit.cover,
+                        )
                             : CachedNetworkImage(
-                                imageUrl: widget.image!.downloadUrl!,
-                                fit: BoxFit.cover,
-                                memCacheWidth: 600,
-                                memCacheHeight: 400,
-                                placeholder: (context, url) => ColorFiltered(
-                                  colorFilter: const ColorFilter.mode(
-                                    Colors.grey,
-                                    BlendMode.saturation,
-                                  ),
-                                  child: Image.asset(
-                                    'assets/images/ballo.png',
-                                    fit: BoxFit.cover,
-                                  ),
+                          imageUrl: widget.image!.downloadUrl!,
+                          fit: BoxFit.cover,
+                          memCacheWidth: 600,
+                          memCacheHeight: 400,
+                          placeholder: (context, url) =>
+                              ColorFiltered(
+                                colorFilter: const ColorFilter.mode(
+                                  Colors.grey,
+                                  BlendMode.saturation,
                                 ),
-                                errorWidget: (context, url, error) => Image.asset(
+                                child: Image.asset(
                                   'assets/images/ballo.png',
                                   fit: BoxFit.cover,
                                 ),
                               ),
+                          errorWidget: (context, url, error) =>
+                              Image.asset(
+                                'assets/images/ballo.png',
+                                fit: BoxFit.cover,
+                              ),
+                        ),
                       ),
                     ),
                     Expanded(
@@ -479,7 +756,8 @@ class _MyEventCardState extends State<MyEventCard>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            margin: EdgeInsets.only(bottom: widget.height * 0.007),
+                            margin:
+                            EdgeInsets.only(bottom: widget.height * 0.007),
                             child: Text(
                               widget.titolo,
                               maxLines: 1,
@@ -495,8 +773,8 @@ class _MyEventCardState extends State<MyEventCard>
                               GestureDetector(
                                 onTap: () {},
                                 child: Padding(
-                                  padding:
-                                      EdgeInsets.only(right: widget.width * 0.02),
+                                  padding: EdgeInsets.only(
+                                      right: widget.width * 0.02),
                                   child: Icon(
                                     size: 14,
                                     Icons.place_outlined,
@@ -521,8 +799,8 @@ class _MyEventCardState extends State<MyEventCard>
                               GestureDetector(
                                 onTap: () {},
                                 child: Padding(
-                                  padding:
-                                      EdgeInsets.only(right: widget.width * 0.02),
+                                  padding: EdgeInsets.only(
+                                      right: widget.width * 0.02),
                                   child: Icon(
                                     size: 14,
                                     Icons.calendar_today_outlined,
@@ -542,22 +820,24 @@ class _MyEventCardState extends State<MyEventCard>
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-
                                 ParticipantBubbles(
                                     participants: widget.participants),
                                 if (widget.isManage)
-                                  SizedBox(height: 40,),
-                                if (!widget.isManage)Container(
-                                  margin:
-                                      EdgeInsets.only(left: widget.width * 0.001),
-                                  child: LikeButton(
-                                    width: widget.width,
-                                    eventId: widget.eventId,
-                                    isLike: widget.isLike,
-                                    onFavouriteChange: widget.onFavouriteChange,
-                                    favoritesService: widget.favoritesService,
+                                  SizedBox(
+                                    height: 40,
                                   ),
-                                )
+                                if (!widget.isManage)
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                        left: widget.width * 0.001),
+                                    child: LikeButton(
+                                      width: widget.width,
+                                      eventId: widget.eventId,
+                                      isLike: widget.isLike,
+                                      onFavouriteChange:
+                                      widget.onFavouriteChange,
+                                    ),
+                                  )
                               ],
                             ),
                           ),
@@ -571,7 +851,9 @@ class _MyEventCardState extends State<MyEventCard>
                 ),
                 Divider(
                   height: 1,
-                  color: appConfig.getTheme().highlightColor,
+                  color: appConfig
+                      .getTheme()
+                      .highlightColor,
                 )
               ],
             ),
@@ -582,34 +864,37 @@ class _MyEventCardState extends State<MyEventCard>
   }
 
 
-
   void deleteEvent() async {
     showDialog(
       context: context,
-      builder: (context) => ConfirmEventDialog(
-        event: widget.event,
-        // il tuo EventModel
-        title: 'Eliminare evento?',
-        subtitle:
-        'Sei sicuro di voler eliminare l\'evento "${widget.event.title}"? Questa azione non può essere annullata.',
-        cancel: 'Annulla',
-        confirm: 'Elimina',
-        onCancel: () {
-          Navigator.of(context).pop();
-        },
-        onConfirm: () async {
-          final SnackBarStyle snackBarStyle = SnackBarStyle(context, widget.scaffoldKey);
+      builder: (context) =>
+          ConfirmEventDialog(
+            event: widget.event,
+            // il tuo EventModel
+            title: 'Eliminare evento?',
+            subtitle:
+            'Sei sicuro di voler eliminare l\'evento "${widget.event
+                .title}"? Questa azione non può essere annullata.',
+            cancel: 'Annulla',
+            confirm: 'Elimina',
+            onCancel: () {
+              Navigator.of(context).pop();
+            },
+            onConfirm: () async {
+              final SnackBarStyle snackBarStyle = SnackBarStyle(
+                  context, widget.scaffoldKey);
 
-          Navigator.of(context).pop();
+              Navigator.of(context).pop();
 
-          final EventFirestore eventFirestore = widget.eventFirestore ?? EventFirestore();
-          eventFirestore.deleteEvent(widget.event);
+              final EventFirestore eventFirestore = widget.eventFirestore ??
+                  EventFirestore();
+              eventFirestore.deleteEvent(widget.event);
 
-          snackBarStyle.showSnackBar('Evento eliminato');
+              snackBarStyle.showSnackBar('Evento eliminato');
 
-          widget.onEventChange(widget.event.id, null);
-        },
-      ),
+              widget.onEventChange(widget.event.id, null);
+            },
+          ),
     );
   }
 
@@ -617,9 +902,10 @@ class _MyEventCardState extends State<MyEventCard>
     Object? value = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AddEventScreen(
-          event: widget.event,
-        ),
+        builder: (context) =>
+            AddEventScreen(
+              event: widget.event,
+            ),
       ),
     );
 
@@ -647,7 +933,8 @@ class LikeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final FavoritesService favoritesService = this.favoritesService ?? FavoritesService();
+    final FavoritesService favoritesService = this.favoritesService ??
+        FavoritesService();
     final AppConfig appConfig = AppConfig(context);
 
     return IconButton(
@@ -662,8 +949,12 @@ class LikeButton extends StatelessWidget {
         },
         icon: Icon(
           isLike ? Icons.favorite_rounded : Icons.favorite_outline,
-          color: appConfig.getTheme().secondaryHeaderColor,
-          size: 22,
+          color: appConfig.isTablet() ? appConfig
+              .getTheme()
+              .scaffoldBackgroundColor : appConfig
+              .getTheme()
+              .secondaryHeaderColor,
+          size: appConfig.isTablet() ? 45 : 22,
         ));
   }
 }
@@ -684,24 +975,36 @@ class MyPersonalRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppConfig appConfig = AppConfig(context);
+
     return Container(
       padding: EdgeInsets.only(
           top: height * 0.02, left: width * 0.008, right: width * 0.008),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(titolo, style: textStyleTitle(context)),
+          Text(titolo,
+              style: appConfig.isTablet()
+                  ? textStyleTitle(context).copyWith(fontSize: 30)
+                  : textStyleTitle(context)),
           count == -1
               ? SizedBox()
               : Row(
-                  children: [
-                    Text('${count} event${count == 1 ? 'o' : 'i'}',
-                        style: textStyleSubtitle(context)),
-                    SizedBox(
-                      width: width * 0.02,
+            children: [
+              Text('${count} event${count == 1 ? 'o' : 'i'}',
+                  style: appConfig.isTablet()
+                      ? textStyleSubtitle(context).copyWith(
+                    fontSize: responsiveFontSize(
+                      context,
+                      fontSizeBig,
                     ),
-                  ],
-                )
+                  )
+                      : textStyleSubtitle(context)),
+              SizedBox(
+                width: width * 0.02,
+              ),
+            ],
+          )
         ],
       ),
     );
@@ -737,10 +1040,15 @@ class _ButtonRowState extends State<ButtonRow> {
 
   @override
   Widget build(BuildContext context) {
+    final AppConfig appConfig = AppConfig(context);
+
     return Container(
-      height: 50,
+      height: appConfig.isTablet() ? 80 : 50,
       padding: EdgeInsets.only(
-          left: widget.width * 0.008, right: widget.width * 0.008, top: 10, bottom: 10),
+          left: widget.width * 0.008,
+          right: widget.width * 0.008,
+          top: appConfig.isTablet() ? 0 : 10,
+          bottom: appConfig.isTablet() ? 0 : 10),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -829,14 +1137,13 @@ class _ButtonRowState extends State<ButtonRow> {
 }
 
 class FilterButton extends StatefulWidget {
-  const FilterButton(
-      {super.key,
-      required this.onTap,
-      required this.coloreBottonePremuto,
-      required this.label,
-      required this.onRemove,
-      required this.isSelected,
-      required this.width});
+  const FilterButton({super.key,
+    required this.onTap,
+    required this.coloreBottonePremuto,
+    required this.label,
+    required this.onRemove,
+    required this.isSelected,
+    required this.width});
 
   final Color coloreBottonePremuto;
   final String label;
@@ -859,11 +1166,15 @@ class _FilterButtonState extends State<FilterButton> {
           padding: EdgeInsets.all(widget.width * 0.01),
           decoration: BoxDecoration(
             color: widget.isSelected
-                ? appConfig.getTheme().highlightColor
-                : Theme.of(context).scaffoldBackgroundColor,
+                ? appConfig
+                .getTheme()
+                .highlightColor
+                : Theme
+                .of(context)
+                .scaffoldBackgroundColor,
             // Colore di sfondo
             borderRadius:
-                BorderRadius.circular(widget.width * 0.02), // Bordi arrotondati
+            BorderRadius.circular(widget.width * 0.02), // Bordi arrotondati
             border: getCustomBorder(
               appConfig: appConfig,
               width: 1,
@@ -871,34 +1182,41 @@ class _FilterButtonState extends State<FilterButton> {
           ),
           child: widget.isSelected
               ? Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: widget.width * 0.015),
-                      child: Text(
-                        widget.label,
-                        style: textStyleTextField(context),
-                      ),
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: widget.width * 0.015),
+                child: Text(
+                  widget.label,
+                  style: appConfig.isTablet()
+                      ? textStyleTextField(context).copyWith(
+                    fontSize: responsiveFontSize(
+                      context,
+                      fontSizeBig,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(right: widget.width * 0.015),
-                      child: GestureDetector(
-                          onTap: () => {_onButtonPressed()},
-                          child: Icon(
-                            Icons.close,
-                            size: 13,
-                          )),
-                    )
-                  ],
-                )
+                  )
+                      : textStyleTextField(context),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: widget.width * 0.015),
+                child: GestureDetector(
+                    onTap: () => {_onButtonPressed()},
+                    child: Icon(
+                      Icons.close,
+                      size: appConfig.isTablet() ? 20 : 13,
+                    )),
+              )
+            ],
+          )
               : Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: widget.width * 0.015),
-                  child: Text(
-                    widget.label,
-                    style: textStyleTextField(context),
-                  ),
-                )),
+            padding:
+            EdgeInsets.symmetric(horizontal: widget.width * 0.015),
+            child: Text(
+              widget.label,
+              style: textStyleTextField(context),
+            ),
+          )),
     );
   }
 
@@ -913,20 +1231,23 @@ class _FilterButtonState extends State<FilterButton> {
 
 class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
   final Widget _filters;
+  final AppConfig _appConfig;
 
-  _SliverTabBarDelegate(this._filters);
-
-  @override
-  double get minExtent => 50;
+  _SliverTabBarDelegate(this._filters, this._appConfig);
 
   @override
-  double get maxExtent => 50;
+  double get minExtent => _appConfig.isTablet() ? 80 : 50;
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+  double get maxExtent => _appConfig.isTablet() ? 80 : 50;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset,
+      bool overlapsContent) {
     return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
+      color: Theme
+          .of(context)
+          .scaffoldBackgroundColor,
       child: _filters,
     );
   }

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/services/firebase/firebase_storage.dart';
+import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/widgets/button.dart';
 
 import '../models/image_model.dart';
@@ -20,6 +21,7 @@ class ParticipantBubbles extends StatefulWidget {
 class _ParticipantBubblesState extends State<ParticipantBubbles> {
   
   late List<Future<ImageModel?>> usersImages;
+  late AppConfig appConfig;
   
   @override
   void initState() {
@@ -39,26 +41,32 @@ class _ParticipantBubblesState extends State<ParticipantBubbles> {
 
   @override
   Widget build(BuildContext context) {
+
+    appConfig = AppConfig(context);
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         widget.participants.isEmpty ? SizedBox() : SizedBox(
-          height: 25,
-          width: min(widget.participants.length, 3) * 25 -
-              (min(widget.participants.length - 1, 3)) * 6,
+          height: appConfig.isTablet() ? 40 : 25,
+          width: min(widget.participants.length, 3) * (appConfig.isTablet() ? 40 : 25) -
+              (min(widget.participants.length - 1, 3)) * (appConfig.isTablet() ? 12 : 6),
           child: Stack(
             children: getImages(widget.participants),
           ),
         ),
-        !widget.showText ? SizedBox() : Padding(
-          padding: EdgeInsets.only(
-            left: widget.participants.length == 0 ? 0 : 10,
-          ),
-          child: Text(
-            widget.participants.isEmpty
-                ? 'Nessun partecipante'
-                : '${widget.participants.length} partecipant${widget.participants.length == 1 ? 'e' : 'i'}',
-            style: textStyleEventCardSubtitle(context),
+        !widget.showText ? SizedBox() : Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: widget.participants.length == 0 ? 0 : 10,
+            ),
+            child: Text(
+              widget.participants.isEmpty
+                  ? 'Nessun partecipante'
+                  : '${widget.participants.length} partecipant${widget.participants.length == 1 ? 'e' : 'i'}',
+              style: appConfig.isTablet() ? textStyleEventCardSubtitle(context).copyWith(fontSize: 22) : textStyleEventCardSubtitle(context),
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ),
       ],
@@ -83,8 +91,8 @@ class _ParticipantBubblesState extends State<ParticipantBubbles> {
                   snap.data == null ||
                   snap.data!.downloadUrl == null) {
                 return Container(
-                  height: 25,
-                  width: 25,
+                  height: appConfig.isTablet() ? 40 : 25,
+                  width: appConfig.isTablet() ? 40 : 25,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                   ),
@@ -99,8 +107,8 @@ class _ParticipantBubblesState extends State<ParticipantBubbles> {
               }
 
               return Container(
-                height: 25,
-                width: 25,
+                height: appConfig.isTablet() ? 40 : 25,
+                width: appConfig.isTablet() ? 40 : 25,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                 ),

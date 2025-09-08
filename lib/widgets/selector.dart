@@ -156,13 +156,13 @@ class _SelectorStyleState<T> extends State<SelectorStyle<T>> {
           ),
           Container(
             alignment: Alignment.center,
-            height: 41,
+            height: _appConfig.isTablet() ? 65 : 41,
             child: DropdownButtonFormField<T>(
               key: _dropdownButtonKey,
               elevation: 5,
               dropdownColor: _appConfig.getTheme().highlightColor,
               decoration: InputDecoration(
-                contentPadding: centerText ? EdgeInsets.only(left: 0) : EdgeInsets.only(left: 15),
+                contentPadding: centerText ? EdgeInsets.only(left: 0, top : _appConfig.getHeight() * (_appConfig.isTablet() ? 3 : 0),) : EdgeInsets.only(left: 15, top : _appConfig.getHeight() * (_appConfig.isTablet() ? 3 : 0),),
                 filled: false,
                 enabled: widget.isEnable,
                 fillColor: _appConfig.getTheme().highlightColor,

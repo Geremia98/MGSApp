@@ -35,7 +35,7 @@ class OptionalRegistrationScreen1 extends StatelessWidget {
                 children: <Widget>[
                   Center(
                     child: CircleAvatar(
-                        radius: appConfig.getWidth() * 22,
+                        radius: appConfig.getWidth() * (appConfig.isTablet() ? 15 : 22),
                         backgroundColor:
                             const Color.fromARGB(255, 255, 221, 109),
                         child: Image.asset(
