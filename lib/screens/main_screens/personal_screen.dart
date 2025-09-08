@@ -119,7 +119,7 @@ class PersonalScreenState extends State<PersonalScreen> {
                 child: Padding(
                   padding: EdgeInsets.only(
                       bottom:
-                          appConfig.getHeight() * paddingUnderTheMainUppperBar),
+                      appConfig.getHeight() * paddingUnderTheMainUppperBar),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -139,178 +139,180 @@ class PersonalScreenState extends State<PersonalScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-<<<<<<< HEAD
                           GestureDetector(
-                            onTap: () async {
-                              final ImagePickerService service = ImagePickerService();
+                              onTap: () async {
+                                final ImagePickerService service = ImagePickerService();
 
-                              XFile? image = await service.getImageFromUser();
+                                XFile? image = await service.getImageFromUser();
 
-                              if (image == null) {
-                                if (kDebugMode) {
-                                  print('picked image value is null');
+                                if (image == null) {
+                                  if (kDebugMode) {
+                                    print('picked image value is null');
+                                  }
+                                  return;
                                 }
-                                return;
-                              }
 
-                              Uint8List? imageCropped = await service.openImageCropperProfilePicture(image, context);
+                                Uint8List? imageCropped = await service
+                                    .openImageCropperProfilePicture(
+                                    image, context);
 
-                              if (imageCropped == null) {
-                                if (kDebugMode) {
-                                  print('image cropper value is null');
+                                if (imageCropped == null) {
+                                  if (kDebugMode) {
+                                    print('image cropper value is null');
+                                  }
+                                  return;
                                 }
-                                return;
-                              }
 
-                              String? mimeType =
-                              lookupMimeType(image!.path, headerBytes: await image.readAsBytes());
+                                String? mimeType =
+                                lookupMimeType(image!.path,
+                                    headerBytes: await image.readAsBytes());
 
-                              ImageModel? imageModel = ImageModel(
-                                image: imageCropped,
-                                path: image.path,
-                                extension: mimeType,
-                              );
+                                ImageModel? imageModel = ImageModel(
+                                  image: imageCropped,
+                                  path: image.path,
+                                  extension: mimeType,
+                                );
 
-                              imageModel = await service.storeImage(imageModel);
+                                imageModel =
+                                await service.storeImage(imageModel);
 
-                              setState(() {
-                                UserModel.profilePic = imageModel;
-                              });
-
-                            },
-                            child: MyProfilePicture(
-                              appConfig: appConfig,
-                              borderRadius: 100,
-                              borderThickness: 0,
-                              dimension: appConfig.isTablet() ? 200 : 100,
-                            ),
-=======
-                          MyProfilePicture(
-                            appConfig: appConfig,
-                            borderRadius: 100,
-                            borderThickness: 0,
-                            dimension: appConfig.isTablet() ? 200 : 100,
->>>>>>> 374ca1e (Tablet screens (non tutte) (#17))
-                          ),
-                          SizedBox(
-                            height: appConfig.isTablet() ? 30 : 15,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: 'Ciao,  ',
-                                      style: textStyleEventCardTitle(context)
-                                          .copyWith(
-                                              fontWeight: FontWeight.w500),
-                                    ),
-                                    TextSpan(
-                                      text:
-                                          '${UserModel.name} ${UserModel.surname}',
-                                      style: textStyleEventCardTitle(context),
-                                    ),
-                                  ],
-                                ),
+                                setState(() {
+                                  UserModel.profilePic = imageModel;
+                                });
+                              },
+                              child: MyProfilePicture(
+                                appConfig: appConfig,
+                                borderRadius: 100,
+                                borderThickness: 0,
+                                dimension: appConfig.isTablet() ? 200 : 100,
                               ),
-                              if (UserModel.bossCode.isNotEmpty)
-                                Padding(
-<<<<<<< HEAD
-                                  padding: EdgeInsets.only(
-                                      left: appConfig.isTablet() ? 10 : 5),
-=======
-                                  padding: EdgeInsets.only(left: appConfig.isTablet() ? 10 : 5),
->>>>>>> 374ca1e (Tablet screens (non tutte) (#17))
-                                  child: Icon(
-                                    Icons.verified_outlined,
-                                    size: appConfig.isTablet() ? 26 : 17,
-                                    color: appConfig
-                                        .getTheme()
-                                        .secondaryHeaderColor,
-                                  ),
-                                )
-                            ],
                           ),
-                          SizedBox(
-<<<<<<< HEAD
-                            height: appConfig.isTablet()
-                                ? appConfig.getHeight() * 10
-                                : appConfig.getHeight() * 5,
-=======
-                            height: appConfig.isTablet() ? appConfig.getHeight() * 10 : appConfig.getHeight() * 5,
->>>>>>> 374ca1e (Tablet screens (non tutte) (#17))
-                          ),
-                          _buildRowFor(
-                            Icons.person_2_outlined,
-                            'Anagrafica account',
-                            appConfig.getTheme().secondaryHeaderColor,
-                            () async {
-                              await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const UserInfoPage()),
-                              );
 
-                              setState(() {});
-                            },
-                          ),
+                              SizedBox(
+                                height: appConfig.isTablet() ? 30 : 15,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: 'Ciao,  ',
+                                          style: textStyleEventCardTitle(
+                                              context)
+                                              .copyWith(
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        TextSpan(
+                                          text:
+                                          '${UserModel.name} ${UserModel
+                                              .surname}',
+                                          style: textStyleEventCardTitle(
+                                              context),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  if (UserModel.bossCode.isNotEmpty)
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: appConfig.isTablet() ? 10 : 5),
+                                      child: Icon(
+                                        Icons.verified_outlined,
+                                        size: appConfig.isTablet() ? 26 : 17,
+                                        color: appConfig
+                                            .getTheme()
+                                            .secondaryHeaderColor,
+                                      ),
+                                    )
+                                ],
+                              ),
+                              SizedBox(
+                                height: appConfig.isTablet()
+                                    ? appConfig.getHeight() * 10
+                                    : appConfig.getHeight() * 5,
+                              ),
+                              _buildRowFor(
+                                Icons.person_2_outlined,
+                                'Anagrafica account',
+                                appConfig
+                                    .getTheme()
+                                    .secondaryHeaderColor,
+                                    () async {
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (
+                                            context) => const UserInfoPage()),
+                                  );
+
+                                  setState(() {});
+                                },
+                              ),
+                              _buildRowFor(
+                                Icons.home_outlined,
+                                'Gruppo account',
+                                appConfig
+                                    .getTheme()
+                                    .secondaryHeaderColor,
+                                    () async {
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                        const UserGroupPage()),
+                                  );
+
+                                  setState(() {});
+                                },
+                              ),
+                              if (UserModel.bossCode.isEmpty)
                           _buildRowFor(
-                            Icons.home_outlined,
-                            'Gruppo account',
-                            appConfig.getTheme().secondaryHeaderColor,
-                            () async {
+                            Icons.verified_outlined,
+                            'Diventa Boss',
+                            appConfig
+                                .getTheme()
+                                .secondaryHeaderColor,
+                                () async {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const UserGroupPage()),
+                                    const UserBossPage()),
                               );
 
                               setState(() {});
                             },
                           ),
-                          if (UserModel.bossCode.isEmpty)
-                            _buildRowFor(
-                              Icons.verified_outlined,
-                              'Diventa Boss',
-                              appConfig.getTheme().secondaryHeaderColor,
-                              () async {
-                                await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const UserBossPage()),
-                                );
-
-                                setState(() {});
-                              },
-                            ),
                           _buildRowFor(
                             Icons.email_outlined,
                             'Modifica email',
-                            appConfig.getTheme().secondaryHeaderColor,
-                            () async {
+                            appConfig
+                                .getTheme()
+                                .secondaryHeaderColor,
+                                () async {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const ChangeEmailScreen()),
+                                    const ChangeEmailScreen()),
                               );
                             },
                           ),
                           _buildRowFor(
                             Icons.lock_outline_rounded,
                             'Modifica password',
-                            appConfig.getTheme().secondaryHeaderColor,
-                            () async {
+                            appConfig
+                                .getTheme()
+                                .secondaryHeaderColor,
+                                () async {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const ChangePasswordScreen()),
+                                    const ChangePasswordScreen()),
                               );
                             },
                           ),
@@ -320,21 +322,25 @@ class PersonalScreenState extends State<PersonalScreen> {
                           _buildRowFor(
                             Icons.bug_report_outlined,
                             'Segnala bug',
-                            appConfig.getTheme().secondaryHeaderColor,
-                            () async {
+                            appConfig
+                                .getTheme()
+                                .secondaryHeaderColor,
+                                () async {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const ReportBugCategoryScreen()),
+                                    const ReportBugCategoryScreen()),
                               );
                             },
                           ),
                           _buildRowFor(
                             Icons.question_mark_outlined,
                             'FAQ',
-                            appConfig.getTheme().secondaryHeaderColor,
-                            () async {
+                            appConfig
+                                .getTheme()
+                                .secondaryHeaderColor,
+                                () async {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -345,10 +351,12 @@ class PersonalScreenState extends State<PersonalScreen> {
                           _buildRowFor(
                             Icons.logout,
                             'Esci',
-                            appConfig.getTheme().secondaryHeaderColor,
-                            () async {
+                            appConfig
+                                .getTheme()
+                                .secondaryHeaderColor,
+                                () async {
                               final FirebaseAuthService authService =
-                                  FirebaseAuthService();
+                              FirebaseAuthService();
                               await authService.signOut(context);
                               Navigator.of(context).push(
                                 MaterialPageRoute(
@@ -377,21 +385,19 @@ class PersonalScreenState extends State<PersonalScreen> {
     );
   }
 
-  Widget _buildRowFor(
-      IconData iconData, String text, Color color, void Function()? onTap) {
+  Widget _buildRowFor(IconData iconData, String text, Color color,
+      void Function()? onTap) {
     final AppConfig appConfig = AppConfig(context);
 
     return Container(
       color: Colors.transparent,
-<<<<<<< HEAD
       width: appConfig.isTablet()
           ? appConfig.getWidth() * 80
           : appConfig.getWidth() * 100,
-=======
-      width: appConfig.isTablet() ? appConfig.getWidth() * 80 : appConfig.getWidth() * 100,
->>>>>>> 374ca1e (Tablet screens (non tutte) (#17))
       child: Material(
-        color: appConfig.getTheme().scaffoldBackgroundColor,
+        color: appConfig
+            .getTheme()
+            .scaffoldBackgroundColor,
         child: InkWell(
           onTap: onTap,
           splashColor: Colors.grey.withOpacity(0.1),
@@ -413,7 +419,9 @@ class PersonalScreenState extends State<PersonalScreen> {
                       children: <Widget>[
                         Icon(
                           iconData,
-                          color: appConfig.getTheme().secondaryHeaderColor,
+                          color: appConfig
+                              .getTheme()
+                              .secondaryHeaderColor,
                           size: appConfig.isTablet() ? 32 : 22,
                         ),
                         SizedBox(
@@ -426,11 +434,11 @@ class PersonalScreenState extends State<PersonalScreen> {
                             maxLines: 1,
                             style: appConfig.isTablet()
                                 ? textStyleTextField(context).copyWith(
-                                    fontSize: responsiveFontSize(
-                                      context,
-                                      fontSizeBig,
-                                    ),
-                                  )
+                              fontSize: responsiveFontSize(
+                                context,
+                                fontSizeBig,
+                              ),
+                            )
                                 : textStyleTextField(context),
                           ),
                         ),
@@ -441,8 +449,12 @@ class PersonalScreenState extends State<PersonalScreen> {
                       child: Icon(
                         Icons.navigate_next,
                         color: text == 'Esci'
-                            ? appConfig.getTheme().scaffoldBackgroundColor
-                            : appConfig.getTheme().secondaryHeaderColor,
+                            ? appConfig
+                            .getTheme()
+                            .scaffoldBackgroundColor
+                            : appConfig
+                            .getTheme()
+                            .secondaryHeaderColor,
                         size: appConfig.isTablet() ? 28 : 18,
                       ),
                     )
