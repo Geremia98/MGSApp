@@ -55,15 +55,18 @@ class _ParticipantBubblesState extends State<ParticipantBubbles> {
             children: getImages(widget.participants),
           ),
         ),
-        !widget.showText ? SizedBox() : Padding(
-          padding: EdgeInsets.only(
-            left: widget.participants.length == 0 ? 0 : 10,
-          ),
-          child: Text(
-            widget.participants.isEmpty
-                ? 'Nessun partecipante'
-                : '${widget.participants.length} partecipant${widget.participants.length == 1 ? 'e' : 'i'}',
-            style: appConfig.isTablet() ? textStyleEventCardSubtitle(context).copyWith(fontSize: 22) : textStyleEventCardSubtitle(context),
+        !widget.showText ? SizedBox() : Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: widget.participants.length == 0 ? 0 : 10,
+            ),
+            child: Text(
+              widget.participants.isEmpty
+                  ? 'Nessun partecipante'
+                  : '${widget.participants.length} partecipant${widget.participants.length == 1 ? 'e' : 'i'}',
+              style: appConfig.isTablet() ? textStyleEventCardSubtitle(context).copyWith(fontSize: 22) : textStyleEventCardSubtitle(context),
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ),
       ],
