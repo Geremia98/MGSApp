@@ -264,7 +264,7 @@ TextStyle textStyleTitle(BuildContext context) {
 
 TextStyle textStyleSubtitle(BuildContext context) {
   return TextStyle(
-    fontSize: responsiveFontSize(context,  fontSizeMedium + (AppConfig(context).isTablet() ? 2 : 0),),
+    fontSize: responsiveFontSize(context, fontSizeMedium,),
     fontWeight: FontWeight.w500,
     color: AppConfig(context)
         .getTheme()

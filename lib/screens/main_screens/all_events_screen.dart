@@ -252,8 +252,8 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
             maxCrossAxisExtent: appConfig.getWidth() * 90,
             // larghezza massima di una card
             mainAxisSpacing: 12,
-            crossAxisSpacing: 20,
-            childAspectRatio: 0.85,
+            crossAxisSpacing: 12,
+            childAspectRatio: 0.75,
           ),
           delegate: SliverChildBuilderDelegate(
                 (context, index) {

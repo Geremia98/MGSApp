@@ -139,6 +139,7 @@ class PersonalScreenState extends State<PersonalScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+<<<<<<< HEAD
                           GestureDetector(
                             onTap: () async {
                               final ImagePickerService service = ImagePickerService();
@@ -183,6 +184,13 @@ class PersonalScreenState extends State<PersonalScreen> {
                               borderThickness: 0,
                               dimension: appConfig.isTablet() ? 200 : 100,
                             ),
+=======
+                          MyProfilePicture(
+                            appConfig: appConfig,
+                            borderRadius: 100,
+                            borderThickness: 0,
+                            dimension: appConfig.isTablet() ? 200 : 100,
+>>>>>>> 374ca1e (Tablet screens (non tutte) (#17))
                           ),
                           SizedBox(
                             height: appConfig.isTablet() ? 30 : 15,
@@ -210,8 +218,12 @@ class PersonalScreenState extends State<PersonalScreen> {
                               ),
                               if (UserModel.bossCode.isNotEmpty)
                                 Padding(
+<<<<<<< HEAD
                                   padding: EdgeInsets.only(
                                       left: appConfig.isTablet() ? 10 : 5),
+=======
+                                  padding: EdgeInsets.only(left: appConfig.isTablet() ? 10 : 5),
+>>>>>>> 374ca1e (Tablet screens (non tutte) (#17))
                                   child: Icon(
                                     Icons.verified_outlined,
                                     size: appConfig.isTablet() ? 26 : 17,
@@ -223,9 +235,13 @@ class PersonalScreenState extends State<PersonalScreen> {
                             ],
                           ),
                           SizedBox(
+<<<<<<< HEAD
                             height: appConfig.isTablet()
                                 ? appConfig.getHeight() * 10
                                 : appConfig.getHeight() * 5,
+=======
+                            height: appConfig.isTablet() ? appConfig.getHeight() * 10 : appConfig.getHeight() * 5,
+>>>>>>> 374ca1e (Tablet screens (non tutte) (#17))
                           ),
                           _buildRowFor(
                             Icons.person_2_outlined,
@@ -367,9 +383,13 @@ class PersonalScreenState extends State<PersonalScreen> {
 
     return Container(
       color: Colors.transparent,
+<<<<<<< HEAD
       width: appConfig.isTablet()
           ? appConfig.getWidth() * 80
           : appConfig.getWidth() * 100,
+=======
+      width: appConfig.isTablet() ? appConfig.getWidth() * 80 : appConfig.getWidth() * 100,
+>>>>>>> 374ca1e (Tablet screens (non tutte) (#17))
       child: Material(
         color: appConfig.getTheme().scaffoldBackgroundColor,
         child: InkWell(
