@@ -104,7 +104,7 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
               const SizedBox(height: 16),
               Text(
                 'Perfavore descrivi il problema che stai riscontrando. '
-                'Il nostro team controllerà appena possibile.',
+                '\nIl nostro team controllerà appena possibile.',
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.left,
               ),

@@ -36,10 +36,10 @@ class GoBackButton extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(appConfig.getWidth() * 1.5),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(10),
                   border: getCustomBorder(
                     appConfig: appConfig,
-                    width: 0.5,
+                    width: 0.3,
                   ),
                 ),
                 child: Icon(

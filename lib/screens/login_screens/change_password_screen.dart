@@ -58,7 +58,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 ),
                 Center(
                   child: Text(
-                    'Inserisci la tua nuova password. E\' possibile, per motivi di sicurezza, venga richiesto di rieffettuare il login prima di poterla modificare.',
+                    'Inserisci la tua nuova password. È possibile che, per motivi di sicurezza, venga richiesto di rieffettuare il login prima di poterla modificare.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: appConfig.getWidth() * 3.5,

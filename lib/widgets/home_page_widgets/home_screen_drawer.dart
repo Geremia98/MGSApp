@@ -221,7 +221,7 @@ class ItemForMenu extends StatelessWidget {
                       BorderRadius.circular(10), // Bordi arrotondati
                   border: getCustomBorder(
                     appConfig: appConfig,
-                    width: 0.5,
+                    width: 0.3,
                   ),
                 ),
                 child: Icon(
@@ -236,13 +236,13 @@ class ItemForMenu extends StatelessWidget {
             style: isTitle
                 ? textStyleTitle(context)
                 : appConfig.isTablet()
-                    ? textStyleSubtitle(context).copyWith(
+                    ? textStyleItemMenu(context).copyWith(
                         fontSize: responsiveFontSize(
                           context,
                           fontSizeBig,
                         ),
                       )
-                    : textStyleSubtitle(context),
+                    : textStyleItemMenu(context),
           ),
         ],
       ),

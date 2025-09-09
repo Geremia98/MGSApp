@@ -78,10 +78,6 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
     double width = MediaQuery
         .of(context)
         .size
@@ -110,14 +106,14 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
                   future: futureEvents,
                   builder: (context, snap) {
                     if (snap.hasError) {
-                      return Center(
+                      return const Center(
                           child: Text(
                               'Errore durante il caricamente degli eventi'));
                     }
 
                     if (snap.connectionState == ConnectionState.done &&
                         (!snap.hasData || snap.data!.isEmpty)) {
-                      return Center(child: Text('Nessun evento trovato'));
+                      return const Center(child: Text('Nessun evento trovato'));
                     }
 
                     final allEvents = snap.data ?? [];
@@ -1177,7 +1173,7 @@ class _FilterButtonState extends State<FilterButton> {
             BorderRadius.circular(widget.width * 0.02), // Bordi arrotondati
             border: getCustomBorder(
               appConfig: appConfig,
-              width: 1,
+              width: 0.3,
             ),
           ),
           child: widget.isSelected
@@ -1198,15 +1194,6 @@ class _FilterButtonState extends State<FilterButton> {
                       : textStyleTextField(context),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(right: widget.width * 0.015),
-                child: GestureDetector(
-                    onTap: () => {_onButtonPressed()},
-                    child: Icon(
-                      Icons.close,
-                      size: appConfig.isTablet() ? 20 : 13,
-                    )),
-              )
             ],
           )
               : Padding(

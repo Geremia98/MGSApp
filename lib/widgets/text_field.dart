@@ -162,7 +162,7 @@ TextStyle textStyleHint(BuildContext context) => TextStyle(
 
 TextStyle textStyleTextField(BuildContext context) => TextStyle(
       color: AppConfig(context).getTheme().secondaryHeaderColor,
-      fontWeight: FontWeight.w500,
+      fontWeight: FontWeight.w400,
       fontSize: responsiveFontSize(context, fontSizeMedium),
     );
 

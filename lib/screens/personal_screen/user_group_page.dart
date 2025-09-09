@@ -4,10 +4,7 @@ import 'package:mgs_app2/models/user_firestore.dart';
 import 'package:mgs_app2/models/user_model.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/widgets/button.dart';
-import 'package:mgs_app2/widgets/registration_screens_widgets/my_date_picker.dart';
-import 'package:mgs_app2/widgets/registration_screens_widgets/my_segmented_button.dart';
 import 'package:mgs_app2/widgets/selector.dart';
-import 'package:mgs_app2/widgets/text_field.dart';
 
 import '../../utilities/constants_dimensions.dart';
 import '../../utilities/constants_strings.dart';

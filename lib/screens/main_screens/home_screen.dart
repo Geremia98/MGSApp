@@ -94,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           AsyncSnapshot<List<EventModel>> snap) {
                         if (snap.connectionState == ConnectionState.done &&
                             (snap.data == null || snap.data!.isEmpty)) {
-                          return SizedBox(
+                          return const SizedBox(
                             child: Text('Nessun evento'),
                           );
                         }
@@ -146,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       AsyncSnapshot<List<EventModel>> snap) {
                     if (snap.connectionState == ConnectionState.done &&
                         (snap.data == null || snap.data!.isEmpty)) {
-                      return SizedBox(
+                      return const SizedBox(
                         child: Text('Nessun evento'),
                       );
                     }

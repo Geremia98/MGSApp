@@ -88,7 +88,7 @@ class MyEventsCard extends StatelessWidget {
               ),
               margin: EdgeInsets.only(right: 20),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(10),
                 child: event == null
                     ? SizedBox()
                     : event!.image == null || event!.image!.downloadUrl == null

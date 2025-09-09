@@ -10,15 +10,10 @@ import 'package:mgs_app2/screens/registration_screens/registration_controller.da
 import 'package:mgs_app2/screens/report_bug/report_bug_category_screen.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
-import 'package:mgs_app2/utilities/constants_strings.dart';
-import 'package:mgs_app2/utilities/my_colors.dart';
 import 'package:mgs_app2/widgets/button.dart';
 import 'package:mgs_app2/widgets/buttons.dart';
+import 'package:mgs_app2/widgets/home_page_widgets/home_screen_drawer.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/my_profile_pic.dart';
-import 'package:mgs_app2/widgets/personal_page_widgets/my_big_async_button.dart';
-import 'package:mgs_app2/widgets/personal_page_widgets/my_squared_icon_button.dart';
-import 'package:mgs_app2/widgets/personal_page_widgets/selector_for_personal_screen.dart';
-import 'package:mgs_app2/widgets/registration_screens_widgets/my_date_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../services/firebase/auth.dart';
@@ -126,7 +121,7 @@ class PersonalScreenState extends State<PersonalScreen> {
                         appConfig: appConfig,
                         title: 'Profilo',
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Column(
@@ -135,8 +130,8 @@ class PersonalScreenState extends State<PersonalScreen> {
                         children: [
                           MyProfilePicture(
                             appConfig: appConfig,
-                            borderRadius: 100,
-                            borderThickness: 0,
+                            borderRadius: 20,
+                            borderThickness: 0.3,
                             dimension: appConfig.isTablet() ? 200 : 100,
                           ),
                           SizedBox(
@@ -150,15 +145,9 @@ class PersonalScreenState extends State<PersonalScreen> {
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                      text: 'Ciao,  ',
-                                      style: textStyleEventCardTitle(context)
-                                          .copyWith(
-                                              fontWeight: FontWeight.w500),
-                                    ),
-                                    TextSpan(
                                       text:
                                           '${UserModel.name} ${UserModel.surname}',
-                                      style: textStyleEventCardTitle(context),
+                                      style: textStyleTitle(context),
                                     ),
                                   ],
                                 ),
@@ -179,11 +168,14 @@ class PersonalScreenState extends State<PersonalScreen> {
                           SizedBox(
                             height: appConfig.isTablet() ? appConfig.getHeight() * 10 : appConfig.getHeight() * 5,
                           ),
-                          _buildRowFor(
-                            Icons.person_2_outlined,
-                            'Anagrafica account',
-                            appConfig.getTheme().secondaryHeaderColor,
-                            () async {
+                          
+                        ItemForMenu(
+              appConfig: appConfig,
+              height: appConfig.getHeight()*80,
+              width: appConfig.getWidth()*100,
+              icon: Icons.person_3_rounded,
+              title: 'Anagrafica account',
+              onTap: () async {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -192,12 +184,14 @@ class PersonalScreenState extends State<PersonalScreen> {
 
                               setState(() {});
                             },
-                          ),
-                          _buildRowFor(
-                            Icons.home_outlined,
-                            'Gruppo account',
-                            appConfig.getTheme().secondaryHeaderColor,
-                            () async {
+            ),
+            ItemForMenu(
+              appConfig: appConfig,
+              height: appConfig.getHeight()*80,
+              width: appConfig.getWidth()*100,
+              icon: Icons.home_rounded,
+              title: 'Gruppo account',
+              onTap: () async {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -207,13 +201,15 @@ class PersonalScreenState extends State<PersonalScreen> {
 
                               setState(() {});
                             },
-                          ),
+            ),
                           if (UserModel.bossCode.isEmpty)
-                            _buildRowFor(
-                              Icons.verified_outlined,
-                              'Diventa Boss',
-                              appConfig.getTheme().secondaryHeaderColor,
-                              () async {
+                          ItemForMenu(
+              appConfig: appConfig,
+              height: appConfig.getHeight()*80,
+              width: appConfig.getWidth()*100,
+              icon: Icons.verified_outlined,
+              title: 'Diventa Boss',
+              onTap: () async {
                                 await Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -223,12 +219,14 @@ class PersonalScreenState extends State<PersonalScreen> {
 
                                 setState(() {});
                               },
-                            ),
-                          _buildRowFor(
-                            Icons.email_outlined,
-                            'Modifica email',
-                            appConfig.getTheme().secondaryHeaderColor,
-                            () async {
+            ),
+                            ItemForMenu(
+              appConfig: appConfig,
+              height: appConfig.getHeight()*80,
+              width: appConfig.getWidth()*100,
+              icon: Icons.email_rounded,
+              title: 'Modifica email',
+              onTap: () async {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -236,12 +234,14 @@ class PersonalScreenState extends State<PersonalScreen> {
                                         const ChangeEmailScreen()),
                               );
                             },
-                          ),
-                          _buildRowFor(
-                            Icons.lock_outline_rounded,
-                            'Modifica password',
-                            appConfig.getTheme().secondaryHeaderColor,
-                            () async {
+            ),
+            ItemForMenu(
+              appConfig: appConfig,
+              height: appConfig.getHeight()*50,
+              width: appConfig.getWidth()*100,
+              icon: Icons.lock,
+              title: 'Modifica password',
+              onTap: () async {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -249,15 +249,17 @@ class PersonalScreenState extends State<PersonalScreen> {
                                         const ChangePasswordScreen()),
                               );
                             },
-                          ),
+            ),
                           SizedBox(
-                            height: appConfig.getHeight() * 5,
+                            height: appConfig.getHeight() * 3,
                           ),
-                          _buildRowFor(
-                            Icons.bug_report_outlined,
-                            'Segnala bug',
-                            appConfig.getTheme().secondaryHeaderColor,
-                            () async {
+                          ItemForMenu(
+              appConfig: appConfig,
+              height: appConfig.getHeight()*80,
+              width: appConfig.getWidth()*100,
+              icon: Icons.bug_report_rounded,
+              title: 'Segnala un bug',
+              onTap: () async {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -265,26 +267,30 @@ class PersonalScreenState extends State<PersonalScreen> {
                                         const ReportBugCategoryScreen()),
                               );
                             },
-                          ),
-                          _buildRowFor(
-                            Icons.question_mark_outlined,
-                            'FAQ',
-                            appConfig.getTheme().secondaryHeaderColor,
-                            () async {
+            ),
+            ItemForMenu(
+              appConfig: appConfig,
+              height: appConfig.getHeight()*80,
+              width: appConfig.getWidth()*100,
+              icon: Icons.question_mark_rounded,
+              title: 'FAQ',
+              onTap: () async {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const FAQScreen()),
                               );
                             },
-                          ),
-                          _buildRowFor(
-                            Icons.logout,
-                            'Esci',
-                            appConfig.getTheme().secondaryHeaderColor,
-                            () async {
+            ),
+            ItemForMenu(
+              appConfig: appConfig,
+              height: appConfig.getHeight()*80,
+              width: appConfig.getWidth()*100,
+              icon: Icons.logout_rounded,
+              title: 'Esci',
+              onTap: () async {
                               final FirebaseAuthService authService =
-                                  FirebaseAuthService();
+                                  widget.authService ?? FirebaseAuthService();
                               await authService.signOut(context);
                               Navigator.of(context).push(
                                 MaterialPageRoute(
@@ -292,8 +298,8 @@ class PersonalScreenState extends State<PersonalScreen> {
                                 ),
                               );
                             },
-                            // logoutPanel,
-                          ),
+            ),
+
                         ],
                       ),
                     ],

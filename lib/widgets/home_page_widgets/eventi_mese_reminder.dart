@@ -88,7 +88,7 @@ class _EventiDelMeseReminder extends State<EventiDelMeseReminder> {
                 ],
                 border: getCustomBorder(
                   appConfig: appConfig,
-                  width: 0.5,
+                  width: 0.3,
                 ),
               ),
               child: Row(

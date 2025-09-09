@@ -36,13 +36,13 @@ class MyPersonalHomeRow extends StatelessWidget {
         children: [
           Text(
             titolo,
-            style: textStyleTitle(context),
+            style: textStyleHomePersonalRow(context),
           ),
           Row(
             children: [
               Text(
                 'Vedi tutti',
-                style: textStyleTextField(context),
+                style: textStyleVediTutti(context),
               ),
               SizedBox(
                 width: width * 0.02,
@@ -63,11 +63,11 @@ class MyPersonalHomeRow extends StatelessWidget {
                   decoration: BoxDecoration(
                     // Colore di sfondo
                     borderRadius: BorderRadius.circular(
-                      10,
+                      7,
                     ), // Bordi arrotondati
                     border: getCustomBorder(
                       appConfig: appConfig,
-                      width: 0.8,
+                      width: 0.3,
                     ),
                   ),
                   child: Icon(

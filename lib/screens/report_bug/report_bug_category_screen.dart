@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/report_bug/report_bug_screen.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
+import 'package:mgs_app2/utilities/my_theme_data.dart';
 import 'package:mgs_app2/widgets/buttons.dart';
 
 class ReportBugCategoryScreen extends StatelessWidget {
@@ -38,12 +39,15 @@ class ReportBugCategoryScreen extends StatelessWidget {
                   bottom: appConfig.getHeight() * 1,
                 ),
                 child: Text(
-                  'Seleziona una categoria',
+                  'Di che si tratta?',
                   style: TextStyle(
                     fontSize: appConfig.getWidth() * 7,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+              ),
+              const SizedBox(
+                height: 20,
               ),
               Expanded(
                 child: GridView.builder(
@@ -99,7 +103,10 @@ class CategoryButton extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Theme.of(context).dividerColor),
+          border: getCustomBorder(
+            width: 0.3,
+            appConfig: AppConfig(context),
+          )
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -111,7 +118,7 @@ class CategoryButton extends StatelessWidget {
               child: Text(
                 label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.w600),
+                style: const TextStyle(fontWeight: FontWeight.w400),
               ),
             ),
           ],

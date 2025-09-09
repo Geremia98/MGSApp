@@ -35,7 +35,7 @@ class SortOfAppBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(
                   10), // Bordi arrotondati
               border: getCustomBorder(
-                width: 0.5,
+                width: 0.3,
                 appConfig: appConfig,
               ),
             ),
@@ -54,7 +54,7 @@ class SortOfAppBar extends StatelessWidget {
           ),
           child: MyProfilePicture(
             appConfig: appConfig,
-            borderThickness: 0.5,
+            borderThickness: 0.3,
             borderRadius: 10,
             dimension: appConfig.isTablet() ? 80 : 45,
             storageService: storageService,

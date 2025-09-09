@@ -126,7 +126,7 @@ class _MyCustomSegmentedButtonState<T>
 
     return Material(
       color: isSelected
-          ? (widget.isEnabled ? theme.secondaryHeaderColor : Colors.grey.shade500)
+          ? (widget.isEnabled ? theme.secondaryHeaderColor : const Color.fromARGB(255, 202, 202, 202))
           : theme.scaffoldBackgroundColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.horizontal(
@@ -171,7 +171,7 @@ class _MyCustomSegmentedButtonState<T>
               color: isSelected
                   ? theme.scaffoldBackgroundColor
                   : theme.secondaryHeaderColor,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),

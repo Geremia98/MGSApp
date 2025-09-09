@@ -181,7 +181,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                   }
                 },
               ),
-              SizedBox(height: 60),
+              const SizedBox(height: 60),
               if (!isInEditMode)
                 Center(
                   child: ButtonText(
