@@ -47,6 +47,16 @@ class _MyCustomSegmentedButtonState<T>
   }
 
   @override
+  void didUpdateWidget(covariant MyCustomSegmentedButton<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selected != _selected) {
+      setState(() {
+        _selected = widget.selected;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
 

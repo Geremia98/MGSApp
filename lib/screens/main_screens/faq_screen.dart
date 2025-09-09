@@ -5,6 +5,7 @@ import 'package:mgs_app2/utilities/constants_strings.dart';
 import 'package:mgs_app2/widgets/button.dart';
 import 'package:mgs_app2/widgets/buttons.dart';
 import 'package:mgs_app2/widgets/font.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FAQScreen extends StatefulWidget {
   const FAQScreen({super.key});
@@ -53,7 +54,25 @@ class _FAQScreenState extends State<FAQScreen> {
                           style: textStyleSubtitle(context)),
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () async {
+                        final Uri emailUri = Uri(
+                          scheme: 'mailto',
+                          path: 'albertotedoldi00@gmail.com',
+                          queryParameters: {
+                            'subject': 'FAQ MSG app',
+                            // 'body': 'Scrivi qui il tuo messaggio'  // opzionale
+                          },
+                        );
+
+                        if (await canLaunchUrl(emailUri)) {
+                          await launchUrl(
+                            emailUri,
+                            mode: LaunchMode.externalApplication,
+                          );
+                        } else {
+                          throw Exception('Non riesco ad aprire la mail');
+                        }
+                      },
                       child: Center(
                         child: Text(
                           'Mandaci una mail',
@@ -174,10 +193,7 @@ class _FAQItemWidgetState extends State<FAQItemWidget>
               },
               child: Container(
                 padding: const EdgeInsets.only(right: 14, left: 14, bottom: 14),
-                child: Text(
-                  widget.answer,
-                  style: textStyleSubtitle(context)
-                ),
+                child: Text(widget.answer, style: textStyleSubtitle(context)),
               ),
             ),
           ),

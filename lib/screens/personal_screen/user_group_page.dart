@@ -16,13 +16,12 @@ class UserGroupPage extends StatefulWidget {
   @override
   State<UserGroupPage> createState() => _UserGroupPageState();
 }
-
 class _UserGroupPageState extends State<UserGroupPage> {
   bool isInEditMode = false;
 
-  late String country;
-  late String ispettoria;
-  late String group;
+  late ValueNotifier<String> countryNotifier;
+  late ValueNotifier<String> ispettoriaNotifier;
+  late ValueNotifier<String> groupNotifier;
 
   bool isLoading = false;
 
@@ -30,9 +29,17 @@ class _UserGroupPageState extends State<UserGroupPage> {
   void initState() {
     super.initState();
 
-    country = UserModel.country;
-    ispettoria = UserModel.ispettoria;
-    group = UserModel.group;
+    countryNotifier = ValueNotifier(UserModel.country);
+    ispettoriaNotifier = ValueNotifier(UserModel.ispettoria);
+    groupNotifier = ValueNotifier(UserModel.group);
+  }
+
+  @override
+  void dispose() {
+    countryNotifier.dispose();
+    ispettoriaNotifier.dispose();
+    groupNotifier.dispose();
+    super.dispose();
   }
 
   @override
@@ -48,74 +55,87 @@ class _UserGroupPageState extends State<UserGroupPage> {
         ),
         child: Padding(
           padding: EdgeInsets.only(
-              bottom: appConfig.getHeight() * paddingUnderTheMainUppperBar),
+            bottom: appConfig.getHeight() * paddingUnderTheMainUppperBar,
+          ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               GoBackButton(
                 icon: Icons.arrow_back_rounded,
-                onTap: () {
-                  Navigator.pop(context);
-                },
+                onTap: () => Navigator.pop(context),
                 appConfig: appConfig,
                 title: 'Gruppo account',
               ),
-              SizedBox(
-                height: appConfig.getHeight() * 5,
-              ),
-              const SizedBox(
-                height: 30,
-              ),
+              const SizedBox(height: 30),
               Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal:
-                      !appConfig.isTablet() ? 0 : appConfig.getWidth() * 10,
+                  horizontal: !appConfig.isTablet()
+                      ? 0
+                      : appConfig.getWidth() * 10,
                 ),
                 child: Column(
                   children: [
-                    SelectorStyle(
-                      isEnable: isInEditMode,
-                      constantDropDownCountryList,
-                      country,
-                      onValueChange: (String value) => country = value,
-                      title: 'Paese: ',
+                    ValueListenableBuilder<String>(
+                      valueListenable: countryNotifier,
+                      builder: (context, value, _) {
+                        return SelectorStyle(
+                          isEnable: isInEditMode,
+                          constantDropDownCountryList,
+                          value,
+                          onValueChange: (String newValue) =>
+                          countryNotifier.value = newValue,
+                          title: 'Paese: ',
+                        );
+                      },
                     ),
-                    SizedBox(height: 20),
-                    SelectorStyle(
-                      isEnable: isInEditMode,
-                      constantDropDownIspettoriaList,
-                      ispettoria,
-                      onValueChange: (String value) => ispettoria = value,
-                      title: 'Ispettoria: ',
+                    const SizedBox(height: 20),
+                    ValueListenableBuilder<String>(
+                      valueListenable: ispettoriaNotifier,
+                      builder: (context, value, _) {
+                        return SelectorStyle(
+                          isEnable: isInEditMode,
+                          constantDropDownIspettoriaList,
+                          value,
+                          onValueChange: (String newValue) =>
+                          ispettoriaNotifier.value = newValue,
+                          title: 'Ispettoria: ',
+                        );
+                      },
                     ),
-                    SizedBox(height: 20),
-                    SelectorStyle(
-                      isEnable: isInEditMode,
-                      constantDropDownGroupList,
-                      group,
-                      onValueChange: (String value) => group = value,
-                      title: 'Gruppo: ',
+                    const SizedBox(height: 20),
+                    ValueListenableBuilder<String>(
+                      valueListenable: groupNotifier,
+                      builder: (context, value, _) {
+                        return SelectorStyle(
+                          isEnable: isInEditMode,
+                          constantDropDownGroupList,
+                          value,
+                          onValueChange: (String newValue) =>
+                          groupNotifier.value = newValue,
+                          title: 'Gruppo: ',
+                        );
+                      },
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 60),
+              const SizedBox(height: 60),
               if (!isInEditMode)
                 Center(
                   child: ButtonText(
-                      text: 'Modifica',
-                      onTap: () {
-                        setState(() {
-                          isInEditMode = true;
-                        });
-                      }),
+                    text: 'Modifica',
+                    onTap: () {
+                      setState(() => isInEditMode = true);
+                    },
+                  ),
                 ),
               if (isInEditMode)
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      horizontal:
-                          appConfig.isTablet() ? appConfig.getWidth() * 10 : 0),
+                    horizontal: appConfig.isTablet()
+                        ? appConfig.getWidth() * 10
+                        : 0,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -125,9 +145,11 @@ class _UserGroupPageState extends State<UserGroupPage> {
                         onTap: () {
                           setState(() {
                             isInEditMode = false;
-                            country = UserModel.country;
-                            ispettoria = UserModel.ispettoria;
-                            group = UserModel.group;
+
+                            // reset valori
+                            countryNotifier.value = UserModel.country;
+                            ispettoriaNotifier.value = UserModel.ispettoria;
+                            groupNotifier.value = UserModel.group;
                           });
                         },
                         color: appConfig.getTheme().scaffoldBackgroundColor,
@@ -138,27 +160,26 @@ class _UserGroupPageState extends State<UserGroupPage> {
                         text: 'Conferma',
                         isLoading: isLoading,
                         onTap: () async {
-                          if (isLoading) {
-                            return;
-                          }
+                          if (isLoading) return;
 
-                          setState(() {
-                            isLoading = true;
-                          });
+                          setState(() => isLoading = true);
 
                           final UserFirestore userFirestore = UserFirestore();
 
                           await userFirestore.updateUserGroup(
-                              group: group,
-                              ispettoria: ispettoria,
-                              country: country);
+                            group: groupNotifier.value,
+                            ispettoria: ispettoriaNotifier.value,
+                            country: countryNotifier.value,
+                          );
 
                           setState(() {
                             isInEditMode = false;
                             isLoading = false;
-                            UserModel.country = country;
-                            UserModel.ispettoria = ispettoria;
-                            UserModel.group = group;
+
+                            // aggiorna UserModel
+                            UserModel.country = countryNotifier.value;
+                            UserModel.ispettoria = ispettoriaNotifier.value;
+                            UserModel.group = groupNotifier.value;
                           });
                         },
                         fixedWidth: 170,
@@ -173,3 +194,4 @@ class _UserGroupPageState extends State<UserGroupPage> {
     );
   }
 }
+

@@ -62,16 +62,19 @@ class HomePageDrawer extends StatelessWidget {
               color: appConfig.getTheme().highlightColor,
             ),
             ItemForMenu(
-              appConfig: appConfig,
-              height: height,
-              width: width,
-              icon: Icons.person_3_rounded,
-              title: 'Profilo',
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const PersonalScreen()),
-              ),
-            ),
+                appConfig: appConfig,
+                height: height,
+                width: width,
+                icon: Icons.person_3_rounded,
+                title: 'Profilo',
+                onTap: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PersonalScreen()),
+                  );
+                  Navigator.pop(context);
+                }),
             if (UserModel.bossCode.isNotEmpty)
               ItemForMenu(
                   appConfig: appConfig,
@@ -146,8 +149,8 @@ class HomePageDrawer extends StatelessWidget {
                   ? Icons.dark_mode
                   : Icons.sunny,
               title: BrightnessManager().brightness == Brightness.light
-    ? 'Tema scuro'
-        : 'Tema chiaro',
+                  ? 'Tema scuro'
+                  : 'Tema chiaro',
               onTap: () => {
                 BrightnessManager().toggleBrightness()
                 //provider.toggleTheme()
@@ -217,8 +220,7 @@ class ItemForMenu extends StatelessWidget {
                 padding: EdgeInsets.all(width * 0.012),
                 decoration: BoxDecoration(
                   // Colore di sfondo
-                  borderRadius:
-                      BorderRadius.circular(10), // Bordi arrotondati
+                  borderRadius: BorderRadius.circular(10), // Bordi arrotondati
                   border: getCustomBorder(
                     appConfig: appConfig,
                     width: 0.3,
