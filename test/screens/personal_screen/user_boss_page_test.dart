@@ -177,7 +177,7 @@ void main() {
         
         final textWidget = tester.widget<Text>(instructionText);
         expect(textWidget.textAlign, TextAlign.center);
-        expect(textWidget.style?.fontWeight, FontWeight.w500);
+        expect(textWidget.style?.fontWeight, FontWeight.w700);
         
         await tester.binding.setSurfaceSize(null);
       } finally {
