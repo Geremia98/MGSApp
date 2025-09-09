@@ -98,7 +98,7 @@ class MyEventsCard extends StatelessWidget {
                           )
                         : CachedNetworkImage(
                             imageUrl: event!.image!.downloadUrl!,
-                            fit: BoxFit.cover,
+                            fit: BoxFit.fitHeight,
                             memCacheWidth: 600,
                             memCacheHeight: 600,
                             placeholder: (context, url) => ColorFiltered(

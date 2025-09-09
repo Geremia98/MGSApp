@@ -15,7 +15,7 @@ class AppConfig {
   Brightness getBrightness() => _brightness;
   BuildContext getContext() => _context;
 
-  bool isTablet() => _width * 100 > 600;
+  bool isTablet() => _width * 100 > 800;
 
 
 

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/my_theme_data.dart';
 import 'package:mgs_app2/wrapper.dart';
 import 'package:provider/provider.dart';
@@ -53,6 +54,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     ]);
 
     final brightnessManager = Provider.of<BrightnessManager>(context);
+
+    print(AppConfig(context).getWidth());
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

@@ -44,32 +44,36 @@ class _ParticipantBubblesState extends State<ParticipantBubbles> {
 
     appConfig = AppConfig(context);
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        widget.participants.isEmpty ? SizedBox() : SizedBox(
-          height: appConfig.isTablet() ? 40 : 25,
-          width: min(widget.participants.length, 3) * (appConfig.isTablet() ? 40 : 25) -
-              (min(widget.participants.length - 1, 3)) * (appConfig.isTablet() ? 12 : 6),
-          child: Stack(
-            children: getImages(widget.participants),
-          ),
-        ),
-        !widget.showText ? SizedBox() : Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(
-              left: widget.participants.length == 0 ? 0 : 10,
-            ),
-            child: Text(
-              widget.participants.isEmpty
-                  ? 'Nessun partecipante'
-                  : '${widget.participants.length} partecipant${widget.participants.length == 1 ? 'e' : 'i'}',
-              style: appConfig.isTablet() ? textStyleEventCardSubtitle(context).copyWith(fontSize: 22) : textStyleEventCardSubtitle(context),
-              overflow: TextOverflow.ellipsis,
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: widget.showText ? 160 : min(widget.participants.length, 3) * (appConfig.isTablet() ? 40 : 25) -
+          (min(widget.participants.length - 1, 3)) * (appConfig.isTablet() ? 12 : 6)),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          widget.participants.isEmpty ? SizedBox() : SizedBox(
+            height: appConfig.isTablet() ? 40 : 25,
+            width: min(widget.participants.length, 3) * (appConfig.isTablet() ? 40 : 25) -
+                (min(widget.participants.length - 1, 3)) * (appConfig.isTablet() ? 12 : 6),
+            child: Stack(
+              children: getImages(widget.participants),
             ),
           ),
-        ),
-      ],
+          !widget.showText ? SizedBox() : Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: widget.participants.length == 0 ? 0 : 10,
+              ),
+              child: Text(
+                widget.participants.isEmpty
+                    ? 'Nessun partecipante'
+                    : '${widget.participants.length} partecipant${widget.participants.length == 1 ? 'e' : 'i'}',
+                style: appConfig.isTablet() ? textStyleEventCardSubtitle(context).copyWith(fontSize: 22) : textStyleEventCardSubtitle(context),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
