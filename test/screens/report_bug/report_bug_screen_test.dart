@@ -73,7 +73,7 @@ void main() {
 
         expect(find.byType(GoBackButton), findsOneWidget);
         expect(find.text('Segnala un bug'), findsOneWidget);
-        expect(find.text('Perfavore descrivi il problema che stai riscontrando. Il nostro team controllerà appena possibile.'), findsOneWidget);
+        expect(find.text('Perfavore descrivi il problema che stai riscontrando. \nIl nostro team controllerà appena possibile.'), findsOneWidget);
         expect(find.byType(PrimaryTextField), findsOneWidget);
         expect(find.byType(PrimaryButton), findsOneWidget);
         expect(find.text('Invia segnalazione'), findsOneWidget);

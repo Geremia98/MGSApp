@@ -42,7 +42,7 @@ void main() {
         expect(find.byType(ReportBugCategoryScreen), findsOneWidget);
         expect(find.byType(Scaffold), findsOneWidget);
         expect(find.byType(SafeArea), findsOneWidget);
-        expect(find.text('Seleziona una categoria'), findsOneWidget);
+        expect(find.text('Di che si tratta?'), findsOneWidget);
       } finally {
         FlutterError.onError = originalOnError;
       }
@@ -65,7 +65,7 @@ void main() {
         );
 
         expect(find.byType(GoBackButton), findsOneWidget);
-        expect(find.text('Seleziona una categoria'), findsOneWidget);
+        expect(find.text('Di che si tratta?'), findsOneWidget);
         expect(find.byType(GridView), findsOneWidget);
         expect(find.byIcon(Icons.arrow_back_rounded), findsOneWidget);
       } finally {
@@ -465,7 +465,7 @@ void main() {
         expect(find.text('Gestione Gruppi'), findsOneWidget);
         
         // Title should still be present
-        expect(find.text('Seleziona una categoria'), findsOneWidget);
+        expect(find.text('Di che si tratta?'), findsOneWidget);
         
         await tester.binding.setSurfaceSize(null);
       } finally {

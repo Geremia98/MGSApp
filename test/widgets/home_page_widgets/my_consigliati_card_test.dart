@@ -158,9 +158,9 @@ void main() {
 
       final textWidgets = tester.widgetList<Text>(find.byType(Text)).toList();
       
-      // Title text should have bold weight
+      // Title text should have w500 weight (not bold)
       final titleText = textWidgets.first;
-      expect(titleText.style?.fontWeight, equals(FontWeight.bold));
+      expect(titleText.style?.fontWeight, equals(FontWeight.w500));
       expect(titleText.maxLines, equals(1));
       expect(titleText.overflow, equals(TextOverflow.ellipsis));
       
