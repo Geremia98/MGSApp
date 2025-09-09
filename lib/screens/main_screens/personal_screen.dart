@@ -231,7 +231,7 @@ class PersonalScreenState extends State<PersonalScreen> {
                             appConfig: appConfig,
                             height: appConfig.getHeight() * 80,
                             width: appConfig.getWidth() * 100,
-                            icon: Icons.person_2_outlined,
+                            icon: Icons.person,
                             title: 'Anagrafica account',
                             onTap: () async {
                               await Navigator.push(
@@ -265,7 +265,7 @@ class PersonalScreenState extends State<PersonalScreen> {
                               appConfig: appConfig,
                               height: appConfig.getHeight() * 80,
                               width: appConfig.getWidth() * 100,
-                              icon: Icons.verified_outlined,
+                              icon: Icons.verified,
                               title: 'Diventa Boss',
                               onTap: () async {
                                 await Navigator.push(
