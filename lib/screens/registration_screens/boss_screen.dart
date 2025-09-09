@@ -48,6 +48,13 @@ class _BossRegistrationScreenState extends State<BossRegistrationScreen> {
     isEnabled = controller.bossCode.isEmpty;
   }
 
+  bool get canProceed {
+    // Can proceed if:
+    // 1. Not claiming to be boss (isBoss = false), OR
+    // 2. Claiming to be boss AND has provided boss code
+    return !controller.isBoss || (controller.isBoss && controller.bossCode.isNotEmpty);
+  }
+
   @override
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
@@ -130,6 +137,10 @@ class _BossRegistrationScreenState extends State<BossRegistrationScreen> {
                               onValueChange: (isBoss) {
                                 setState(() {
                                   controller.isBoss = isBoss;
+                                  // Clear boss code when switching to "No"
+                                  if (!isBoss) {
+                                    controller.bossCode = '';
+                                  }
                                 });
                               },
                               //title: 'Sesso',
@@ -177,6 +188,8 @@ class _BossRegistrationScreenState extends State<BossRegistrationScreen> {
                                 }
 
                                 controller.bossCode = p1;
+                                // Trigger rebuild to update button state
+                                setState(() {});
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -204,8 +217,11 @@ class _BossRegistrationScreenState extends State<BossRegistrationScreen> {
                       activeColor: appConfig.getTheme().primaryColor,
                       disabledColor: appConfig.getTheme().disabledColor,
                       icon: Icons.arrow_forward_rounded,
-                      isEnable: true,
+                      isEnable: canProceed,
                       onTap: () {
+                        // Only proceed if button should be enabled
+                        if (!canProceed) return;
+                        
                         if (controller.isBoss &&
                             controller.bossCode.isNotEmpty) {
                           Navigator.push(
