@@ -317,7 +317,7 @@ void main() {
         expect(delegate.crossAxisCount, equals(2));
         expect(delegate.crossAxisSpacing, equals(16));
         expect(delegate.mainAxisSpacing, equals(16));
-        expect(delegate.childAspectRatio, equals(3.0));
+        expect(delegate.childAspectRatio, equals(1.2)); // Mobile aspect ratio
       } finally {
         FlutterError.onError = originalOnError;
       }

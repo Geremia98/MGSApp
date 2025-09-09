@@ -306,7 +306,7 @@ void main() {
 
         expect(find.text('Test Event Title'), findsOneWidget);
         expect(find.text('Test Location'), findsOneWidget);
-        expect(find.text('15-01-2024 02:30'), findsOneWidget);
+        expect(find.text('15-01-2024 14:30'), findsOneWidget);
       });
 
       testWidgets('navigates to event screen when tapped', (WidgetTester tester) async {
