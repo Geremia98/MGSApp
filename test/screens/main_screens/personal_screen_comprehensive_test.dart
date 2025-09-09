@@ -249,7 +249,7 @@ void main() {
         await tester.pump();
         await tester.pump(const Duration(milliseconds: 100));
 
-        expect(find.byIcon(Icons.person_2_outlined), findsOneWidget);
+        expect(find.byIcon(Icons.person), findsOneWidget);
         expect(find.byIcon(Icons.home_rounded), findsOneWidget);
         expect(find.byIcon(Icons.email_rounded), findsOneWidget);
         expect(find.byIcon(Icons.lock), findsOneWidget);
@@ -476,7 +476,7 @@ void main() {
         await tester.pump(const Duration(milliseconds: 100));
 
         // Check that all menu items have proper icons and text
-        expect(find.byIcon(Icons.person_2_outlined), findsOneWidget);
+        expect(find.byIcon(Icons.person), findsOneWidget);
         expect(find.byIcon(Icons.home_rounded), findsOneWidget);
         expect(find.byIcon(Icons.email_rounded), findsOneWidget);
         expect(find.byIcon(Icons.lock), findsOneWidget);
