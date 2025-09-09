@@ -633,17 +633,19 @@ class _EventScreenState extends State<EventScreen> {
       FunctionResponse response = await caller.joinEvent(event.id);
 
       if (response.getType() == ResponseType.error) {
-        snackBarStyle
-            .showSnackBar('Impossibile partecipare. Riprova più tardi.');
+
 
         setState(() {
           isLoading = false;
         });
 
+        snackBarStyle
+            .showSnackBar('Impossibile partecipare. Riprova più tardi.');
+
         return;
       }
 
-      snackBarStyle.showSnackBar('Evento aggiunto correttamente');
+      //snackBarStyle.showSnackBar('Evento aggiunto correttamente');
 
       setState(() {
         event.participants.add(UserModel.uid);
@@ -681,10 +683,12 @@ class _EventScreenState extends State<EventScreen> {
     }
 
     setState(() {
+      event.participants.add(UserModel.uid);
       isLoading = false;
+      reloadAncestor = true;
     });
 
-    snackBarStyle.showSnackBar('Evento aggiunto correttamente');
+    //snackBarStyle.showSnackBar('Evento aggiunto correttamente');
   }
 }
 
