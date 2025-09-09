@@ -76,22 +76,45 @@ class EventFirestore {
     }
   }
 
+  int calculateAge(DateTime? birthDate) {
+    DateTime today = DateTime.now();
+
+    if (birthDate == null) {
+      return 0;
+    }
+
+    int age = today.year - birthDate.year;
+
+    // Se il compleanno non è ancora passato quest'anno, sottrai 1
+    if (today.month < birthDate.month ||
+        (today.month == birthDate.month && today.day < birthDate.day)) {
+      age--;
+    }
+
+    return age;
+  }
+
   Future<List<EventModel>> retrieveEvents() async {
     List<EventModel> events = [];
 
     try {
       QuerySnapshot snap = await eventsCR
-          /*.where('target.targetGender', whereIn: ['both', UserModel.gender.name])
-            .where('target.targetCountry', isEqualTo: UserModel.country)
-            .where('target.targetGruppo', isEqualTo: UserModel.group)
-            .where('target.targetIspettoria', isEqualTo: UserModel.ispettoria)*/
+          .where('target.targetGender',
+              whereIn: ['both', UserModel.gender.name])
+          .where('target.targetCountry', isEqualTo: UserModel.country)
+          .where('target.targetGruppo', whereIn: ['', UserModel.group])
+          .where('target.targetIspettoria',  whereIn: ['', UserModel.ispettoria])
+          .where('target.maxTargetAge',
+          isGreaterThanOrEqualTo: calculateAge(UserModel.birth))
+          .where('target.minTargetAge',
+          isLessThanOrEqualTo: calculateAge(UserModel.birth))
           .orderBy('start', descending: true)
           .get();
 
       for (QueryDocumentSnapshot doc in snap.docs) {
-
         //Non metto gli eventi creati da lui nei consigliati
-        if ((doc.data() as Map<String, dynamic>)[firestoreEventCreatorUid] == UserModel.uid) {
+        if ((doc.data() as Map<String, dynamic>)[firestoreEventCreatorUid] ==
+            UserModel.uid) {
           continue;
         }
 
@@ -102,7 +125,11 @@ class EventFirestore {
         bool isFavourite = await favoritesService.isFavorite(doc.id);
 
         events.add(EventModel.fromFirestore(
-            doc.id, doc.data() as Map<String, dynamic>, image, participants, isFavourite));
+            doc.id,
+            doc.data() as Map<String, dynamic>,
+            image,
+            participants,
+            isFavourite));
       }
 
       return events;
@@ -114,17 +141,13 @@ class EventFirestore {
     }
   }
 
-
   Future<void> deleteEvent(EventModel event) async {
-
     try {
-
       if (event.creatorUid != event.creatorUid) {
         return;
       }
 
       await eventsCR.doc(event.id).delete();
-
     } catch (error) {
       if (kDebugMode) {
         print('Error while retrieving participants UID: $error');
@@ -179,12 +202,16 @@ class EventFirestore {
         ImageModel? image = await _storage.getEventBannerImage(doc.id);
 
         events.add(EventModel.fromFirestore(
-            doc.id, doc.data() as Map<String, dynamic>, image, participants, isFavourite));
+            doc.id,
+            doc.data() as Map<String, dynamic>,
+            image,
+            participants,
+            isFavourite));
       }
 
       if (!justCreatedByMe) {
-        final joinedEvents = await retrieveUserJoinedEvents(
-            onlyFuture: onlyFuture);
+        final joinedEvents =
+            await retrieveUserJoinedEvents(onlyFuture: onlyFuture);
         events.addAll(joinedEvents);
       }
 
@@ -219,8 +246,8 @@ class EventFirestore {
       final FavoritesService favoritesService = FavoritesService();
       bool isFavourite = await favoritesService.isFavorite(doc.id);
 
-      return EventModel.fromFirestore(
-          doc.id, doc.data() as Map<String, dynamic>, image, participants, isFavourite);
+      return EventModel.fromFirestore(doc.id,
+          doc.data() as Map<String, dynamic>, image, participants, isFavourite);
     } catch (error) {
       if (kDebugMode) {
         print('error while fetching events: $error');
@@ -234,7 +261,7 @@ class EventFirestore {
       DocumentReference ref = await eventsCR.add(event.toPayload());
 
       if (event.image != null) {
-       await _storage.storeEventBannerImage(ref.id, event.image!);
+        await _storage.storeEventBannerImage(ref.id, event.image!);
       }
 
       return ref.id;
