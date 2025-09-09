@@ -60,21 +60,24 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   child: Text(
                     'Inserisci la tua nuova password. E\' possibile, per motivi di sicurezza, venga richiesto di rieffettuare il login prima di poterla modificare.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: appConfig.getWidth() * 3.5,
-                      fontWeight: FontWeight.w500,
-                      color: appConfig.getTheme().secondaryHeaderColor,
+                    style: textStyleTitle(context).copyWith(
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
                 SizedBox(
                   height: appConfig.getHeight() * 5,
                 ),
-                buildTextField(
-                  appConfig,
-                  hintText: 'Password',
-                  onChanged: onPassChange,
-                  validator: onPassChange,
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal:
+                          appConfig.isTablet() ? appConfig.getWidth() * 10 : 0),
+                  child: buildTextField(
+                    appConfig,
+                    hintText: 'Password',
+                    onChanged: onPassChange,
+                    validator: onPassChange,
+                  ),
                 ),
                 const SizedBox(
                   height: 40,
@@ -97,7 +100,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       return;
     }
 
-    FirebaseAuthService authService = widget.authService ?? FirebaseAuthService();
+    FirebaseAuthService authService =
+        widget.authService ?? FirebaseAuthService();
 
     setState(() {
       isLoading = true;

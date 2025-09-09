@@ -70,116 +70,136 @@ class _UserInfoPageState extends State<UserInfoPage> {
               SizedBox(
                 height: appConfig.getHeight() * 5,
               ),
-              buildTextField(appConfig,
-                  labelText: 'Nome',
-                  initialValue: name,
-                  enabled: isInEditMode, onChanged: (value) {
-                name = value ?? '';
-              }),
-              SizedBox(
-                height: 20,
-              ),
-              buildTextField(appConfig,
-                  labelText: 'Cognome',
-                  initialValue: surname,
-                  enabled: isInEditMode, onChanged: (value) {
-                surname = value ?? '';
-              }),
-              SizedBox(
-                height: 20,
-              ),
-              MyCustomSegmentedButton<UserGender>(
-                height: 48,
-                leftText: 'Maschio',
-                rightText: 'Femmina',
-                title: 'Sesso',
-                selected: gender,
-                onValueChange: (UserGender gender) {
-                  this.gender = gender;
-                },
-                leftValue: UserGender.male,
-                rightValue: UserGender.female,
-                isEnabled: isInEditMode,
-              ),
-              SizedBox(height: 20),
-              MyDatePicker(
-                title: 'Data di nascita',
-                height: 48,
-                birthday: birth,
-                isEnable: isInEditMode,
-                onPressed: () async {
-                  final DateTime? dateNascita = await showDatePicker(
-                    context: context,
-                    initialDate: birth ?? DateTime(2000),
-                    firstDate: DateTime(1960),
-                    lastDate: DateTime(2014),
-                    builder: (BuildContext context, Widget? child) {
-                      return Theme(
-                        data: Theme.of(context).copyWith(
-                          dialogTheme: DialogThemeData(
-                            backgroundColor:
-                                appConfig.getTheme().scaffoldBackgroundColor,
-                            titleTextStyle: TextStyle(
-                              color: appConfig.getTheme().secondaryHeaderColor,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            contentTextStyle: TextStyle(
-                              color: appConfig.getTheme().secondaryHeaderColor,
-                              fontSize: 16,
-                            ),
-                          ),
-                          colorScheme: ColorScheme.light(
-                            primary: appConfig.getTheme().highlightColor,
-                            onPrimary:
-                                appConfig.getTheme().secondaryHeaderColor,
-                            onSurface:
-                                appConfig.getTheme().secondaryHeaderColor,
-                            surface:
-                                appConfig.getTheme().scaffoldBackgroundColor,
-                          ),
-                          inputDecorationTheme: InputDecorationTheme(
-                            labelStyle: TextStyle(
-                                color:
-                                    appConfig.getTheme().secondaryHeaderColor),
-                            hintStyle: TextStyle(
-                                color:
-                                    appConfig.getTheme().secondaryHeaderColor),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: appConfig
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: !appConfig.isTablet() ? 0 : appConfig.getWidth() * 10,
+                ),
+                child: Column(
+                  children: [
+                    buildTextField(appConfig,
+                        labelText: 'Nome',
+                        initialValue: name,
+                        enabled: isInEditMode, onChanged: (value) {
+                      name = value ?? '';
+                    }),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    buildTextField(appConfig,
+                        labelText: 'Cognome',
+                        initialValue: surname,
+                        enabled: isInEditMode, onChanged: (value) {
+                      surname = value ?? '';
+                    }),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    MyCustomSegmentedButton<UserGender>(
+                      leftText: 'Maschio',
+                      rightText: 'Femmina',
+                      title: 'Sesso',
+                      height: appConfig.isTablet() ?  55 : 48,
+                      width: appConfig.isTablet() ? 350 : 200,
+                      selected: gender,
+                      onValueChange: (UserGender gender) {
+                        this.gender = gender;
+                      },
+                      leftValue: UserGender.male,
+                      rightValue: UserGender.female,
+                      isEnabled: isInEditMode,
+                    ),
+                    SizedBox(height: 20),
+                    MyDatePicker(
+                      title: 'Data di nascita',
+                      height: appConfig.isTablet() ?  55 : 48,
+                      width: appConfig.isTablet() ? 350 : 200,
+                      birthday: birth,
+                      isEnable: isInEditMode,
+                      onPressed: () async {
+                        final DateTime? dateNascita = await showDatePicker(
+                          context: context,
+                          initialDate: birth ?? DateTime(2000),
+                          firstDate: DateTime(1960),
+                          lastDate: DateTime(2014),
+                          builder: (BuildContext context, Widget? child) {
+                            return Theme(
+                              data: Theme.of(context).copyWith(
+                                dialogTheme: DialogThemeData(
+                                  backgroundColor: appConfig
                                       .getTheme()
-                                      .secondaryHeaderColor),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: appConfig
+                                      .scaffoldBackgroundColor,
+                                  titleTextStyle: TextStyle(
+                                    color: appConfig
+                                        .getTheme()
+                                        .secondaryHeaderColor,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  contentTextStyle: TextStyle(
+                                    color: appConfig
+                                        .getTheme()
+                                        .secondaryHeaderColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                colorScheme: ColorScheme.light(
+                                  primary: appConfig.getTheme().highlightColor,
+                                  onPrimary:
+                                      appConfig.getTheme().secondaryHeaderColor,
+                                  onSurface:
+                                      appConfig.getTheme().secondaryHeaderColor,
+                                  surface: appConfig
                                       .getTheme()
-                                      .secondaryHeaderColor),
-                            ),
-                          ),
-                          textButtonTheme: TextButtonThemeData(
-                            style: TextButton.styleFrom(
-                              foregroundColor:
-                                  appConfig.getTheme().secondaryHeaderColor,
-                            ),
-                          ),
-                        ),
-                        child: child!,
-                      );
-                    },
-                  );
+                                      .scaffoldBackgroundColor,
+                                ),
+                                inputDecorationTheme: InputDecorationTheme(
+                                  labelStyle: TextStyle(
+                                      color: appConfig
+                                          .getTheme()
+                                          .secondaryHeaderColor),
+                                  hintStyle: TextStyle(
+                                      color: appConfig
+                                          .getTheme()
+                                          .secondaryHeaderColor),
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: appConfig
+                                            .getTheme()
+                                            .secondaryHeaderColor),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: appConfig
+                                            .getTheme()
+                                            .secondaryHeaderColor),
+                                  ),
+                                ),
+                                textButtonTheme: TextButtonThemeData(
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: appConfig
+                                        .getTheme()
+                                        .secondaryHeaderColor,
+                                  ),
+                                ),
+                              ),
+                              child: child!,
+                            );
+                          },
+                        );
 
-                  // Aggiorna lo stato qui, DOPO la selezione
-                  if (dateNascita != null) {
-                    setState(() {
-                      if (!isAtLeast14YearsOld(dateNascita)) {
-                        return;
-                      }
-                      birth = dateNascita;
-                    });
-                  }
-                },
+                        // Aggiorna lo stato qui, DOPO la selezione
+                        if (dateNascita != null) {
+                          setState(() {
+                            if (!isAtLeast14YearsOld(dateNascita)) {
+                              return;
+                            }
+                            birth = dateNascita;
+                          });
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 60),
               if (!isInEditMode)
@@ -193,54 +213,61 @@ class _UserInfoPageState extends State<UserInfoPage> {
                       }),
                 ),
               if (isInEditMode)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ButtonText(
-                      text: 'Annulla',
-                      isEnabled: !isLoading,
-                      onTap: () {
-                        setState(() {
-                          isInEditMode = false;
-                          name = UserModel.name;
-                          surname = UserModel.surname;
-                          birth = UserModel.birth;
-                          gender = UserModel.gender;
-                        });
-                      },
-                      color: appConfig.getTheme().scaffoldBackgroundColor,
-                      textColor: Colors.grey,
-                      fixedWidth: 170,
-                    ),
-                    ButtonText(
-                      text: 'Conferma',
-                      isLoading: isLoading,
-                      onTap: () async {
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: appConfig.isTablet() ? appConfig.getWidth() * 10 : 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ButtonText(
+                        text: 'Annulla',
+                        isEnabled: !isLoading,
+                        onTap: () {
+                          setState(() {
+                            isInEditMode = false;
+                            name = UserModel.name;
+                            surname = UserModel.surname;
+                            birth = UserModel.birth;
+                            gender = UserModel.gender;
+                          });
+                        },
+                        color: appConfig.getTheme().scaffoldBackgroundColor,
+                        textColor: Colors.grey,
+                        fixedWidth: 170,
+                      ),
+                      ButtonText(
+                        text: 'Conferma',
+                        isLoading: isLoading,
+                        onTap: () async {
+                          if (isLoading) {
+                            return;
+                          }
 
-                        if (isLoading) {
-                          return;
-                        }
+                          setState(() {
+                            isLoading = true;
+                          });
 
-                        setState(() {
-                          isLoading = true;
-                        });
+                          final UserFirestore userFirestore =
+                              widget.userFirestore ?? UserFirestore();
 
-                        final UserFirestore userFirestore = widget.userFirestore ?? UserFirestore();
+                          await userFirestore.updateUserInfo(
+                              name: name,
+                              surname: surname,
+                              birth: birth ?? DateTime(2000),
+                              gender: gender);
 
-                        await userFirestore.updateUserInfo(name: name, surname: surname, birth: birth ?? DateTime(2000), gender: gender);
-
-                        setState(() {
-                          isInEditMode = false;
-                          isLoading = false;
-                          UserModel.name = name;
-                          UserModel.surname = surname;
-                          UserModel.birth = birth;
-                          UserModel.gender = gender;
-                        });
-                      },
-                      fixedWidth: 170,
-                    ),
-                  ],
+                          setState(() {
+                            isInEditMode = false;
+                            isLoading = false;
+                            UserModel.name = name;
+                            UserModel.surname = surname;
+                            UserModel.birth = birth;
+                            UserModel.gender = gender;
+                          });
+                        },
+                        fixedWidth: 170,
+                      ),
+                    ],
+                  ),
                 )
             ],
           ),

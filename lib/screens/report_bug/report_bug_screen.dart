@@ -44,8 +44,9 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
     });
 
     final FirebaseFunctionCaller caller = FirebaseFunctionCaller();
-    
-    final FunctionResponse response = await caller.sendReport(widget.category, _descriptionController.text);
+
+    final FunctionResponse response =
+        await caller.sendReport(widget.category, _descriptionController.text);
 
     setState(() {
       _isSubmitting = false;
@@ -53,20 +54,18 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
 
     SnackBarStyle snackBarStyle = SnackBarStyle(context, scaffoldKey);
 
-   if (response.getType() == ResponseType.success) {
-     snackBarStyle.showSnackBar('Segnalazione inviata.');
-     if (!mounted) return;
-     Navigator.pushAndRemoveUntil(
-       context,
-       MaterialPageRoute(builder: (context) => const HomeScreen()),
-           (Route<dynamic> route) => false,
-     );
-     return;
-   }
+    if (response.getType() == ResponseType.success) {
+      snackBarStyle.showSnackBar('Segnalazione inviata.');
+      if (!mounted) return;
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        (Route<dynamic> route) => false,
+      );
+      return;
+    }
 
     snackBarStyle.showSnackBar('Errore durante l\'invio, riprova più tardi.');
-
-
   }
 
   @override
@@ -80,51 +79,54 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
           padding: EdgeInsets.symmetric(horizontal: appConfig.getWidth() * 5),
           child: SingleChildScrollView(
             child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              GoBackButton(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                GoBackButton(
                   icon: Icons.arrow_back_rounded,
                   onTap: () {
                     Navigator.pop(context);
                   },
-                  appConfig: appConfig),
-              Container(
-                padding: EdgeInsets.only(
-                  top: appConfig.getHeight() * 3.5,
-                  bottom: appConfig.getHeight() * 1,
+                  appConfig: appConfig,
+                  title: 'Segnala un bug',
                 ),
-                child: Text(
-                  'Segnala un bug',
-                  style: TextStyle(
-                    fontSize: appConfig.getWidth() * 7,
-                    fontWeight: FontWeight.bold,
+                SizedBox(
+                  height: appConfig.isTablet() ? 60 : 30,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal:
+                        appConfig.isTablet() ? appConfig.getWidth() * 10 : 0,
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Perfavore descrivi il problema che stai riscontrando. '
+                        'Il nostro team controllerà appena possibile.',
+                        style: textStyleSubtitle(context),
+                        textAlign: TextAlign.left,
+                      ),
+                      SizedBox(height: appConfig.isTablet() ? 50 : 24),
+                      PrimaryTextField(
+                        controller: _descriptionController,
+                        labelText: 'Descrizione Bug',
+                        maxLines: 100,
+                        maxLength: 1500,
+                      ),
+                      SizedBox(height: appConfig.isTablet() ? 50 : 24),
+                      Center(
+                        child: PrimaryButton(
+                          onPressed: _isSubmitting ? null : _submitReport,
+                          label: _isSubmitting
+                              ? 'Inviando...'
+                              : 'Invia segnalazione',
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Perfavore descrivi il problema che stai riscontrando. '
-                'Il nostro team controllerà appena possibile.',
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.left,
-              ),
-              const SizedBox(height: 24),
-              PrimaryTextField(
-                controller: _descriptionController,
-                labelText: 'Descrizione Bug',
-                maxLines: 100,
-                maxLength: 1500,
-              ),
-              const SizedBox(height: 24),
-              Center(
-                child: PrimaryButton(
-                  onPressed: _isSubmitting ? null : _submitReport,
-                  label: _isSubmitting ? 'Inviando...' : 'Invia segnalazione',
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-),
         ),
       ),
     );

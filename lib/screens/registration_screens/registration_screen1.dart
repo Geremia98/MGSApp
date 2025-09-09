@@ -162,7 +162,7 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                           MyCustomSegmentedButton<UserGender>(
                             leftText: 'Maschio',
                             rightText: 'Femmina',
-                            height: appConfig.isTablet() ?  55 : heightTextFormFieldWithoutError,
+                            height: appConfig.isTablet() ?  55 : 48,
                             width: appConfig.isTablet() ? 350 : 200,
                             selected: controller.gender,
                             onValueChange: (UserGender gender) {
@@ -177,7 +177,7 @@ class _RegistrationScreen1State extends State<RegistrationScreen1> {
                           MyDatePicker(
                             title: '',
                             birthday: controller.birthDate,
-                            height: appConfig.isTablet() ?  55 : heightTextFormFieldWithoutError,
+                            height: appConfig.isTablet() ?  55 : 48,
                             width: appConfig.isTablet() ? 350 : 200,
                             isEnable: true,
                             onPressed: () async {

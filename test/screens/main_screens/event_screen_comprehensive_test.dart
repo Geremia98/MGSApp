@@ -660,7 +660,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Verify "Iscritto" badge is visible
-        expect(find.text('Iscritto'), findsOneWidget);
+        expect(find.text('ISCRITTO'), findsOneWidget);
 
         await tester.binding.setSurfaceSize(null);
       } finally {
