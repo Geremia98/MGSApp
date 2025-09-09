@@ -52,6 +52,8 @@ class _EventScreenState extends State<EventScreen> {
     super.initState();
 
     event = widget.event;
+
+    print("reset event");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _controller.jumpTo(-200);
       _controller.animateTo(
@@ -758,7 +760,10 @@ class ConfirmEventDialog extends StatelessWidget {
                   fixedWidth: appConfig.isTablet() ? 200 : 130,
                   text: confirm,
                   color: Colors.red,
-                  onTap: onCancel,
+                  onTap: () {
+                    onConfirm();
+                    Navigator.of(context).pop();
+                  },
                 ),
               ],
             )

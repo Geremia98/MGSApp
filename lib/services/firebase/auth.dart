@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 import 'exceptions_translator.dart';
 
@@ -100,18 +101,34 @@ class FirebaseAuthService {
   }
 
   Future<dynamic> signInWithEmailAndPassword(String email, String password) async {
+    final FirebaseExceptionsTranslator _translator = FirebaseExceptionsTranslator();
+
     try {
       final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+
       final User? user = userCredential.user;
+
       return user;
+    } on FirebaseAuthException catch (error) {
+      final message = _translator.getAuthMessage(error);
+      if (kDebugMode) {
+        print('FirebaseAuthException during sign in: ${error.code}');
+      }
+      return message;
+    } on PlatformException catch (error) {
+      final message = _translator.getDatabaseMessage(error);
+      if (kDebugMode) {
+        print('PlatformException during sign in: ${error.code}');
+      }
+      return message;
     } catch (error) {
       if (kDebugMode) {
-        print('Error while signing in account with email and pass: $error');
+        print('Unexpected error during sign in: $error');
       }
-      return error.toString();
+      return "Errore sconosciuto! Contatta l'assistenza.";
     }
   }
 

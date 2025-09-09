@@ -22,7 +22,7 @@ class BackButtonAppBar extends StatelessWidget {
         GestureDetector(
           onTap: onTap,
           child: Container(
-            padding: EdgeInsets.all(15),
+            padding: EdgeInsets.all(appConfig.isTablet() ? 15 : 10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(
                   appConfig.getWidth() * 1.8), // Bordi arrotondati
