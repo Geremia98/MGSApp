@@ -264,7 +264,7 @@ void main() {
           ),
         );
 
-        expect(find.text('Iscritto'), findsOneWidget);
+        expect(find.text('ISCRITTO'), findsOneWidget);
         
       } finally {
         FlutterError.onError = originalOnError;

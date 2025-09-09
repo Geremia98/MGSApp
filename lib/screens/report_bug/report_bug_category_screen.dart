@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/report_bug/report_bug_screen.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
-import 'package:mgs_app2/utilities/my_theme_data.dart';
+import 'package:mgs_app2/widgets/button.dart';
 import 'package:mgs_app2/widgets/buttons.dart';
 
 class ReportBugCategoryScreen extends StatelessWidget {
@@ -28,34 +28,23 @@ class ReportBugCategoryScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               GoBackButton(
-                  icon: Icons.arrow_back_rounded,
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  appConfig: appConfig),
-              Container(
-                padding: EdgeInsets.only(
-                  top: appConfig.getHeight() * 3.5,
-                  bottom: appConfig.getHeight() * 1,
-                ),
-                child: Text(
-                  'Di che si tratta?',
-                  style: TextStyle(
-                    fontSize: appConfig.getWidth() * 7,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                icon: Icons.arrow_back_rounded,
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                appConfig: appConfig,
+                title: 'Di che si tratta?',
               ),
-              const SizedBox(
-                height: 20,
+              SizedBox(
+                height: appConfig.isTablet() ? 60 : 30,
               ),
               Expanded(
                 child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: appConfig.isTablet() ? 2 : 2,
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
-                    childAspectRatio: 1.2, // Adjust for better button shape
+                    childAspectRatio: appConfig.isTablet() ? 3 : 1.2, // Adjust for better button shape
                   ),
                   itemCount: categories.length,
                   itemBuilder: (context, index) {
@@ -67,7 +56,8 @@ class ReportBugCategoryScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ReportBugScreen(category: category['name']),
+                            builder: (context) =>
+                                ReportBugScreen(category: category['name']),
                           ),
                         );
                       },
@@ -97,31 +87,34 @@ class CategoryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: getCustomBorder(
-            width: 0.3,
-            appConfig: AppConfig(context),
-          )
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 40, color: Theme.of(context).primaryColor),
-            const SizedBox(height: 12),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                label,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.w400),
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: 100,
+        maxHeight: 100,
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Theme.of(context).dividerColor),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 40, color: Theme.of(context).primaryColor),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: textStyleSubtitle(context),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

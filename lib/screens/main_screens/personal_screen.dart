@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mgs_app2/models/user_model.dart';
 import 'package:mgs_app2/screens/login_screens/change_email_screen.dart';
 import 'package:mgs_app2/screens/login_screens/change_password_screen.dart';
@@ -8,15 +10,23 @@ import 'package:mgs_app2/screens/personal_screen/user_group_page.dart';
 import 'package:mgs_app2/screens/personal_screen/user_info_page.dart';
 import 'package:mgs_app2/screens/registration_screens/registration_controller.dart';
 import 'package:mgs_app2/screens/report_bug/report_bug_category_screen.dart';
+import 'package:mgs_app2/services/firebase/firebase_storage.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
 import 'package:mgs_app2/utilities/constants_dimensions.dart';
 import 'package:mgs_app2/widgets/button.dart';
 import 'package:mgs_app2/widgets/buttons.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/home_screen_drawer.dart';
 import 'package:mgs_app2/widgets/home_page_widgets/my_profile_pic.dart';
+import 'package:mgs_app2/widgets/personal_page_widgets/my_big_async_button.dart';
+import 'package:mgs_app2/widgets/personal_page_widgets/my_squared_icon_button.dart';
+import 'package:mgs_app2/widgets/personal_page_widgets/selector_for_personal_screen.dart';
+import 'package:mgs_app2/widgets/registration_screens_widgets/my_date_picker.dart';
+import 'package:mime/mime.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../../models/image_model.dart';
 import '../../services/firebase/auth.dart';
+import '../../services/picker.dart';
 import '../../widgets/font.dart';
 import '../../wrapper.dart';
 
@@ -108,7 +118,7 @@ class PersonalScreenState extends State<PersonalScreen> {
                 child: Padding(
                   padding: EdgeInsets.only(
                       bottom:
-                          appConfig.getHeight() * paddingUnderTheMainUppperBar),
+                      appConfig.getHeight() * paddingUnderTheMainUppperBar),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -128,59 +138,114 @@ class PersonalScreenState extends State<PersonalScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          MyProfilePicture(
-                            appConfig: appConfig,
-                            borderRadius: 20,
-                            borderThickness: 0.3,
-                            dimension: appConfig.isTablet() ? 200 : 100,
-                          ),
-                          SizedBox(
-                            height: appConfig.isTablet() ? 30 : 15,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text:
-                                          '${UserModel.name} ${UserModel.surname}',
-                                      style: textStyleTitle(context),
-                                    ),
-                                  ],
-                                ),
+                          GestureDetector(
+                              onTap: () async {
+                                final ImagePickerService service = ImagePickerService();
+
+                                XFile? image = await service.getImageFromUser();
+
+                                if (image == null) {
+                                  if (kDebugMode) {
+                                    print('picked image value is null');
+                                  }
+                                  return;
+                                }
+
+                                Uint8List? imageCropped = await service
+                                    .openImageCropperProfilePicture(
+                                    image, context);
+
+                                if (imageCropped == null) {
+                                  if (kDebugMode) {
+                                    print('image cropper value is null');
+                                  }
+                                  return;
+                                }
+
+                                String? mimeType =
+                                lookupMimeType(image!.path,
+                                    headerBytes: await image.readAsBytes());
+
+                                ImageModel? imageModel = ImageModel(
+                                  image: imageCropped,
+                                  path: image.path,
+                                  extension: mimeType,
+                                );
+
+                                imageModel =
+                                await service.storeImage(imageModel);
+
+                                setState(() {
+                                  UserModel.profilePic = imageModel;
+                                });
+                              },
+                              child: MyProfilePicture(
+                                appConfig: appConfig,
+                                borderRadius: 20,
+                                borderThickness: 0.5,
+                                dimension: appConfig.isTablet() ? 200 : 100,
                               ),
-                              if (UserModel.bossCode.isNotEmpty)
-                                Padding(
-                                  padding: EdgeInsets.only(left: appConfig.isTablet() ? 10 : 5),
-                                  child: Icon(
-                                    Icons.verified_outlined,
-                                    size: appConfig.isTablet() ? 26 : 17,
-                                    color: appConfig
-                                        .getTheme()
-                                        .secondaryHeaderColor,
+                          ),
+
+                              SizedBox(
+                                height: appConfig.isTablet() ? 30 : 15,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: 'Ciao,  ',
+                                          style: textStyleTitle(
+                                              context)
+                                              .copyWith(
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        TextSpan(
+                                          text:
+                                          '${UserModel.name} ${UserModel
+                                              .surname}',
+                                          style: textStyleTitle(
+                                              context),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                )
-                            ],
-                          ),
-                          SizedBox(
-                            height: appConfig.isTablet() ? appConfig.getHeight() * 10 : appConfig.getHeight() * 5,
-                          ),
-                          
-                        ItemForMenu(
-              appConfig: appConfig,
-              height: appConfig.getHeight()*80,
-              width: appConfig.getWidth()*100,
-              icon: Icons.person_3_rounded,
-              title: 'Anagrafica account',
-              onTap: () async {
-                              await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const UserInfoPage()),
-                              );
+                                  if (UserModel.bossCode.isNotEmpty)
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: appConfig.isTablet() ? 10 : 5),
+                                      child: Icon(
+                                        Icons.verified_outlined,
+                                        size: appConfig.isTablet() ? 26 : 17,
+                                        color: appConfig
+                                            .getTheme()
+                                            .secondaryHeaderColor,
+                                      ),
+                                    )
+                                ],
+                              ),
+                              SizedBox(
+                                height: appConfig.isTablet()
+                                    ? appConfig.getHeight() * 10
+                                    : appConfig.getHeight() * 5,
+                              ),
+                              _buildRowFor(
+                                Icons.person_2_outlined,
+                                'Anagrafica account',
+                                appConfig
+                                    .getTheme()
+                                    .secondaryHeaderColor,
+                                    () async {
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (
+                                            context) => const UserInfoPage()),
+                                  );
 
                               setState(() {});
                             },
@@ -246,10 +311,10 @@ class PersonalScreenState extends State<PersonalScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const ChangePasswordScreen()),
+                                    const ChangePasswordScreen()),
                               );
                             },
-            ),
+                          ),
                           SizedBox(
                             height: appConfig.getHeight() * 3,
                           ),
@@ -264,7 +329,7 @@ class PersonalScreenState extends State<PersonalScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const ReportBugCategoryScreen()),
+                                    const ReportBugCategoryScreen()),
                               );
                             },
             ),
@@ -319,15 +384,19 @@ class PersonalScreenState extends State<PersonalScreen> {
     );
   }
 
-  Widget _buildRowFor(
-      IconData iconData, String text, Color color, void Function()? onTap) {
+  Widget _buildRowFor(IconData iconData, String text, Color color,
+      void Function()? onTap) {
     final AppConfig appConfig = AppConfig(context);
 
     return Container(
       color: Colors.transparent,
-      width: appConfig.isTablet() ? appConfig.getWidth() * 80 : appConfig.getWidth() * 100,
+      width: appConfig.isTablet()
+          ? appConfig.getWidth() * 80
+          : appConfig.getWidth() * 100,
       child: Material(
-        color: appConfig.getTheme().scaffoldBackgroundColor,
+        color: appConfig
+            .getTheme()
+            .scaffoldBackgroundColor,
         child: InkWell(
           onTap: onTap,
           splashColor: Colors.grey.withOpacity(0.1),
@@ -349,7 +418,9 @@ class PersonalScreenState extends State<PersonalScreen> {
                       children: <Widget>[
                         Icon(
                           iconData,
-                          color: appConfig.getTheme().secondaryHeaderColor,
+                          color: appConfig
+                              .getTheme()
+                              .secondaryHeaderColor,
                           size: appConfig.isTablet() ? 32 : 22,
                         ),
                         SizedBox(
@@ -362,11 +433,11 @@ class PersonalScreenState extends State<PersonalScreen> {
                             maxLines: 1,
                             style: appConfig.isTablet()
                                 ? textStyleTextField(context).copyWith(
-                                    fontSize: responsiveFontSize(
-                                      context,
-                                      fontSizeBig,
-                                    ),
-                                  )
+                              fontSize: responsiveFontSize(
+                                context,
+                                fontSizeBig,
+                              ),
+                            )
                                 : textStyleTextField(context),
                           ),
                         ),
@@ -377,8 +448,12 @@ class PersonalScreenState extends State<PersonalScreen> {
                       child: Icon(
                         Icons.navigate_next,
                         color: text == 'Esci'
-                            ? appConfig.getTheme().scaffoldBackgroundColor
-                            : appConfig.getTheme().secondaryHeaderColor,
+                            ? appConfig
+                            .getTheme()
+                            .scaffoldBackgroundColor
+                            : appConfig
+                            .getTheme()
+                            .secondaryHeaderColor,
                         size: appConfig.isTablet() ? 28 : 18,
                       ),
                     )
