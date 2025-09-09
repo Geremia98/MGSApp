@@ -255,7 +255,7 @@ TextStyle textStyleButton(BuildContext context) {
 TextStyle textStyleTitle(BuildContext context) {
   return TextStyle(
     fontSize: responsiveFontSize(context, fontSizeHuge,),
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w500,
     color: AppConfig(context)
         .getTheme()
         .primaryColor,
@@ -272,10 +272,40 @@ TextStyle textStyleSubtitle(BuildContext context) {
   );
 }
 
+TextStyle textStyleItemMenu(BuildContext context) {
+  return TextStyle(
+    fontSize: responsiveFontSize(context, fontSizeMedium,),
+    fontWeight: FontWeight.w300,
+    color: AppConfig(context)
+        .getTheme()
+        .primaryColor,
+  );
+}
+
+TextStyle textStyleVediTutti(BuildContext context) {
+  return TextStyle(
+    fontSize: responsiveFontSize(context, fontSizeMedium,),
+    fontWeight: FontWeight.w400,
+    color: AppConfig(context)
+        .getTheme()
+        .primaryColor,
+  );
+}
+
+TextStyle textStyleHomePersonalRow(BuildContext context) {
+  return TextStyle(
+    fontSize: responsiveFontSize(context, fontSizeHuge,),
+    fontWeight: FontWeight.w500,
+    color: AppConfig(context)
+        .getTheme()
+        .primaryColor,
+  );
+}
+
 TextStyle textStyleEventCardTitle(BuildContext context) {
   return TextStyle(
     fontSize: responsiveFontSize(context, AppConfig(context).isTablet() ? fontSizeBig : fontSizeMedium),
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w500,
     color: AppConfig(context)
         .getTheme()
         .secondaryHeaderColor,
@@ -285,7 +315,7 @@ TextStyle textStyleEventCardTitle(BuildContext context) {
 TextStyle textStyleEventCardSubtitle(BuildContext context) {
   return TextStyle(
     fontSize: responsiveFontSize(context, AppConfig(context).isTablet() ? fontSizeBig - 1 : fontSizeMedium - 1),
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w300,
     color: AppConfig(context)
         .getTheme()
         .secondaryHeaderColor,

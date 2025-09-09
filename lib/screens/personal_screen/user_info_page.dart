@@ -29,6 +29,10 @@ class _UserInfoPageState extends State<UserInfoPage> {
   late DateTime? birth;
   late UserGender gender;
 
+
+  late TextEditingController nameController;
+  late TextEditingController surnameController;
+
   bool isLoading = false;
 
   @override
@@ -39,6 +43,16 @@ class _UserInfoPageState extends State<UserInfoPage> {
     surname = UserModel.surname;
     birth = UserModel.birth;
     gender = UserModel.gender;
+
+    nameController = TextEditingController(text: name);
+    surnameController = TextEditingController(text: surname);
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    surnameController.dispose();
+    super.dispose();
   }
 
   @override
@@ -78,7 +92,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                   children: [
                     buildTextField(appConfig,
                         labelText: 'Nome',
-                        initialValue: name,
+                        controller: nameController,
                         enabled: isInEditMode, onChanged: (value) {
                       name = value ?? '';
                     }),
@@ -87,7 +101,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                     ),
                     buildTextField(appConfig,
                         labelText: 'Cognome',
-                        initialValue: surname,
+                        controller: surnameController,
                         enabled: isInEditMode, onChanged: (value) {
                       surname = value ?? '';
                     }),
@@ -201,7 +215,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                   ],
                 ),
               ),
-              SizedBox(height: 60),
+              const SizedBox(height: 60),
               if (!isInEditMode)
                 Center(
                   child: ButtonText(
@@ -228,6 +242,9 @@ class _UserInfoPageState extends State<UserInfoPage> {
                             surname = UserModel.surname;
                             birth = UserModel.birth;
                             gender = UserModel.gender;
+
+                            nameController.text = name;
+                            surnameController.text = surname;
                           });
                         },
                         color: appConfig.getTheme().scaffoldBackgroundColor,
@@ -255,6 +272,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                               birth: birth ?? DateTime(2000),
                               gender: gender);
 
+
                           setState(() {
                             isInEditMode = false;
                             isLoading = false;
@@ -262,6 +280,10 @@ class _UserInfoPageState extends State<UserInfoPage> {
                             UserModel.surname = surname;
                             UserModel.birth = birth;
                             UserModel.gender = gender;
+
+                            nameController.text = name;
+                            surnameController.text = surname;
+
                           });
                         },
                         fixedWidth: 170,

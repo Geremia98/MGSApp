@@ -52,6 +52,8 @@ class _EventScreenState extends State<EventScreen> {
     super.initState();
 
     event = widget.event;
+
+    print("reset event");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _controller.jumpTo(-200);
       _controller.animateTo(
@@ -153,7 +155,7 @@ class _EventScreenState extends State<EventScreen> {
                 Navigator.pop(context, reloadAncestor),
               },
               child: Container(
-                padding: EdgeInsets.all(15),
+                padding: EdgeInsets.all(appConfig.isTablet() ? 15 : 10),
                 decoration: BoxDecoration(
                   // Colore di sfondo
                   color: appConfig.getTheme().scaffoldBackgroundColor,
@@ -631,17 +633,19 @@ class _EventScreenState extends State<EventScreen> {
       FunctionResponse response = await caller.joinEvent(event.id);
 
       if (response.getType() == ResponseType.error) {
-        snackBarStyle
-            .showSnackBar('Impossibile partecipare. Riprova più tardi.');
+
 
         setState(() {
           isLoading = false;
         });
 
+        snackBarStyle
+            .showSnackBar('Impossibile partecipare. Riprova più tardi.');
+
         return;
       }
 
-      snackBarStyle.showSnackBar('Evento aggiunto correttamente');
+      //snackBarStyle.showSnackBar('Evento aggiunto correttamente');
 
       setState(() {
         event.participants.add(UserModel.uid);
@@ -679,10 +683,12 @@ class _EventScreenState extends State<EventScreen> {
     }
 
     setState(() {
+      event.participants.add(UserModel.uid);
       isLoading = false;
+      reloadAncestor = true;
     });
 
-    snackBarStyle.showSnackBar('Evento aggiunto correttamente');
+    //snackBarStyle.showSnackBar('Evento aggiunto correttamente');
   }
 }
 
@@ -758,7 +764,10 @@ class ConfirmEventDialog extends StatelessWidget {
                   fixedWidth: appConfig.isTablet() ? 200 : 130,
                   text: confirm,
                   color: Colors.red,
-                  onTap: onCancel,
+                  onTap: () {
+                    onConfirm();
+                    Navigator.of(context).pop();
+                  },
                 ),
               ],
             )
@@ -768,7 +777,6 @@ class ConfirmEventDialog extends StatelessWidget {
     );
   }
 }
-
 class EventDetailBox extends StatelessWidget {
   const EventDetailBox({
     super.key,
@@ -789,10 +797,9 @@ class EventDetailBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppConfig appConfig = AppConfig(context);
 
-
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.6, end: 1.0),
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       builder: (context, value, child) {
         return Transform.scale(
@@ -801,63 +808,43 @@ class EventDetailBox extends StatelessWidget {
         );
       },
       child: Container(
-        width: appConfig.isTablet() ? width * 0.4 : width * 0.5 - 30,
         decoration: BoxDecoration(
           color: appConfig.getTheme().highlightColor.withOpacity(0.5),
           borderRadius: BorderRadius.circular(10),
         ),
         padding: EdgeInsets.all(appConfig.isTablet() ? 20 : 10),
+        margin: EdgeInsets.symmetric(horizontal: appConfig.isTablet() ? 20 : 10),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                ClipRect(
-                  child: SizedBox(
-                    width: appConfig.isTablet() ? 32 : 22,
-                    height: appConfig.isTablet() ? 32 : 22,
-                    child: Icon(
-                      icon,
-                      size: appConfig.isTablet() ? 32 : 22,
-                      color: appConfig.getTheme().secondaryHeaderColor,
-                    ),
+                Icon(
+                  icon,
+                  size: appConfig.isTablet() ? 32 : 22,
+                  color: appConfig.getTheme().secondaryHeaderColor,
+                ),
+                const SizedBox(width: 12),
+                // Qui usiamo Expanded per evitare overflow
+                Expanded(
+                  child: Text(
+                    title,
+                    style: textStyleEventCardTitle(context),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                SizedBox(
-                  width: 20,
-                ),
-                SizedBox(
-                  width: appConfig.isTablet()
-                      ? width * 0.4 - 100
-                      : width * 0.5 - 85,
-                  child:
-                Text(
-                  title,
-                  style: textStyleEventCardTitle(context),
-                ),),
               ],
             ),
-            SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  child: Icon(
-                    icon,
-                    size: appConfig.isTablet() ? 32 : 22,
-                    color: Colors.transparent,
-                  ),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                SizedBox(
-                  width: appConfig.isTablet()
-                      ? width * 0.4 - 100
-                      : width * 0.5 - 85,
+                // Spazio vuoto per allineare icona
+                SizedBox(width: appConfig.isTablet() ? 32 : 22),
+                const SizedBox(width: 12),
+                Expanded(
                   child: Text(
                     subTitle,
                     maxLines: 4,
@@ -866,13 +853,14 @@ class EventDetailBox extends StatelessWidget {
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
     );
   }
 }
+
 
 class ParticipantsEventDialog extends StatefulWidget {
   final void Function(String) onDeleteParticipant;

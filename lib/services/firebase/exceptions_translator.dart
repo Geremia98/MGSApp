@@ -3,33 +3,32 @@ import 'package:flutter/services.dart';
 
 class FirebaseExceptionsTranslator {
 
+
   String getAuthMessage(FirebaseAuthException error) {
 
-    switch (error.code.toUpperCase()) {
-      case "INVALID-CREDENTIAL":
-        return "Le credenziali specificate sono scadute! (Error: 200)";
-      case "INVALID-EMAIL":
+    switch (error.code.toLowerCase()) {
+      case "invalid-credential":
+        return "Email o password non corretti!";
+      case "invalid-email":
         return "Formato email non valido!";
-      case "WRONG-PASSWORD":
+      case "wrong-password":
+      case "account-exists-with-different-credential":
         return "Impossibile connettersi, password o email non corrette!";
-      case "ACCOUNT-EXISTS-WITH-DIFFERENT-CREDENTIAL":
-        return "Impossibile connettersi, password o email non corrette!";
-      case "EMAIL-ALREADY-IN-USE":
+      case "email-already-in-use":
+      case "credential-already-in-use":
         return "Indirizzo email già in uso!";
-      case "CREDENTIAL-ALREADY-IN-USE":
-        return "Indirizzo email già in uso!";
-      case "NETWORK-REQUEST-FAILED":
+      case "network-request-failed":
         return "Verifica la tua connessione";
-      case "USER-DISABLED":
+      case "user-disabled":
         return "Questo account è stato disabilitato!";
-      case "TOO-MANY-REQUESTS":
+      case "too-many-requests":
         return "Troppi tentativi di accesso. Riprovare più tardi!";
-      case "USER-NOT-FOUND":
+      case "user-not-found":
         return "Indirizzo email non registrato!";
-      case  'REQUIRES-RECENT-LOGIN':
+      case "requires-recent-login":
         return "Operazione sensibile. Esci ed entra nuovamente nel tuo account!";
       default:
-        return "${error.message} errore durante l'operazione! Contattare l'assistenza";
+        return "${error.message ?? "Errore sconosciuto"} durante l'operazione! Contattare l'assistenza";
     }
   }
 

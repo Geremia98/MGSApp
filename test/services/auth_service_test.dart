@@ -93,7 +93,7 @@ void main() {
 
         // Assert
         expect(result, isA<String>());
-        expect(result, exception.toString());
+        expect(result, 'Indirizzo email non registrato!');
       });
     });
 

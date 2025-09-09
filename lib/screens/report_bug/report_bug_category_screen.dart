@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:mgs_app2/screens/report_bug/report_bug_screen.dart';
 import 'package:mgs_app2/utilities/app_config.dart';
@@ -32,7 +33,7 @@ class ReportBugCategoryScreen extends StatelessWidget {
                   Navigator.pop(context);
                 },
                 appConfig: appConfig,
-                title: 'Seleziona una categoria',
+                title: 'Di che si tratta?',
               ),
               SizedBox(
                 height: appConfig.isTablet() ? 60 : 30,

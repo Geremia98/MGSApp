@@ -41,7 +41,7 @@ void main() {
         await tester.pumpWidget(MaterialApp(home: const ChangePasswordScreen()));
 
         expect(find.text('Modifica password'), findsOneWidget);
-        expect(find.text('Inserisci la tua nuova password. E\' possibile, per motivi di sicurezza, venga richiesto di rieffettuare il login prima di poterla modificare.'), findsOneWidget);
+        expect(find.text('Inserisci la tua nuova password. È possibile che, per motivi di sicurezza, venga richiesto di rieffettuare il login prima di poterla modificare.'), findsOneWidget);
         expect(find.byType(TextFormField), findsOneWidget);
         expect(find.text('Modifica'), findsOneWidget);
         expect(find.byType(GoBackButton), findsOneWidget);

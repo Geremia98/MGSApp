@@ -101,7 +101,7 @@ class _ReportBugScreenState extends State<ReportBugScreen> {
                     children: [
                       Text(
                         'Perfavore descrivi il problema che stai riscontrando. '
-                        'Il nostro team controllerà appena possibile.',
+                            '\nIl nostro team controllerà appena possibile.',
                         style: textStyleSubtitle(context),
                         textAlign: TextAlign.left,
                       ),

@@ -128,22 +128,22 @@ void main() {
 
         // Enter edit mode and modify data
         await tester.tap(find.text('Modifica'));
-        await tester.pump();
+        await tester.pumpAndSettle(); // Wait for edit mode to fully render
+
+        // Verify we're now in edit mode - buttons should be visible
+        expect(find.text('Conferma'), findsOneWidget);
+        expect(find.text('Annulla'), findsOneWidget);
 
         await tester.enterText(find.byType(TextFormField).first, 'Giovanni');
         await tester.pump();
 
         // Scroll to make sure button is visible
         await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -300));
-        await tester.pump();
+        await tester.pumpAndSettle();
 
         // Submit changes
         await tester.tap(find.text('Conferma'), warnIfMissed: false);
         await tester.pumpAndSettle();
-
-        // The tap may not work due to button positioning, so let's verify the component exists
-        expect(find.text('Conferma'), findsOneWidget);
-        expect(find.text('Annulla'), findsOneWidget);
         
         await tester.binding.setSurfaceSize(null);
         UserModel.name = 'Mario'; // Reset

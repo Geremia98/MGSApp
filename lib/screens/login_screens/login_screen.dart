@@ -17,7 +17,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _isLoading = false;
+  late bool _isLoading;
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final RegistrationController controller = RegistrationController();
@@ -26,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    _isLoading = false;
   }
 
   @override
@@ -140,8 +141,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           ButtonText(
                             fixedWidth: appConfig.isTablet() ? 350 : -1,
                             text: 'Entra',
-                            onTap: () =>
-                                controller.signIn(formKey, context, scaffoldKey),
+                            onTap: () async {
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              await controller.signIn(formKey, context, scaffoldKey);
+                              setState(() {
+                                _isLoading = false;
+                              });
+                            },
                             isLoading: _isLoading,
                           ),
                         ],

@@ -33,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late Future<List<EventModel>> retrievePersonalEvents;
 
   List<EventModel> personalEvents = [];
+  List<EventModel> suggestedEvents = [];
 
   @override
   void initState() {
@@ -89,25 +90,35 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: height * 0.20,
                   child: FutureBuilder(
-                      future: retrieveEvents,
+                      future:  eventFirestore.retrieveEvents(),
                       builder: (BuildContext context,
                           AsyncSnapshot<List<EventModel>> snap) {
                         if (snap.connectionState == ConnectionState.done &&
                             (snap.data == null || snap.data!.isEmpty)) {
-                          return SizedBox(
+                          return const SizedBox(
                             child: Text('Nessun evento'),
                           );
+                        }
+
+                        if (snap.connectionState == ConnectionState.done) {
+                          suggestedEvents = snap.data!;
                         }
 
                         return ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
-                          itemCount: snap.data == null
+                          itemCount:  snap.connectionState != ConnectionState.done &&
+                              suggestedEvents.isEmpty
                               ? 3
-                              : math.min(snap.data!.length, 3),
+                              : math.min(suggestedEvents.length, 3),
                           itemBuilder: (BuildContext context, int index) {
+
                             EventModel? event =
-                                snap.data == null ? null : snap.data![index];
+                            snap.connectionState != ConnectionState.done &&
+                                suggestedEvents.isEmpty
+                                ? null
+                                : suggestedEvents[index];
+
                             return TweenAnimationBuilder<double>(
                               tween: Tween(begin: 0.7, end: 1.0),
                               duration:
@@ -126,7 +137,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 event: event,
                                 onPop: needsRefreshEvents,
                                 isLoading: snap.connectionState !=
-                                    ConnectionState.done,
+                                    ConnectionState.done &&
+                                    suggestedEvents.isEmpty,
                               ),
                             );
                           },
@@ -146,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       AsyncSnapshot<List<EventModel>> snap) {
                     if (snap.connectionState == ConnectionState.done &&
                         (snap.data == null || snap.data!.isEmpty)) {
-                      return SizedBox(
+                      return const SizedBox(
                         child: Text('Nessun evento'),
                       );
                     }

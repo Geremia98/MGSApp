@@ -88,7 +88,7 @@ class MyEventsCard extends StatelessWidget {
               ),
               margin: EdgeInsets.only(right: 20),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(10),
                 child: event == null
                     ? SizedBox()
                     : event!.image == null || event!.image!.downloadUrl == null
@@ -98,7 +98,7 @@ class MyEventsCard extends StatelessWidget {
                           )
                         : CachedNetworkImage(
                             imageUrl: event!.image!.downloadUrl!,
-                            fit: BoxFit.cover,
+                            fit: BoxFit.fitHeight,
                             memCacheWidth: 600,
                             memCacheHeight: 600,
                             placeholder: (context, url) => ColorFiltered(

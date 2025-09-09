@@ -24,7 +24,12 @@ class AllEventsScreen extends StatefulWidget {
   final FavoritesService? favoritesService;
 
   const AllEventsScreen(
-      {super.key, required this.futureEvents, this.isManage = false, required this.titolo, this.eventFirestore, this.favoritesService});
+      {super.key,
+      required this.futureEvents,
+      this.isManage = false,
+      required this.titolo,
+      this.eventFirestore,
+      this.favoritesService});
 
   @override
   State<AllEventsScreen> createState() => _AllEventsScreenState();
@@ -78,14 +83,7 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double width = MediaQuery.of(context).size.width;
     final AppConfig appConfig = AppConfig(context);
 
     return Scaffold(
@@ -99,9 +97,8 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
             children: <Widget>[
               GoBackButton(
                 icon: Icons.arrow_back_rounded,
-                onTap: () =>
-                    Navigator.pop(
-                        context, editedEvents.keys.isEmpty ? false : true),
+                onTap: () => Navigator.pop(
+                    context, editedEvents.keys.isEmpty ? false : true),
                 appConfig: appConfig,
                 title: titleShowedInAppbar ? widget.titolo : '',
               ),
@@ -110,14 +107,14 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
                   future: futureEvents,
                   builder: (context, snap) {
                     if (snap.hasError) {
-                      return Center(
+                      return const Center(
                           child: Text(
                               'Errore durante il caricamente degli eventi'));
                     }
 
                     if (snap.connectionState == ConnectionState.done &&
                         (!snap.hasData || snap.data!.isEmpty)) {
-                      return Center(child: Text('Nessun evento trovato'));
+                      return const Center(child: Text('Nessun evento trovato'));
                     }
 
                     final allEvents = snap.data ?? [];
@@ -183,7 +180,7 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
         return events.where((e) {
           final start = e.start!;
           return start
-              .isAfter(startOfMonth.subtract(const Duration(seconds: 1))) &&
+                  .isAfter(startOfMonth.subtract(const Duration(seconds: 1))) &&
               start.isBefore(startOfNextMonth);
         }).toList();
       default:
@@ -205,14 +202,8 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
 
   Widget buildPage(List<EventModel> events) {
     //TODO sarebbe da aggiungere shimmer anche qua
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     Set<int> animatedIndexes = {};
 
     final AppConfig appConfig = AppConfig(context);
@@ -246,102 +237,107 @@ class _AllEventsScreenState extends State<AllEventsScreen> {
               appConfig,
             ),
           ),
-        appConfig.isTablet()
-            ? SliverGrid(
-          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: appConfig.getWidth() * 90,
-            // larghezza massima di una card
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
-            childAspectRatio: 0.75,
-          ),
-          delegate: SliverChildBuilderDelegate(
-                (context, index) {
-              final firstTime = !animatedIndexes.contains(index);
-              if (firstTime) animatedIndexes.add(index);
-              final event = events[index];
-
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          EventScreen(
-                            event: event,
-                          ),
-                    ),
-                  );
-                },
-                child: MyEventCard(
-                  triggerAnimation: firstTime,
-                  height: height,
-                  width: width,
-                  eventId: event.id,
-                  image: event.image,
-                  titolo: event.title,
-                  luogo: event.location,
-                  isLike: event.isFavourite,
-                  participants: event.participants,
-                  dataInizio:
-                  DateFormat('dd-MM-yyyy hh:mm').format(event.start!),
-                  onFavouriteChange: onFavouriteChange,
-                  index: index,
-                  isManage: widget.isManage,
-                  event: event,
-                  scaffoldKey: scaffoldKey,
-                  onEventChange: onEventChange,
+        if (appConfig.isTablet())
+            SliverGrid(
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: appConfig.getWidth() * 90,
+                  // larghezza massima di una card
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  childAspectRatio: 0.75,
                 ),
-              );
-            },
-            childCount: events.length,
-          ),
-        )
-            : SliverList(
-          delegate: SliverChildBuilderDelegate(
-                (context, index) {
-              final firstTime = !animatedIndexes.contains(index);
-              if (firstTime) animatedIndexes.add(index);
-              final event = events[index];
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final firstTime = !animatedIndexes.contains(index);
+                    if (firstTime) animatedIndexes.add(index);
+                    final event = events[index];
 
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          EventScreen(
-                            event: event,
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EventScreen(
+                              event: event,
+                            ),
                           ),
-                    ),
-                  );
-                },
-                child: MyEventCard(
-                  triggerAnimation: firstTime,
-                  height: height,
-                  width: width,
-                  eventId: event.id,
-                  image: event.image,
-                  titolo: event.title,
-                  luogo: event.location,
-                  isLike: event.isFavourite,
-                  participants: event.participants,
-                  dataInizio:
-                  DateFormat('dd-MM-yyyy hh:mm').format(event.start!),
-                  onFavouriteChange: onFavouriteChange,
-                  index: index,
-                  isManage: widget.isManage,
-                  event: event,
-                  scaffoldKey: scaffoldKey,
-                  onEventChange: onEventChange,
-                  eventFirestore: widget.eventFirestore,
-                  favoritesService: widget.favoritesService,
+                        );
+                      },
+                      child: MyEventCard(
+                        triggerAnimation: firstTime,
+                        height: height,
+                        width: width,
+                        eventId: event.id,
+                        image: event.image,
+                        titolo: event.title,
+                        luogo: event.location,
+                        isLike: event.isFavourite,
+                        participants: event.participants,
+                        dataInizio:
+                            DateFormat('dd-MM-yyyy hh:mm').format(event.start!),
+                        onFavouriteChange: onFavouriteChange,
+                        index: index,
+                        isManage: widget.isManage,
+                        event: event,
+                        scaffoldKey: scaffoldKey,
+                        onEventChange: onEventChange,
+                      ),
+                    );
+                  },
+                  childCount: events.length,
                 ),
-              );
-            },
-            childCount: events.length,
-          ),
-        ),
+              ),
+        if (!appConfig.isTablet())
+          SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    
+                    try {
+                      final firstTime = !animatedIndexes.contains(index);
+                      if (firstTime) animatedIndexes.add(index);
+                      final event = events[index];
+
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EventScreen(event: event),
+                            ),
+                          );
+                        },
+                        child: MyEventCard(
+                          triggerAnimation: firstTime,
+                          height: height,
+                          width: width,
+                          eventId: event.id,
+                          image: event.image,
+                          titolo: event.title,
+                          luogo: event.location,
+                          isLike: event.isFavourite,
+                          participants: event.participants,
+                          dataInizio: event.start == null
+                              ? "Data non disponibile"
+                              : DateFormat('dd-MM-yyyy HH:mm')
+                                  .format(event.start!),
+                          onFavouriteChange: onFavouriteChange,
+                          index: index,
+                          isManage: widget.isManage,
+                          event: event,
+                          scaffoldKey: scaffoldKey,
+                          onEventChange: onEventChange,
+                          eventFirestore: widget.eventFirestore,
+                          favoritesService: widget.favoritesService,
+                        ),
+                      );
+                    } catch (e, st) {
+                      debugPrint("❌ Errore in SliverList item $index: $e\n$st");
+                      return const SizedBox(); // fallback
+                    }
+                  },
+                  childCount: events.length,
+                ),
+              ),
         SliverToBoxAdapter(
           child: SizedBox(
             height: 20,
@@ -455,41 +451,39 @@ class _MyEventCardState extends State<MyEventCard>
                   ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: widget.image == null ||
-                        widget.image!.downloadUrl == null
+                            widget.image!.downloadUrl == null
                         ? Image.asset(
-                      'assets/images/ballo.png',
-                      height: widget.width * 0.3,
-                      width: widget.width * 0.50,
-                      fit: BoxFit.cover,
-                    )
+                            'assets/images/ballo.png',
+                            height: widget.width * 0.3,
+                            width: widget.width * 0.50,
+                            fit: BoxFit.cover,
+                          )
                         : CachedNetworkImage(
-                      imageUrl: widget.image!.downloadUrl!,
-                      height: widget.width * 0.3,
-                      width: widget.width * 0.50,
-                      fit: BoxFit.cover,
-                      memCacheWidth: 600,
-                      memCacheHeight: 400,
-                      placeholder: (context, url) =>
-                          ColorFiltered(
-                            colorFilter: const ColorFilter.mode(
-                              Colors.grey,
-                              BlendMode.saturation,
+                            imageUrl: widget.image!.downloadUrl!,
+                            height: widget.width * 0.3,
+                            width: widget.width * 0.50,
+                            fit: BoxFit.cover,
+                            memCacheWidth: 600,
+                            memCacheHeight: 400,
+                            placeholder: (context, url) => ColorFiltered(
+                              colorFilter: const ColorFilter.mode(
+                                Colors.grey,
+                                BlendMode.saturation,
+                              ),
+                              child: Image.asset(
+                                'assets/images/ballo.png',
+                                height: widget.height * 0.25,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                            child: Image.asset(
+                            errorWidget: (context, url, error) => Image.asset(
                               'assets/images/ballo.png',
                               height: widget.height * 0.25,
                               width: double.infinity,
                               fit: BoxFit.cover,
                             ),
                           ),
-                      errorWidget: (context, url, error) =>
-                          Image.asset(
-                            'assets/images/ballo.png',
-                            height: widget.height * 0.25,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
-                    ),
                   ),
 
                   // Like button in overlay (solo se non è in modalità manage)
@@ -513,9 +507,8 @@ class _MyEventCardState extends State<MyEventCard>
                       child: GestureDetector(
                         onTap: () async {
                           final RenderBox button =
-                          context.findRenderObject() as RenderBox;
-                          final RenderBox overlay = Overlay
-                              .of(context)
+                              context.findRenderObject() as RenderBox;
+                          final RenderBox overlay = Overlay.of(context)
                               .context
                               .findRenderObject() as RenderBox;
 
@@ -527,7 +520,8 @@ class _MyEventCardState extends State<MyEventCard>
                                 (buttonPosition.dx + button.size.width),
                             // distanza dal lato destro
                             buttonPosition.dy, // distanza dall’alto
-                            buttonPosition.dx + button.size.width +
+                            buttonPosition.dx +
+                                button.size.width +
                                 appConfig.getWidth() * 50,
                             // attaccato al bordo destro
                             overlay.size.height -
@@ -537,9 +531,7 @@ class _MyEventCardState extends State<MyEventCard>
 
                           showMenu<String>(
                             context: context,
-                            color: appConfig
-                                .getTheme()
-                                .scaffoldBackgroundColor,
+                            color: appConfig.getTheme().scaffoldBackgroundColor,
                             position: position,
                             items: [
                               PopupMenuItem(
@@ -563,9 +555,7 @@ class _MyEventCardState extends State<MyEventCard>
                         child: Icon(
                           Icons.more_vert,
                           size: 40,
-                          color: appConfig
-                              .getTheme()
-                              .scaffoldBackgroundColor,
+                          color: appConfig.getTheme().scaffoldBackgroundColor,
                         ),
                       ),
                     ),
@@ -582,8 +572,8 @@ class _MyEventCardState extends State<MyEventCard>
                       widget.titolo,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: textStyleEventCardTitle(context).copyWith(
-                          fontSize: 25),
+                      style: textStyleEventCardTitle(context)
+                          .copyWith(fontSize: 25),
                     ),
                     const SizedBox(height: 6),
 
@@ -596,8 +586,8 @@ class _MyEventCardState extends State<MyEventCard>
                             widget.luogo,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: textStyleEventCardSubtitle(context).copyWith(
-                                fontSize: 22),
+                            style: textStyleEventCardSubtitle(context)
+                                .copyWith(fontSize: 22),
                           ),
                         ),
                       ],
@@ -612,8 +602,8 @@ class _MyEventCardState extends State<MyEventCard>
                         Expanded(
                           child: Text(
                             widget.dataInizio,
-                            style: textStyleEventCardSubtitle(context).copyWith(
-                                fontSize: 22),
+                            style: textStyleEventCardSubtitle(context)
+                                .copyWith(fontSize: 22),
                           ),
                         ),
                       ],
@@ -631,6 +621,7 @@ class _MyEventCardState extends State<MyEventCard>
         ),
       );
     }
+
     return ScaleTransition(
       scale: _scaleAnimation,
       child: Container(
@@ -646,7 +637,7 @@ class _MyEventCardState extends State<MyEventCard>
               appConfig: appConfig,
               width: 0.5,
             ), */
-        ),
+            ),
         child: Stack(
           children: [
             if (widget.isManage)
@@ -656,14 +647,13 @@ class _MyEventCardState extends State<MyEventCard>
                 child: GestureDetector(
                   onTap: () async {
                     final RenderBox button =
-                    context.findRenderObject() as RenderBox;
-                    final RenderBox overlay = Overlay
-                        .of(context)
+                        context.findRenderObject() as RenderBox;
+                    final RenderBox overlay = Overlay.of(context)
                         .context
                         .findRenderObject() as RenderBox;
 
                     final Offset buttonPosition =
-                    button.localToGlobal(Offset.zero, ancestor: overlay);
+                        button.localToGlobal(Offset.zero, ancestor: overlay);
 
                     final RelativeRect position = RelativeRect.fromLTRB(
                       overlay.size.width -
@@ -678,9 +668,7 @@ class _MyEventCardState extends State<MyEventCard>
 
                     showMenu<String>(
                       context: context,
-                      color: appConfig
-                          .getTheme()
-                          .scaffoldBackgroundColor,
+                      color: appConfig.getTheme().scaffoldBackgroundColor,
                       position: position,
                       items: [
                         PopupMenuItem(
@@ -704,9 +692,7 @@ class _MyEventCardState extends State<MyEventCard>
                   child: Icon(
                     Icons.more_vert, // Icona simile a quella mostrata
                     size: 22, // Dimensione dell'icona
-                    color: appConfig
-                        .getTheme()
-                        .secondaryHeaderColor,
+                    color: appConfig.getTheme().secondaryHeaderColor,
                   ),
                 ),
               ),
@@ -721,33 +707,32 @@ class _MyEventCardState extends State<MyEventCard>
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: widget.image == null ||
-                            widget.image!.downloadUrl == null
+                                widget.image!.downloadUrl == null
                             ? Image.asset(
-                          'assets/images/ballo.png',
-                          fit: BoxFit.cover,
-                        )
+                                'assets/images/ballo.png',
+                                fit: BoxFit.cover,
+                              )
                             : CachedNetworkImage(
-                          imageUrl: widget.image!.downloadUrl!,
-                          fit: BoxFit.cover,
-                          memCacheWidth: 600,
-                          memCacheHeight: 400,
-                          placeholder: (context, url) =>
-                              ColorFiltered(
-                                colorFilter: const ColorFilter.mode(
-                                  Colors.grey,
-                                  BlendMode.saturation,
+                                imageUrl: widget.image!.downloadUrl!,
+                                fit: BoxFit.cover,
+                                memCacheWidth: 600,
+                                memCacheHeight: 400,
+                                placeholder: (context, url) => ColorFiltered(
+                                  colorFilter: const ColorFilter.mode(
+                                    Colors.grey,
+                                    BlendMode.saturation,
+                                  ),
+                                  child: Image.asset(
+                                    'assets/images/ballo.png',
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                                child: Image.asset(
+                                errorWidget: (context, url, error) =>
+                                    Image.asset(
                                   'assets/images/ballo.png',
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                          errorWidget: (context, url, error) =>
-                              Image.asset(
-                                'assets/images/ballo.png',
-                                fit: BoxFit.cover,
-                              ),
-                        ),
                       ),
                     ),
                     Expanded(
@@ -757,7 +742,7 @@ class _MyEventCardState extends State<MyEventCard>
                         children: [
                           Container(
                             margin:
-                            EdgeInsets.only(bottom: widget.height * 0.007),
+                                EdgeInsets.only(bottom: widget.height * 0.007),
                             child: Text(
                               widget.titolo,
                               maxLines: 1,
@@ -815,31 +800,27 @@ class _MyEventCardState extends State<MyEventCard>
                               ),
                             ],
                           ),
-                          Container(
-                            margin: EdgeInsets.only(top: 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ParticipantBubbles(
-                                    participants: widget.participants),
-                                if (widget.isManage)
-                                  SizedBox(
-                                    height: 40,
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ParticipantBubbles(
+                                  participants: widget.participants),
+                              if (!widget.isManage)
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      left: widget.width * 0.001),
+                                  child: LikeButton(
+                                    width: widget.width,
+                                    eventId: widget.eventId,
+                                    isLike: widget.isLike,
+                                    onFavouriteChange:
+                                    widget.onFavouriteChange,
                                   ),
-                                if (!widget.isManage)
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        left: widget.width * 0.001),
-                                    child: LikeButton(
-                                      width: widget.width,
-                                      eventId: widget.eventId,
-                                      isLike: widget.isLike,
-                                      onFavouriteChange:
-                                      widget.onFavouriteChange,
-                                    ),
-                                  )
-                              ],
-                            ),
+                                )
+                            ],
                           ),
                         ],
                       ),
@@ -851,9 +832,7 @@ class _MyEventCardState extends State<MyEventCard>
                 ),
                 Divider(
                   height: 1,
-                  color: appConfig
-                      .getTheme()
-                      .highlightColor,
+                  color: appConfig.getTheme().highlightColor,
                 )
               ],
             ),
@@ -863,38 +842,35 @@ class _MyEventCardState extends State<MyEventCard>
     );
   }
 
-
   void deleteEvent() async {
     showDialog(
       context: context,
-      builder: (context) =>
-          ConfirmEventDialog(
-            event: widget.event,
-            // il tuo EventModel
-            title: 'Eliminare evento?',
-            subtitle:
-            'Sei sicuro di voler eliminare l\'evento "${widget.event
-                .title}"? Questa azione non può essere annullata.',
-            cancel: 'Annulla',
-            confirm: 'Elimina',
-            onCancel: () {
-              Navigator.of(context).pop();
-            },
-            onConfirm: () async {
-              final SnackBarStyle snackBarStyle = SnackBarStyle(
-                  context, widget.scaffoldKey);
+      builder: (context) => ConfirmEventDialog(
+        event: widget.event,
+        // il tuo EventModel
+        title: 'Eliminare evento?',
+        subtitle:
+            'Sei sicuro di voler eliminare l\'evento "${widget.event.title}"? Questa azione non può essere annullata.',
+        cancel: 'Annulla',
+        confirm: 'Elimina',
+        onCancel: () {
+          Navigator.of(context).pop();
+        },
+        onConfirm: () async {
+          final SnackBarStyle snackBarStyle =
+              SnackBarStyle(context, widget.scaffoldKey);
 
-              Navigator.of(context).pop();
+          Navigator.of(context).pop();
 
-              final EventFirestore eventFirestore = widget.eventFirestore ??
-                  EventFirestore();
-              eventFirestore.deleteEvent(widget.event);
+          final EventFirestore eventFirestore =
+              widget.eventFirestore ?? EventFirestore();
+          eventFirestore.deleteEvent(widget.event);
 
-              snackBarStyle.showSnackBar('Evento eliminato');
+          snackBarStyle.showSnackBar('Evento eliminato');
 
-              widget.onEventChange(widget.event.id, null);
-            },
-          ),
+          widget.onEventChange(widget.event.id, null);
+        },
+      ),
     );
   }
 
@@ -902,10 +878,9 @@ class _MyEventCardState extends State<MyEventCard>
     Object? value = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            AddEventScreen(
-              event: widget.event,
-            ),
+        builder: (context) => AddEventScreen(
+          event: widget.event,
+        ),
       ),
     );
 
@@ -933,8 +908,8 @@ class LikeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final FavoritesService favoritesService = this.favoritesService ??
-        FavoritesService();
+    final FavoritesService favoritesService =
+        this.favoritesService ?? FavoritesService();
     final AppConfig appConfig = AppConfig(context);
 
     return IconButton(
@@ -949,11 +924,9 @@ class LikeButton extends StatelessWidget {
         },
         icon: Icon(
           isLike ? Icons.favorite_rounded : Icons.favorite_outline,
-          color: appConfig.isTablet() ? appConfig
-              .getTheme()
-              .scaffoldBackgroundColor : appConfig
-              .getTheme()
-              .secondaryHeaderColor,
+          color: appConfig.isTablet()
+              ? appConfig.getTheme().scaffoldBackgroundColor
+              : appConfig.getTheme().secondaryHeaderColor,
           size: appConfig.isTablet() ? 45 : 22,
         ));
   }
@@ -990,21 +963,21 @@ class MyPersonalRow extends StatelessWidget {
           count == -1
               ? SizedBox()
               : Row(
-            children: [
-              Text('${count} event${count == 1 ? 'o' : 'i'}',
-                  style: appConfig.isTablet()
-                      ? textStyleSubtitle(context).copyWith(
-                    fontSize: responsiveFontSize(
-                      context,
-                      fontSizeBig,
+                  children: [
+                    Text('${count} event${count == 1 ? 'o' : 'i'}',
+                        style: appConfig.isTablet()
+                            ? textStyleSubtitle(context).copyWith(
+                                fontSize: responsiveFontSize(
+                                  context,
+                                  fontSizeBig,
+                                ),
+                              )
+                            : textStyleSubtitle(context)),
+                    SizedBox(
+                      width: width * 0.02,
                     ),
-                  )
-                      : textStyleSubtitle(context)),
-              SizedBox(
-                width: width * 0.02,
-              ),
-            ],
-          )
+                  ],
+                )
         ],
       ),
     );
@@ -1137,13 +1110,14 @@ class _ButtonRowState extends State<ButtonRow> {
 }
 
 class FilterButton extends StatefulWidget {
-  const FilterButton({super.key,
-    required this.onTap,
-    required this.coloreBottonePremuto,
-    required this.label,
-    required this.onRemove,
-    required this.isSelected,
-    required this.width});
+  const FilterButton(
+      {super.key,
+      required this.onTap,
+      required this.coloreBottonePremuto,
+      required this.label,
+      required this.onRemove,
+      required this.isSelected,
+      required this.width});
 
   final Color coloreBottonePremuto;
   final String label;
@@ -1166,57 +1140,44 @@ class _FilterButtonState extends State<FilterButton> {
           padding: EdgeInsets.all(widget.width * 0.01),
           decoration: BoxDecoration(
             color: widget.isSelected
-                ? appConfig
-                .getTheme()
-                .highlightColor
-                : Theme
-                .of(context)
-                .scaffoldBackgroundColor,
+                ? appConfig.getTheme().highlightColor
+                : Theme.of(context).scaffoldBackgroundColor,
             // Colore di sfondo
             borderRadius:
-            BorderRadius.circular(widget.width * 0.02), // Bordi arrotondati
+                BorderRadius.circular(widget.width * 0.02), // Bordi arrotondati
             border: getCustomBorder(
               appConfig: appConfig,
-              width: 1,
+              width: 0.3,
             ),
           ),
           child: widget.isSelected
               ? Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: widget.width * 0.015),
-                child: Text(
-                  widget.label,
-                  style: appConfig.isTablet()
-                      ? textStyleTextField(context).copyWith(
-                    fontSize: responsiveFontSize(
-                      context,
-                      fontSizeBig,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: widget.width * 0.015),
+                      child: Text(
+                        widget.label,
+                        style: appConfig.isTablet()
+                            ? textStyleTextField(context).copyWith(
+                                fontSize: responsiveFontSize(
+                                  context,
+                                  fontSizeBig,
+                                ),
+                              )
+                            : textStyleTextField(context),
+                      ),
                     ),
-                  )
-                      : textStyleTextField(context),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: widget.width * 0.015),
-                child: GestureDetector(
-                    onTap: () => {_onButtonPressed()},
-                    child: Icon(
-                      Icons.close,
-                      size: appConfig.isTablet() ? 20 : 13,
-                    )),
-              )
-            ],
-          )
+                  ],
+                )
               : Padding(
-            padding:
-            EdgeInsets.symmetric(horizontal: widget.width * 0.015),
-            child: Text(
-              widget.label,
-              style: textStyleTextField(context),
-            ),
-          )),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: widget.width * 0.015),
+                  child: Text(
+                    widget.label,
+                    style: textStyleTextField(context),
+                  ),
+                )),
     );
   }
 
@@ -1242,12 +1203,10 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => _appConfig.isTablet() ? 80 : 50;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset,
-      bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: Theme
-          .of(context)
-          .scaffoldBackgroundColor,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: _filters,
     );
   }

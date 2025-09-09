@@ -35,6 +35,13 @@ void main() {
       // Mock the static uid field on UserModel for the duration of the tests
       UserModel.uid = uid;
       
+      // Set up UserModel static fields for the query filters
+      UserModel.gender = UserGender.male;
+      UserModel.country = 'Italy';
+      UserModel.group = 'test_group';
+      UserModel.ispettoria = 'test_ispettoria';
+      UserModel.birth = DateTime.now().subtract(const Duration(days: 365 * 25)); // 25 years old
+      
       // Add events created by other users for retrieveEvents test
       // (retrieveEvents excludes user-created events)
       await fakeDb.collection('events').doc('e_other1').set({
@@ -42,12 +49,28 @@ void main() {
         'creationDate': Timestamp.fromDate(DateTime.now()),
         'creatorUid': 'other_user_1',
         'title': 'Event 1',
+        'target': {
+          'targetGender': 'both',
+          'targetCountry': 'Italy',
+          'targetGruppo': 'test_group',
+          'targetIspettoria': 'test_ispettoria',
+          'maxTargetAge': 30,
+          'minTargetAge': 18,
+        },
       });
       await fakeDb.collection('events').doc('e_other2').set({
         'start': Timestamp.fromDate(DateTime.now().subtract(const Duration(days: 1))),
         'creationDate': Timestamp.fromDate(DateTime.now().subtract(const Duration(days: 2))),
         'creatorUid': 'other_user_2', 
         'title': 'Past Event',
+        'target': {
+          'targetGender': 'both',
+          'targetCountry': 'Italy',
+          'targetGruppo': 'test_group',
+          'targetIspettoria': 'test_ispettoria',
+          'maxTargetAge': 30,
+          'minTargetAge': 18,
+        },
       });
     });
 

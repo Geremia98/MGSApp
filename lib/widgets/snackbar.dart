@@ -19,30 +19,51 @@ class SnackBarStyle {
   bool isSnackBarShowed = false;
 
   void showSnackBar(String text, {double? bottomPadding}) {
-
     if (isSnackBarShowed) return;
-    if (_scaffoldKey.currentState == null) return;
+    final scaffoldContext = _scaffoldKey.currentContext;
+    if (scaffoldContext == null) return;
+
+    final appConfig = AppConfig(scaffoldContext);
+    final bottom = bottomPadding ?? appConfig.getHeight();
 
     isSnackBarShowed = true;
-    ScaffoldMessenger.of(_scaffoldKey.currentState!.context).showSnackBar(SnackBar(
-      behavior: SnackBarBehavior.floating,
-      elevation: 1,
-      margin: EdgeInsets.only(
-        left: _appConfig.getWidth() * 10,
-        right: _appConfig.getWidth() * 10,
-        bottom: bottomPadding ?? this.bottomPadding,
-      ),
-      backgroundColor: getDarkTheme().highlightColor.withOpacity(0.9),
-      content: Text(text,
+    ScaffoldMessenger
+        .of(scaffoldContext)
+        .showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        elevation: 1,
+        margin: EdgeInsets.only(
+          left: appConfig.getWidth() * 10,
+          right: appConfig.getWidth() * 10,
+          bottom: bottom,
+        ),
+        backgroundColor: appConfig
+            .getTheme()
+            .highlightColor
+            .withOpacity(0.9),
+        content: Text(
+          text,
           textAlign: TextAlign.center,
           overflow: TextOverflow.fade,
-          style: textStyleSnackBar(context)),
-      duration: const Duration(seconds: 3),
-    )).closed.then((value) => isSnackBarShowed = false);
+          style: TextStyle(
+            color: appConfig
+                .getTheme()
+                .secondaryHeaderColor,
+            fontWeight: FontWeight.w600,
+            fontSize: fontSizeMedium,
+          ),
+        ),
+        duration: const Duration(seconds: 3),
+      ),
+    )
+        .closed
+        .then((value) => isSnackBarShowed = false);
   }
 }
 
-TextStyle textStyleSnackBar(BuildContext context) => TextStyle(
+
+  TextStyle textStyleSnackBar(BuildContext context) => TextStyle(
   color: AppConfig(context).getTheme().secondaryHeaderColor,
   fontWeight: FontWeight.w600,
   fontSize: fontSizeMedium,
